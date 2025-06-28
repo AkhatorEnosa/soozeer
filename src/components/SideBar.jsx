@@ -185,7 +185,7 @@ const SideBar = ({uid, page, paramsId, toggleSearchBar}) => {
                       <span className="flex relative"><i className="bi bi-bell"></i> {notificationCount} </span>
                       Notifications</p>}
               </Link>
-              <p className={page === 'search' ?  "w-full  bg-primary/10 flex font-semibold text-black dark:text-[#CBC9C9] rounded-full border-r-[1px] bg-primary/5 rounded-full gap-4 px-10 py-5 cursor-pointer" : "w-full hover:bg-primary/5 dark:hover:bg-primary/15 flex gap-4 px-10 py-5 cursor-pointer text-black dark:text-[#CBC9C9] rounded-full"} onClick={toggleSearchBar}><i className={page === 'search' ? "bi bi-binoculars-fill" : "bi bi-binoculars"}></i> Search</p>
+              <p className={page === 'search' ?  "w-full flex font-semibold text-black dark:text-[#CBC9C9] border-r-[1px] bg-primary/5 rounded-full gap-4 px-10 py-5 cursor-pointer" : "w-full hover:bg-primary/5 dark:hover:bg-primary/15 flex gap-4 px-10 py-5 cursor-pointer text-black dark:text-[#CBC9C9] rounded-full"} onClick={toggleSearchBar}><i className={page === 'search' ? "bi bi-binoculars-fill" : "bi bi-binoculars"}></i> Search</p>
             </div>
 
             <div className="relative flex flex-col px-6 py-4 gap-5 justify-center text-base text-black dark:text-[#CBC9C9] rounded-full hover:bg-primary/5 cursor-pointer z-50" onClick={()=> setShowSubMenu(!showSubMenu)}>
@@ -193,7 +193,7 @@ const SideBar = ({uid, page, paramsId, toggleSearchBar}) => {
               {showSubMenu && <div className="fixed left-0 top-0 w-full h-full cursor-default" onClick={()=> setShowSubMenu(false)}></div>}
 
               <div className={showSubMenu ? "absolute opacity-100 w-full flex flex-col gap-2 items-center -top-[12rem] left-0 text-base font-semibold py-5 px-3 transition-all duration-200" : "absolute w-full flex flex-col gap-2 items-center opacity -top-[12rem] -left-[100vw]  px-3 py-5 transition-all duration-200"}>
-                <p className="w-full flex gap-2 items-center bg-base-100 dark:bg-black rounded-full border-[1px] border-neutral-100 shadow-sm dark:shadow-primary/40 text-base font-semibold dark:bg-primary/5 rounded-full/40 hover:bg-primary/5 dark:hover:bg-primary/15 px-10 py-5" onClick={() => setTriggerLogout(true)}>Logout</p>
+                <p className="w-full flex gap-2 items-center bg-base-100 dark:bg-black rounded-full border-[1px] border-neutral-100 shadow-sm dark:shadow-primary/40 text-base font-semibold dark:bg-primary/5  dark:border-neutral-500 rounded-full/40 hover:bg-primary/5 dark:hover:bg-primary/15 px-10 py-5" onClick={() => setTriggerLogout(true)}>Logout</p>
                 <ThemeToggleButton handleThemeToggle={handleThemeToggle} theme={theme} systemTheme={systemThemeIsDark}/>
               </div>
 
@@ -212,7 +212,7 @@ const SideBar = ({uid, page, paramsId, toggleSearchBar}) => {
         {
             triggerLogout && uid && 
           <div className="fixed w-screen h-screen flex justify-center px-10 bg-base-100/80 dark:bg-black/80 items-center top-0 left-0 cursor-default z-[1000]">
-                <div className="w-[85%] md:w-[50%] bg-base-100 dark:bg-black dark:text-[#cbc9c9] rounded-full p-5 rounded-[1rem] flex flex-col gap-2 border-[1px] border-black/10 dark:border-[#CBC9C9]/20 shadow-md dark:shadow-[#cbc9c9]/20">
+                <div className="w-[85%] md:w-[50%] bg-base-100 dark:bg-black dark:text-[#cbc9c9] p-5 rounded-[1rem] flex flex-col gap-2 border-[1px] border-black/10 dark:border-[#CBC9C9]/20 shadow-md dark:shadow-[#cbc9c9]/20">
                     <h1 className="text-2xl lg:text-3xl font-semibold">Logout?</h1>
                     <p>Accepting will log you out of your account. Do you want to proceed?</p>
                     {

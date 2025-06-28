@@ -14,7 +14,7 @@ export default {
         secondary: '#F91880',
         success: '#28C76F',
         warning: '#FF9F43',
-        error: '#EA5455',
+        error: '#d10001',
         info: '#00CFE8',
         neutral: {
           lightest: '#FFFFFF',
@@ -38,7 +38,7 @@ export default {
           "base-100": "#FFFFFF",
           success: "#28C76F",
           warning: "#FF9F43",
-          error: "#EA5455",
+          error: "#d10001",
           info: "#00CFE8",
           accent: "#d4af37"
         },
@@ -52,7 +52,7 @@ export default {
           "base-100": "#121212",
           success: "#28C76F",
           warning: "#FF9F43",
-          error: "#EA5455",
+          error: "#d10001",
           info: "#00CFE8",
           accent: "#d4af37"
         },

@@ -62,8 +62,8 @@ const ResetPassword = () => {
                     <div className="w-full md:w-[35rem] lg:w-96 flex flex-col justify-center items-center gap-10 border-[1px] border-black/5 dark:border-neutral-100/5 rounded-md p-4 md:shadow-md dark:shadow-neutral">
                         <h1 className="text-2xl font-medium hidden lg:flex">Reset Password</h1>
                         <form onSubmit={handleSubmit} className="w-full flex flex-col gap-5">
-                            <input type="email" name="email" id="email" value={email} placeholder="Email" className="w-full input input-bordered input-md" onChange={(e)=>setEmail(e.target.value)}/>
-                            <button type="submit" className="btn btn-primary rounded-md text-white" disabled={isSendingEmail && "disabled"}>{(isSendingEmail && error == null) ? <span className="loading loading-dots loading-sm text-white"></span> : 'Send Password Recovery Mail'}</button>
+                            <input type="email" name="email" id="email" value={email} placeholder="Email" className="w-full input input-bordered input-md rounded-full" onChange={(e)=>setEmail(e.target.value)}/>
+                            <button type="submit" className={`btn rounded-full ${email.trim() !== "" ? "btn-primary" : "bg-primary/50 btn-primary"} text-white disabled:bg-primary/50`} disabled={isSendingEmail && "disabled"}>{(isSendingEmail && error == null) ? <span className="loading loading-dots loading-sm text-white"></span> : 'Send Password Recovery Mail'}</button>
                         </form>
                     </div>}
             </div>

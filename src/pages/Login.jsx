@@ -85,7 +85,7 @@ const Login = () => {
                             <input type={showPassword ? "text" : "password"} name="password" id="password" value={password} placeholder="Password" className="w-full dark:placeholder:text-[#cbc9c9]" autoComplete="" onChange={(e)=>setPassword(e.target.value)}/>
                             <span className="cursor-pointer text-neutral/50 dark:text-inherit" onClick={() => setShowPassword(!showPassword)}>{showPassword ?<i className="bi bi-eye-slash-fill"></i> : <i className="bi bi-eye-fill"></i>}</span>
                         </label>
-                        <button type="submit" className={`btn rounded-full ${email.trim() !== "" && password.trim() !== "" ? "btn-primary text-white" : "bg-primary/50 btn-primary"} disabled:bg-primary/50`} disabled={isLoading && "disabled"}>{(isLoading && !error) ? <span className="loading loading-spinner loading-sm text-white"></span> : 'Login'}</button>
+                        <button type="submit" className={`btn rounded-full ${email.trim() !== "" && password.trim() !== "" ? "btn-primary" : "bg-primary/50 btn-primary"} text-white disabled:bg-primary/50`} disabled={isLoading && "disabled"}>{(isLoading && !error) ? <span className="loading loading-spinner loading-sm text-white"></span> : 'Login'}</button>
                     </form>
                     <div className="flex flex-col gap-2 text-center">
                         <p className="text-xs">Don&lsquo;t have an account?<Link to="/register" className="text-primary cursor-pointer"> Join Us</Link></p>
