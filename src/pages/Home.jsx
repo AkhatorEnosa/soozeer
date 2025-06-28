@@ -562,12 +562,12 @@ const Home = () => {
               <textarea name="body" id="body" ref={divRef} className={`text-md z-20 w-full flex flex-col min-h-8 dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 outline-none resize-none`} value={journalText} placeholder="Body" onChange={(e) => setJournalText(e.target.value)}></textarea>
               
               <div className={`w-full flex justify-between transition-all duration-150 mt-4`}>
-                <select className="bg-primary/5 border-[1px] border-black/20 dark:border-[#CBC9C9]/20 w-full max-w-fit rounded-full text-xs font-semibold px-2 py-0 outline-none" onChange={(e) => setPrivacy(e.target.value)} defaultValue={"Change Privacy?"}>
+                <select className="bg-accent/5 border-[1px] border-black/20 dark:border-[#CBC9C9]/20 w-full max-w-fit rounded-full text-xs font-semibold px-2 py-0 outline-none" onChange={(e) => setPrivacy(e.target.value)} defaultValue={"Change Privacy?"}>
                   <option disabled>Change Privacy?</option>
                   <option>For me</option>
                   <option>Everyone</option>
                 </select>
-                <button className={title !== '' && journalText.trim() !== '' && !isAddingPost && privacy !== null ? "px-6 py-2 bg-primary font-semibold text-white rounded-full scale-100" : "px-6 py-2 bg-primary/30 font-semibold text-white rounded-full transition-all duration-150 cursor-not-allowed"} onClick={handleSubmitJournal} disabled={isAddingPost && "disabled"}>{isAddingPost ?  'Posting...' : 'Post'}</button>
+                <button className={title !== '' && journalText.trim() !== '' && !isAddingPost && privacy !== null ? "px-6 py-2 bg-accent font-semibold text-white rounded-full scale-100" : "px-6 py-2 bg-accent/30 font-semibold text-white rounded-full transition-all duration-150 cursor-not-allowed"} onClick={handleSubmitJournal} disabled={isAddingPost && "disabled"}>{isAddingPost ?  'Posting...' : 'Post'}</button>
               </div>
             </div>
           </div>
@@ -650,9 +650,9 @@ const Home = () => {
           <div className={loggedUser?.u_id !== null ? "w-full flex flex-col col-span-4 border-r-[1px] border-l-[1px] mt-5 border-black/5 dark:border-[#CBC9C9]/20" : "w-full flex flex-col col-span-4 border-r-[1px] border-l-[1px] border-black/5 dark:border-[#CBC9C9]/20 justify-center items-center"}>
 
             {loggedUser?.u_id && <ul className="sticky top-0 flex justify-evenly text-center dark:text-[#CBC9C9] w-full bg-base-100/90 dark:bg-black/90 backdrop-blur-md overflow-scroll no-scrollbar text-sm md:text-base font-medium z-40">
-              <li className={tab === 'forYou' ? "w-full bg-primary/5 py-3 px-10 font-bold cursor-pointer" : "w-full hover:bg-primary/5 py-3 px-10 cursor-pointer"} onClick={() => setTab('forYou')}>For you</li>
-              <li className={tab === 'following' ? "w-full bg-primary/5 py-3 px-10 font-bold cursor-pointer" : "w-full hover:bg-primary/5 py-3 px-10 cursor-pointer"} onClick={() => setTab('following')}>Following</li>
-              <li className={tab === 'journal' ? "w-full bg-primary/5 py-3 px-10 font-bold cursor-pointer" : "w-full hover:bg-primary/5 py-3 px-10 cursor-pointer"} onClick={() => setTab('journal')}>Journal</li>
+              <li className={`w-full ${tab === 'forYou' && "bg-primary/5 font-bold border-b-2 border-primary"} py-3 px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('forYou')}>For you</li>
+              <li className={`w-full ${tab === 'following' && "bg-primary/5 font-bold border-b-[1px] border-primary"} py-3 px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('following')}>Following</li>
+              <li className={`w-full ${tab === 'journal' && "bg-accent/5 font-bold border-b-[1px] border-accent"} py-3 px-10 hover:bg-accent/5 cursor-pointer`} onClick={() => setTab('journal')}>Journal</li>
             </ul>}
 
 
@@ -670,7 +670,7 @@ const Home = () => {
                 </div> : 
                 <div className="relative w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
                   {loggedUser && <div className="w-full flex justify-end lg:justify-start items-center px-4 my-5 text-sm dark:text-[#cbc9c9] fixed bottom-20 left-0 lg:sticky lg:top-12 py-2 lg:bg-base-100/90 dark:lg:dark:bg-black/90 lg:backdrop-blur-sm z-[110]"> 
-                    <button className="w-fit flex gap-2 justify-center items-center border-[1px] border-black bg-base-100 dark:bg-black dark:border-[#CBC9C9] hover:bg-primary/5 hover:border-primary  px-4 py-2 rounded-full shadow-md lg:shadow-none" onClick={()=> setShowPostInModal(!showPostInModal)}><i className="bi bi-pencil"></i>{tab == 'journal' ? "Write Journal" : "Write Post"}</button>
+                    <button className={`w-fit flex gap-2 justify-center items-center border-[1px] border-black bg-base-100 dark:bg-black dark:border-[#CBC9C9] font-semibold ${tab == 'journal' ? "hover:bg-accent/5 hover:border-accent hover:text-accent dark-hover:text-inherit" : "hover:bg-primary/5 hover:border-primary hover:text-primary "}  px-4 py-2 rounded-full shadow-md lg:shadow-none`} onClick={()=> setShowPostInModal(!showPostInModal)}><i className="bi bi-pencil"></i>{tab == 'journal' ? "Write Journal" : "Write Post"}</button>
                   </div>}
                   {content}
                   <p className="py-8 flex justify-center text-primary">.</p>

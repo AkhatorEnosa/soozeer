@@ -76,13 +76,6 @@ const App = () => {
               <Messages />
             </Suspense>
           }/>
-
-          {/* <Route path="/:id/:id" element={<Profile />}/> */}
-          {/* <Route path="/:id" element={<Profile />}/>
-          <Route path="/post/:id" element={<Post />}/>
-          <Route path="/notifications" element={<Notifications />}/>
-          <Route path="/search/:id" element={<Search />}/>
-          <Route path="/404" element={<NotFound />}/> */}
         </Routes>
         <ToastContainer />
       </Router>

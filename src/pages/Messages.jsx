@@ -188,7 +188,7 @@ const Messages = () => {
               {/* <div className="hidden w-full lg:flex px-3 bg-base-100/50 backdrop-blur-sm sticky top-0 z-[100]">
                 <BackBtn link={() => navigate(-1)} title={'Back'}/>
               </div> */}
-                <h1 className="text-xl font-bold px-3 py-5 border-b-[1px] border-black/5 dark:border-slate-500/20 dark:text-[#CBC9C9] bg-base-100/50 dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">Messages</h1>
+                <h1 className="text-xl font-bold px-3 py-5 border-b-[1px] border-black/5 dark:border-slate-500/20 dark:text-[#CBC9C9] bg-base-100/50 dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[30px]">Messages</h1>
                 <div className="divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
                   {content}
                 </div>

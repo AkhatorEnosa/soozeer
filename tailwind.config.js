@@ -31,30 +31,30 @@ export default {
     themes: [
       {
         light: {
-          ...require("daisyui/src/theming/themes")["corporate"],
+          // ...require("daisyui/src/theming/themes")["corporate"],
           primary: "#007AFF",
           secondary: "#F91880",
-          accent: "#F0F2F5",
-          neutral: "#E4E6EB",
+          neutral: "#000000",
           "base-100": "#FFFFFF",
           success: "#28C76F",
           warning: "#FF9F43",
           error: "#EA5455",
           info: "#00CFE8",
+          accent: "#d4af37"
         },
       },
       {
         dark: {
-          ...require("daisyui/src/theming/themes")["forest"],
+          // ...require("daisyui/src/theming/themes")["forest"],
           primary: "#007AFF",
           secondary: "#F91880",
-          accent: "#606770",
           neutral: "#1A1A1A",
           "base-100": "#121212",
           success: "#28C76F",
           warning: "#FF9F43",
           error: "#EA5455",
           info: "#00CFE8",
+          accent: "#d4af37"
         },
       },
     ],

@@ -5,6 +5,8 @@ import { Link, useNavigate } from "react-router-dom"
 import { addMessage } from "../features/messageSlice"
 import MessageBubble from "./MessageBubble";
 import BackBtn from "./BackBtn";
+import bgLight from '../assets/message-bg-light.webp'
+import bgDark from '../assets/message-bg-dark.webp'
 // import supabase from "../config/supabaseClient.config";
 
 /* eslint-disable react/prop-types */
@@ -112,7 +114,10 @@ const Conversation = ({messageId, messages, userId, users, name, img}) => {
                                 <img src={findMessage.sender_img} className="w-8 h-8 object-cover object-center rounded-full cursor-default"/>
                                 <b className="md:text-md">{findMessage.sender_name}</b>
                             </Link> 
-                            <div className="message flex flex-col gap-4 w-full md:max-h-[50vh] px-3 lg:px-3 overflow-scroll" ref={messagesRef}>
+                            <div className="message relative flex flex-col gap-4 w-full md:max-h-[50vh] px-3 lg:px-3 overflow-scroll" ref={messagesRef}>
+
+                                <img src={bgLight} className="dark:hidden flex absolute top-0 opacity-10" alt="" />
+                                <img src={bgDark} className="dark:flex absolute hidden top-0 opacity-20" alt="" />
                                 {getConversationMessages(findMessage).map(message => (
                                         <MessageBubble 
                                             key={message.id}

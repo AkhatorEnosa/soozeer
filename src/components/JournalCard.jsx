@@ -50,7 +50,7 @@ const JournalCard = ({privacy, postUserIdVal, postUserId, title, journal, uImg, 
                     <h1 className="text-xl lg:text-lg font-semibold">{title}</h1>
                     <div className="w-fit flex gap-2 items-center">
                       <i className="text-[10px] not-italic text-neutral-400">{moment(datetime).format("Do MMM, YYYY hh:mm a") + ' . ' + moment(datetime).fromNow()}</i>
-                      <span className="flex gap-1 justify-center items-center text-[8px] px-2 border-[1px] border-[#d4af37] text-[#d4af37] bg-[#d4af37]/10 font-semibold rounded-full"><i className="bi bi-person-fill-lock"></i>{privacy}</span>
+                      <span className="flex gap-1 justify-center items-center text-[8px] px-2 border-[1px] border-accent text-accent bg-accent/10 font-semibold rounded-full"><i className="bi bi-person-fill-lock"></i>{privacy}</span>
                     </div>
                 </div>
 
@@ -62,7 +62,7 @@ const JournalCard = ({privacy, postUserIdVal, postUserId, title, journal, uImg, 
             <blockquote className="text-sm text-justify break-words whitespace-pre-wrap">{expandPost === false && journal?.length > 500 ? <>{validateSize(journal)} <a className="relative z-20 text-xs text-primary cursor-pointer" onClick={togglePost}>See more</a></> : expandPost === true && journal.length > 100 ? <><Linkify options={{ render: renderLink }}>{journal}</Linkify> <a className="relative z-20 text-xs text-primary cursor-pointer" onClick={togglePost}>See Less</a></>: <Linkify options={{ render: renderLink }}>{journal}</Linkify>}</blockquote>
 
             <div className="w-full flex justify-between items-center text-sm font-medium mt-2">
-                <div className={`w-fit p-2 rounded-full flex px-2 py-0 ${liked ? "bg-[#FFD700]/10 text-[#d4af37]" : "bg-neutral-100 dark:bg-neutral-500/30"} hover:text-[#d4af37] hover:bg-[#d4af37]/10 cursor-pointer`} title="Star this journal" onClick={likePost} disabled={liking}>
+                <div className={`w-fit p-2 rounded-full flex px-2 py-0 ${liked ? "bg-[#FFD700]/10 text-accent" : "bg-neutral-100 dark:bg-neutral-500/30"} hover:text-accent hover:bg-accent/10 cursor-pointer`} title="Star this journal" onClick={likePost} disabled={liking}>
                     <span className="flex justify-center items-center text-sm gap-1 font-light rounded-full transition-all duration-150"><i className={`${liked ? "bi bi-star-fill" : "bi bi-star"}`}></i>{likes}</span>
                 </div>
                 <Link to={`/${postUserIdVal}`} className="w-fit flex items-center justify-end gap-2 px-3 py-2 rounded-full font-semibold hover:bg-primary/5 text-inherit dark:text-[#cbc9c9] hover:underline">
