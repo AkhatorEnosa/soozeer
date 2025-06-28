@@ -1,0 +1,155 @@
+import { Link} from "react-router-dom"
+import { useEffect, useState } from "react"
+import logo1 from '../assets/logo-grayscale.png'
+import logo2 from '../assets/logo-grayscale-white.png'
+import { useDispatch, useSelector } from "react-redux"
+import { logOut} from "../features/appSlice"
+import useGetUser from "../hooks/useGetUser"
+import ThemeToggleButton from "./ThemeToggleButton"
+
+const Navbar = () => {
+  const [showSubMenu, setShowSubMenu] = useState(false)
+  const [triggerLogout, setTriggerLogout] = useState(false)
+  const {loggedUser, isLoading, exiting} = useSelector((state) => state.app)
+  const [theme, setTheme] = useState(localStorage.getItem("theme") === "dark" ? localStorage.getItem("theme") : "light")
+  const [systemThemeIsDark, setSystemThemeIsDark] = useState(false)
+  const body = document.body
+
+  const dispatch = useDispatch()
+  useGetUser();
+
+  // handle theme
+  const htmlClassList = document.querySelector('html').classList
+  const checkForDark = window.matchMedia(`(prefers-color-scheme: dark)`)
+
+  useEffect(() => {
+    if(('theme' in localStorage)) {
+      setTheme(theme)
+      htmlClassList.add(theme)
+    }
+    setSystemThemeIsDark(checkForDark.matches)
+
+    if(systemThemeIsDark == true) {
+      setTheme("dark")
+      localStorage.setItem("theme", "dark")
+      htmlClassList.add("dark")
+
+      if(htmlClassList.contains("light")) {
+          htmlClassList.remove("light")
+      }
+    }
+
+    checkForDark.addEventListener('change', ({ matches }) => {
+      if(matches == true){
+        setTheme("dark")
+        localStorage.setItem("theme", "dark")
+        htmlClassList.add("dark")
+
+        if(htmlClassList.contains("light")) {
+            htmlClassList.remove("light")
+        }
+      }
+    })
+    
+  }, [theme, htmlClassList, systemThemeIsDark, checkForDark])
+
+  const handleThemeToggle = () => {
+    if(systemThemeIsDark == false) {
+      if(theme == "light") {
+        localStorage.setItem("theme", "dark")
+        setTheme("dark")
+        htmlClassList.add("dark")
+        if(htmlClassList.contains("light")) {
+          htmlClassList.remove("light")
+        }
+      } else {
+        localStorage.setItem("theme", "light")
+        setTheme("light")
+        htmlClassList.add("light")
+        if(htmlClassList.contains("dark")) {
+          htmlClassList.remove("dark")
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    if(triggerLogout || showSubMenu) {
+      body.style.height = '100vh'
+      body.style.overflowY = 'hidden'
+    } else {
+      body.style.height = '100vh'
+      body.style.overflowY = 'scroll'
+    }
+  }, [triggerLogout, showSubMenu])
+
+    // useEffect(() => {
+    //       dispatch(getUser())
+    //  }, [])
+
+  const handleLogout = () => {
+    dispatch(logOut())
+    setTriggerLogout(false)
+    setShowSubMenu(false)
+  }
+
+  const cancel = () => {
+   setTriggerLogout(false)
+   setShowSubMenu(false)
+  }
+
+  // if(loggedUser) {
+    return (
+      <header className='lg:hidden relative top-0 w-full flex justify-between items-center dark:bg-black px-5 md:px-20 py-2 md:py-3 backdrop-blur-lg z-[120]'>
+          <div className="flex h-full justify-center items-center">
+            <Link to='/' className="lg:py-5 cursor-pointer"> <img src={logo1} alt="logo" className="dark:hidden w-32 md:w-36 lg:w-44"/>  </Link>
+            <Link to='/' className="lg:py-5 cursor-pointer"> <img src={logo2} alt="logo" className="hidden dark:flex w-32 md:w-36 lg:w-44"/> </Link>
+          </div>
+
+          <div className="flex gap-2 md:gap-5">
+            <ul className={`flex gap-5 justify-center items-center text-sm font-medium ${!loggedUser?.u_id ? "lg:hidden" : ""}`}>
+
+              {isLoading && loggedUser == null ? <span className="loading loading-spinner loading-sm text-primary"></span> : !isLoading && loggedUser == null ? <>
+                    <Link to={'/login'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral dark:border-neutral-100 dark:text-white  hover:bg-black hover:text-base-100 dark:hover:bg-white">Login</li></Link>
+                    <Link to={'/register'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral dark:border-neutral-100 dark:text-white  hover:bg-black hover:text-base-100 dark:hover:bg-white">Register</li></Link>
+                </> :
+                <div className="relative flex flex-col gap-5 justify-center items-center text-neutral dark:text-slate-200">
+                  <div className="w-full flex gap-2 items-center md:px-2 md:py-1 rounded-full bg-primary/5 border-[1px] dark:border-neutral-700 cursor-pointer z-50" onClick={()=> setShowSubMenu(!showSubMenu)}>
+                      <img src={loggedUser.u_img} alt="profile_pic" className="w-8 h-8 border-[1px] border-black/30 rounded-full"/>
+                      <li className="hidden md:flex tracking-tight">{loggedUser.name}</li>
+                  </div>
+                  
+                  {showSubMenu && <div className="fixed left-0 top-0 w-screen h-screen cursor-default" onClick={()=> setShowSubMenu(false)}></div>}
+                  <div className={showSubMenu ? "absolute opacity-100 w-fit flex flex-col gap-2 top-11 right-0 transition-all duration-200 cursor-pointer" : "absolute w-fit flex flex-col gap-2 items-center opacity-0 -top-64 right-0 transition-all duration-200"}>
+
+                    <ThemeToggleButton handleThemeToggle={handleThemeToggle} theme={theme} systemTheme={systemThemeIsDark}/>
+                    <p className="w-full flex gap-2 items-center justify-center bg-base-100 dark:bg-black rounded-full border-[1px] border-neutral-100 shadow-sm dark:shadow-primary/40 text-xs font-semibold dark:border-primary/40 bg-primary/5 px-4 py-2" onClick={() => setTriggerLogout(true)}>Logout</p>
+                  </div>
+              </div>}
+            </ul>
+          </div>
+        {
+            triggerLogout && loggedUser?.u_id && 
+            <div className="fixed w-screen h-screen flex justify-center px-10 bg-base-100/90 items-center top-0 left-0 cursor-default z-[1000]">
+              <div className="w-[85%] md:w-[50%] bg-base-100 p-5 rounded-[1rem] flex flex-col gap-2 border-[1px] border-black/10 dark:border-[#CBC9C9]/20 shadow-md dark:shadow-[#cbc9c9]/20">
+                  <h1 className="text-2xl lg:text-3xl font-semibold">Logout?</h1>
+                  <p>Accepting will log you out of your account. Do you want to proceed?</p>
+                  {
+                      !exiting ? 
+                          <div className="w-full flex gap-2 mt-10 font-bold justify-end">
+                              <button className="w-fit px-4 py-2 rounded-full bg-error text-white lg:hover:shadow-md" onClick={handleLogout}>Confirm</button>
+                              <button className="w-fit px-4 py-2 rounded-full bg-black text-white dark:bg-white dark:text-black lg:hover:shadow-md" onClick={cancel}>Cancel</button>
+                          </div> : 
+                        <div className="w-full flex gap-2 mt-10 font-bold justify-center items-center">
+                            <span className="loading loading-spinner"></span>
+                        </div> 
+                  }
+              </div>
+            </div>
+        }
+      </header>
+    )
+  // }
+}
+
+export default Navbar
