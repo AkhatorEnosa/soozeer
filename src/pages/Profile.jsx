@@ -941,11 +941,12 @@ const Profile = () => {
                                   <h3 className="text-[10px] md:text-xs text-neutral-400">@{currentProfile?.u_name}</h3>
                                   <p className={currentProfile?.bio === null || currentProfile?.bio === '' ? "hidden" : "w-full text-xs md:text-sm text-left mt-1"}>{bioVal === '' ? currentProfile?.bio : bioVal}</p>
                                 </div>
-                                {currentProfile?.u_id == loggedUser?.u_id || currentProfile?.dob !== null && currentProfile?.dob_privacy == false  ? <div className="w-full flex items-center text-inherit dark:text-[#cbc9c9] gap-2 text-neutral-500">
+                                {currentProfile?.u_id == loggedUser?.u_id || currentProfile?.dob !== null && currentProfile?.dob_privacy == false  ? <div className="w-full flex items-center text-inherit dark:text-[#cbc9c9] gap-2 text-neutral-500 font-semibold">
                                   {currentProfile?.dob !== null && <><span className="w-fit flex gap-2 text-xs items-center"><i className="bi bi-cake2-fill"></i>Birthday on {moment(currentProfile?.dob).format("MMMM Do, YYYY")}</span>
                                   {currentProfile?.u_id == loggedUser?.u_id && <span className="flex gap-1 justify-center items-center text-[8px] px-2 border-[1px] border-info text-info bg-info/10 font-semibold rounded-full"><i className="bi bi-person-fill-lock"></i>{currentProfile?.dob_privacy == true ? "For Me" : "Everyone"}</span>}</>}
                                 </div> : "" 
                                 }
+                                <p className="w-full flex items-center text-xs dark:text-[#cbc9c9] gap-2 text-neutral-500 font-semibold"><i className="bi bi-calendar3"></i>Joined {moment(currentProfile?.created_at).format('MMMM YYYY')}</p>
                               </div>
 
 

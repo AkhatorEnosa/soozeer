@@ -185,7 +185,7 @@ const SideBar = ({uid, page, paramsId, toggleSearchBar}) => {
                       <span className="flex relative"><i className="bi bi-bell"></i> {notificationCount} </span>
                       Notifications</p>}
               </Link>
-              <p className={page === 'search' ?  "w-full flex font-semibold text-black dark:text-[#CBC9C9] border-r-[1px] bg-primary/5 rounded-full gap-4 px-10 py-5 cursor-pointer" : "w-full hover:bg-primary/5 dark:hover:bg-primary/15 flex gap-4 px-10 py-5 cursor-pointer text-black dark:text-[#CBC9C9] rounded-full"} onClick={toggleSearchBar}><i className={page === 'search' ? "bi bi-binoculars-fill" : "bi bi-binoculars"}></i> Search</p>
+              <p className={page === 'search' ?  "text-primary flex font-semibold dark:text-white bg-primary/5 rounded-full gap-4 px-10 py-5 cursor-pointer not-italic" : "hover:bg-primary/5 dark:hover:bg-primary/15 flex gap-4 px-10 py-5 cursor-pointer not-italic dark:text-[#CBC9C9] rounded-full"} onClick={toggleSearchBar}><i className={page === 'search' ? "bi bi-binoculars-fill" : "bi bi-binoculars"}></i> Search</p>
             </div>
 
             <div className="relative flex flex-col px-6 py-4 gap-5 justify-center text-base text-black dark:text-[#CBC9C9] rounded-full hover:bg-primary/5 cursor-pointer z-50" onClick={()=> setShowSubMenu(!showSubMenu)}>
