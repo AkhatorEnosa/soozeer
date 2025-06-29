@@ -103,49 +103,47 @@ const Conversation = ({messageId, messages, userId, users, name, img}) => {
             // console.log(messageId)
             getConversationMessages(findMessage)
             return (
-                    <div className="absolute top-0 left-0 w-full h-screen md:relative lg:flex flex-col md:h-fit col-span-3 lg:border-[1px] border-black/5 dark:border-neutral-300/10 lg:px-1 py-4  rounded-t-lg rounded-b-3xl pb-24 md:pb-2 bg-base-100 dark:bg-black dark:text-[#CBC9C9]">
-                        <div className="flex flex-col gap-2 h-full justify-between lg:pt-5">
-                            <div className="flex flex-col w-full h-full gap-4">
-                                <div className="w-full flex flex-col px-4 bg-base-100 dark:bg-black lg:px-0 lg:justify-between items-center z-30">
-                                    {/* back button */}
-                                    <div className="w-full flex bg-base-100 dark:bg-black px-4 md:hidden">
-                                        <BackBtn link={() => navigate('../messages/conversations')} title={'Back'}/>
-                                    </div>
-                                    <Link to={`/${findMessage.sender_id}`} className="px-3 md:px-5 w-full flex md:flex-col items-center justify-center gap-2 text-neutral dark:text-[#CBC9C9]">
-                                        <img src={findMessage.sender_img} className="w-8 h-8 object-cover object-center rounded-full cursor-default"/>
-                                        <b className="md:text-md">{findMessage.sender_name}</b>
-                                    </Link> 
-                                </div>
-                                <div className="message relative h-full flex flex-col gap-4 md:max-h-[50vh] px-3 lg:px-3 overflow-scroll" ref={messagesRef}>
-                                    <div className="w-full h-full absolute overflow-clip">
-                                        <img src={bgLight} className="dark:hidden flex absolute top-0 opacity-10" alt="" />
-                                        <img src={bgDark} className="dark:flex absolute hidden top-0 opacity-20" alt="" />
-                                    </div>
-
-                                    {getConversationMessages(findMessage).map(message => (
-                                            <MessageBubble 
-                                                key={message.id}
-                                                senderId={message.sender_id}
-                                                receiverId={message.receiver_id}
-                                                userId={userId}
-                                                message={message.message}
-                                                createdAt={message.created_at}
-                                                singleMessageId={message.id}
-                                                deleting={isDeleting}
-                                            />
-                                        ))}
-                                </div>
+                <div className="absolute top-0 left-0 w-full h-screen md:relative flex flex-col md:h-fit col-span-3 lg:border-[1px] border-black/5 dark:border-neutral-300/10 lg:px-1 py-4 rounded-t-lg rounded-b-3xl pb-24 md:pb-2 bg-base-100 dark:bg-black dark:text-[#CBC9C9] gap-2 justify-between lg:pt-5">
+                    <div className="flex flex-col w-full h-full gap-4">
+                        <div className="w-full flex flex-col px-4 bg-base-100 dark:bg-black lg:px-0 lg:justify-between items-center z-30">
+                            {/* back button */}
+                            <div className="w-full flex bg-base-100 dark:bg-black px-4 md:hidden">
+                                <BackBtn link={() => navigate('../messages/conversations')} title={'Back'}/>
+                            </div>
+                            <Link to={`/${findMessage.sender_id}`} className="px-3 md:px-5 w-full flex md:flex-col items-center justify-center gap-2 text-neutral dark:text-[#CBC9C9]">
+                                <img src={findMessage.sender_img} className="w-8 h-8 object-cover object-center rounded-full cursor-default"/>
+                                <b className="md:text-md">{findMessage.sender_name}</b>
+                            </Link> 
+                        </div>
+                        <div className="message relative h-full flex flex-col gap-4 md:max-h-[50vh] px-3 lg:px-3 overflow-scroll" ref={messagesRef}>
+                            <div className="w-full h-full absolute overflow-clip">
+                                <img src={bgLight} className="dark:hidden flex absolute top-0 opacity-10" alt="" />
+                                <img src={bgDark} className="dark:flex absolute hidden top-0 opacity-20" alt="" />
                             </div>
 
-                             <div className="relative bottom-0 h-fit w-full lg:px-0 ">
-                                 <div className="w-full flex justify-center items-center gap-2 px-4 py-2 md:px-4 md:py-0 mt-auto overflow-clip">
-                                     <textarea name="body" id="body" ref={divRef} className={`text-md z-20 w-full flex flex-col min-h-8 dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 outline-none resize-none`} value={messageValue} placeholder="Type your message here" onChange={(e) => setMessageValue(e.target.value).trim()} readOnly={isAddingMessage && true}></textarea>
- 
-                                     <div className={`w-fit flex justify-center items-center`}>
-                                         <button className={messageValue.trim() !== '' ? "btn p-0 bg-base-100 dark:bg-black border-none text-primary font-semibold hover:bg-inherit transition-all duration-150 disabled:bg-transparent" : "btn p-0 bg-base-100 dark:bg-black border-none text-primary/50 font-semibold hover:bg-inherit text-neutral-400] transition-all duration-150 cursor-not-allowed disabled:bg-transparent"} onClick={handleSubmit} disabled={isAddingMessage && "disabled"}>{isAddingMessage ?  <span className="loading loading-spinner loading-sm text-neutral-400"></span> : <i className={messageValue.trim() !== '' ? "bi bi-send-fill rotate-45 transition-all duration-150" : "bi bi-send-fill rotate-0 transition-all duration-150"}></i>}</button>
-                                     </div>
-                                 </div> 
-                             </div>
+                            {getConversationMessages(findMessage).map(message => (
+                                    <MessageBubble 
+                                        key={message.id}
+                                        senderId={message.sender_id}
+                                        receiverId={message.receiver_id}
+                                        userId={userId}
+                                        message={message.message}
+                                        createdAt={message.created_at}
+                                        singleMessageId={message.id}
+                                        deleting={isDeleting}
+                                    />
+                                ))}
+                        </div>
+                    </div>
+
+                    <div className="relative bottom-0 h-fit w-full lg:px-0 ">
+                        <div className="w-full flex justify-center items-center gap-2 px-4 py-2 md:px-4 md:py-0 mt-auto overflow-clip">
+                            <textarea name="body" id="body" ref={divRef} className={`text-md z-20 w-full flex flex-col min-h-8 dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 outline-none resize-none`} value={messageValue} placeholder="Type your message here" onChange={(e) => setMessageValue(e.target.value)?.trim()} readOnly={isAddingMessage && true}></textarea>
+
+                            <div className={`w-fit flex justify-center items-center`}>
+                                <button className={messageValue.trim() !== '' ? "btn p-0 bg-base-100 dark:bg-black border-none text-primary font-semibold hover:bg-inherit transition-all duration-150 disabled:bg-transparent" : "btn p-0 bg-base-100 dark:bg-black border-none text-primary/50 font-semibold hover:bg-inherit text-neutral-400] transition-all duration-150 cursor-not-allowed disabled:bg-transparent"} onClick={handleSubmit} disabled={isAddingMessage && "disabled"}>{isAddingMessage ?  <span className="loading loading-spinner loading-sm text-neutral-400"></span> : <i className={messageValue.trim() !== '' ? "bi bi-send-fill rotate-45 transition-all duration-150" : "bi bi-send-fill rotate-0 transition-all duration-150"}></i>}</button>
+                            </div>
+                        </div> 
                     </div>
                 </div>
             )
@@ -165,24 +163,23 @@ const Conversation = ({messageId, messages, userId, users, name, img}) => {
                     }
                 }
                 return (
-                    <div className="absolute top-0 left-0 w-full h-screen md:relative lg:flex flex-col md:h-fit col-span-3 lg:border-[1px] border-black/5 dark:border-neutral-300/10 lg:px-1 py-4  rounded-t-lg rounded-b-3xl pb-24 md:pb-2 bg-base-100 dark:bg-black dark:text-[#CBC9C9]">
-                        <div className="flex flex-col gap-2 h-full lg:pt-5">
-
-                            {/* back button */}
-                            <div className="w-full flex px-4 lg:hidden">
-                                <button onClick={() => navigate('../messages/conversations')} className="w-fit flex gap-2 justify-center items-center hover:text-primary duration-200 transition-colors text-xs md:text-sm cursor-pointer">
-                                    <i className="bi bi-arrow-left-circle-fill"></i>
-                                    Go back
-                                </button>
+                    <div className="absolute top-0 left-0 w-full h-screen md:relative flex flex-col md:h-fit col-span-3 lg:border-[1px] border-black/5 dark:border-neutral-300/10 lg:px-1 py-4 rounded-t-lg rounded-b-3xl pb-24 md:pb-2 bg-base-100 dark:bg-black dark:text-[#CBC9C9] gap-2 justify-between lg:pt-5">
+                        <div className="flex flex-col w-full h-full gap-4">
+                            <div className="w-full flex flex-col px-4 bg-base-100 dark:bg-black lg:px-0 lg:justify-between items-center z-30">
+                                {/* back button */}
+                                <div className="w-full flex bg-base-100 dark:bg-black px-4 md:hidden">
+                                    <BackBtn link={() => navigate('../messages/conversations')} title={'Back'}/>
+                                </div>
+                                <Link to={`/${matchUserWithCurrentParam.u_id}`} className="px-3 md:px-5 w-full flex md:flex-col items-center justify-center gap-2 text-neutral dark:text-[#CBC9C9]">
+                                    <img src={matchUserWithCurrentParam.u_img} className="w-8 h-8 object-cover object-center rounded-full cursor-default"/>
+                                    <b className="md:text-md">{matchUserWithCurrentParam.name}</b>
+                                </Link> 
                             </div>
-                            <Link to={`/${matchUserWithCurrentParam.u_id}`} className="px-3 md:px-5 w-full flex md:flex-col items-center justify-center gap-2 text-neutral dark:text-[#CBC9C9]">
-                                <img src={matchUserWithCurrentParam.u_img} className="w-10 h-10 object-cover object-center rounded-full cursor-default"/>
-                                <b className="md:text-xl">{matchUserWithCurrentParam.name}</b>
-                            </Link>  
-                            <div className="message flex flex-col gap-4 w-full md:max-h-[50vh] px-3 lg:px-3 overflow-scroll" ref={messagesRef}>
-
-                                <img src={bgLight} className="dark:hidden flex absolute top-0 opacity-10" alt="" />
-                                <img src={bgDark} className="dark:flex absolute hidden top-0 opacity-20" alt="" />
+                            <div className="message relative h-full flex flex-col gap-4 md:max-h-[50vh] px-3 lg:px-3 overflow-scroll" ref={messagesRef}>
+                                <div className="w-full h-full absolute overflow-clip">
+                                    <img src={bgLight} className="dark:hidden flex absolute top-0 opacity-10" alt="" />
+                                    <img src={bgDark} className="dark:flex absolute hidden top-0 opacity-20" alt="" />
+                                </div>
                                 {getConversationMessages()?.map(message => (
                                     <MessageBubble 
                                         key={message.id}
@@ -196,16 +193,16 @@ const Conversation = ({messageId, messages, userId, users, name, img}) => {
                                     />
                                 ))}
                             </div>
+                        </div>
 
-                            <div className="relative lg:bottom-0 w-full lg:px-0 ">
-                                <div className="w-full flex justify-center items-center gap-2 px-4 py-2 md:px-4 md:py-0 mt-auto overflow-clip">
-                                    <textarea name="body" id="body" ref={divRef} className={`text-md z-20 w-full flex flex-col min-h-8 dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 outline-none resize-none`} value={messageValue} placeholder="Type your message here" onChange={(e) => setMessageValue(e.target.value)} readOnly={isAddingMessage && true}></textarea>
+                        <div className="relative bottom-0 h-fit w-full lg:px-0 ">
+                            <div className="w-full flex justify-center items-center gap-2 px-4 py-2 md:px-4 md:py-0 mt-auto overflow-clip">
+                                <textarea name="body" id="body" ref={divRef} className={`text-md z-20 w-full flex flex-col min-h-8 dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 outline-none resize-none`} value={messageValue} placeholder="Type your message here" onChange={(e) => setMessageValue(e.target.value)?.trim()} readOnly={isAddingMessage && true}></textarea>
 
-                                    <div className={`w-fit flex justify-center items-center`}>
-                                        <button className={messageValue.trim() !== '' ? "btn p-0 bg-base-100 dark:bg-black border-none text-primary font-semibold hover:bg-inherit transition-all duration-150 disabled:bg-transparent" : "btn p-0 bg-base-100 dark:bg-black border-none text-primary/50 font-semibold hover:bg-inherit text-neutral-400] transition-all duration-150 cursor-not-allowed disabled:bg-transparent"} onClick={handleSubmit} disabled={isAddingMessage && "disabled"}>{isAddingMessage ?  <span className="loading loading-spinner loading-sm text-neutral-400"></span> : <i className={messageValue.trim() !== '' ? "bi bi-send-fill rotate-45 transition-all duration-150" : "bi bi-send-fill rotate-0 transition-all duration-150"}></i>}</button>
-                                    </div>
-                                </div> 
-                            </div>
+                                <div className={`w-fit flex justify-center items-center`}>
+                                    <button className={messageValue.trim() !== '' ? "btn p-0 bg-base-100 dark:bg-black border-none text-primary font-semibold hover:bg-inherit transition-all duration-150 disabled:bg-transparent" : "btn p-0 bg-base-100 dark:bg-black border-none text-primary/50 font-semibold hover:bg-inherit text-neutral-400] transition-all duration-150 cursor-not-allowed disabled:bg-transparent"} onClick={handleSubmit} disabled={isAddingMessage && "disabled"}>{isAddingMessage ?  <span className="loading loading-spinner loading-sm text-neutral-400"></span> : <i className={messageValue.trim() !== '' ? "bi bi-send-fill rotate-45 transition-all duration-150" : "bi bi-send-fill rotate-0 transition-all duration-150"}></i>}</button>
+                                </div>
+                            </div> 
                         </div>
                     </div>
                 )
