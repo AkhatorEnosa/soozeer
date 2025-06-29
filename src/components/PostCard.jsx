@@ -1,6 +1,6 @@
 import Linkify from "linkify-react";
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 /* eslint-disable react/prop-types */
@@ -15,7 +15,7 @@ const PostCard = ({userId, postId, liking, bookmarking, deleting, postUserId, po
 
   
   const body = document.body
-  useEffect(() => {
+  useMemo(() => {
     if(showDelete) {
       body.style.height = '100vh'
       body.style.overflowY = 'hidden'

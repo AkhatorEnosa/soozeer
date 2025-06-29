@@ -445,10 +445,11 @@ const Home = () => {
         // filter follows
         const filterFollow = follows.filter(follow => follow.follower_id == loggedUser?.u_id)
         const getFollowedId = filterFollow.map(x => x.followed_id) //then map to get followed id 
-        console.log(getFollowedId)
+        // console.log(getFollowedId)
+        // const allPosts = posts.filter((post) => post.type == 'post')
 
         // filter posts based on if post user id is included in getFollowedId result array 
-        const followingPosts = posts.filter((post) => post.u_id == loggedUser?.u_id || getFollowedId.includes(post.u_id) && post.type == 'post')
+        const followingPosts = posts.filter((post) => (post.u_id == loggedUser?.u_id || getFollowedId.includes(post.u_id)) && post.type == 'post')
         if(followingPosts?.length > 0){
           // get all posts 
           content = followingPosts.map(post => (
@@ -658,7 +659,7 @@ const Home = () => {
 
             
             <div className="relative flex flex-col">
-              {isLoading ? <div className="flex flex-col gap-4">
+              {isLoading ? <div className="flex flex-col gap-4 p-4">
                   <div className="skeleton dark:bg-slate-600 h-24 w-full opacity-15"></div>
                   <div className="skeleton dark:bg-slate-600 h-24 w-full opacity-15"></div>
                   <div className="skeleton dark:bg-slate-600 h-24 w-full opacity-15"></div>
