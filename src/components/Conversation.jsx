@@ -117,7 +117,7 @@ const Conversation = ({messageId, messages, userId, users, name, img}) => {
                         </div>
 
                         <div className={`message relative w-full h-full flex flex-col gap-4 md:max-h-[50vh] px-3 lg:px-3 overflow-scroll`} ref={messagesRef}>
-                            <div className="w-full h-full bg-[url('/message-bg-light.webp')] dark:bg-[url('/message-bg-dark.webp')] absolute top-0 left-0 opacity-10 dark:opacity-25 overflow-clip z-10">
+                            <div className="w-full h-full bg-[url('/message-bg-light.webp')] dark:bg-[url('/message-bg-dark.webp')] bg-contain absolute top-0 left-0 opacity-10 dark:opacity-35 overflow-clip z-10">
                             </div>
                             <div className="relative w-full overflow-scroll z-40">
 
@@ -138,7 +138,7 @@ const Conversation = ({messageId, messages, userId, users, name, img}) => {
                             
                         </div>
 
-                        <div className="relative md:bottom-0 h-fit w-full lg:px-0 z-40">
+                        <div className="relative md:bottom-0 h-fit w-full lg:px-0 z-30">
                             <div className="w-full flex justify-center items-center gap-2 px-4 overflow-clip">
                                 <textarea name="body" id="body" ref={divRef} className={`text-md focus:bg-primary/5 w-full flex flex-col dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 px-2 pt-2 rounded-md outline-none resize-none`} value={messageValue} placeholder="Type your message here" onChange={(e) => setMessageValue(e.target.value)?.trim()} readOnly={isAddingMessage && true}></textarea>
                                 <div className="flex flex-col justify-center w-[5%] h-full">
@@ -185,7 +185,7 @@ const Conversation = ({messageId, messages, userId, users, name, img}) => {
                                 </Link> 
                             </div>
                             <div className="message relative h-full flex flex-col gap-4 md:max-h-[50vh] px-3 lg:px-3 overflow-scroll" ref={messagesRef}>
-                                <div className="w-full h-full bg-[url('/message-bg-light.webp')] dark:bg-[url('/message-bg-dark.webp')] absolute top-0 left-0 opacity-10 dark:opacity-25 overflow-clip z-10">
+                                <div className="w-full h-full bg-[url('/message-bg-light.webp')] dark:bg-[url('/message-bg-dark.webp')] bg-contain absolute top-0 left-0 opacity-10 dark:opacity-35 overflow-clip z-10">
                                 </div>
                                 <div className="relative w-full overflow-scroll z-40">
                                     {getConversationMessages()?.map(message => (
@@ -204,7 +204,7 @@ const Conversation = ({messageId, messages, userId, users, name, img}) => {
                             </div>
                         </div>
 
-                        <div className="relative md:bottom-0 h-fit w-full lg:px-0 z-40">
+                        <div className="relative md:bottom-0 h-fit w-full lg:px-0 z-30">
                             <div className="w-full flex justify-center items-center gap-2 px-4 overflow-clip">
                                 <textarea name="body" id="body" ref={divRef} className={`text-md focus:bg-primary/5 w-full flex flex-col dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 px-2 pt-2 rounded-md outline-none resize-none`} value={messageValue} placeholder="Type your message here" onChange={(e) => setMessageValue(e.target.value)?.trim()} readOnly={isAddingMessage && true}></textarea>
                                 <div className="flex flex-col justify-center w-[5%] h-full">
