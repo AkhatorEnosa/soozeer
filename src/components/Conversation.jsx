@@ -117,7 +117,7 @@ const Conversation = ({messageId, messages, userId, users, name, img}) => {
                         </div>
 
                         <div className={`message relative w-full h-full flex flex-col gap-4 md:max-h-[50vh] px-3 lg:px-3 overflow-scroll`} ref={messagesRef}>
-                            <div className="w-full h-full bg-[url('/message-bg-light.webp')] absolute top-0 left-0 opacity-10 overflow-clip z-10">
+                            <div className="w-full h-full bg-[url('/message-bg-light.webp')] dark:bg-[url('/message-bg-dark.webp')] absolute top-0 left-0 opacity-10 dark:opacity-25 overflow-clip z-10">
                             </div>
                             <div className="relative w-full overflow-scroll z-40">
 
@@ -185,23 +185,22 @@ const Conversation = ({messageId, messages, userId, users, name, img}) => {
                                 </Link> 
                             </div>
                             <div className="message relative h-full flex flex-col gap-4 md:max-h-[50vh] px-3 lg:px-3 overflow-scroll" ref={messagesRef}>
-                                <div className="w-full h-full fixed left-0 overflow-clip z-10">
-                                    <img src={bgLight} className="dark:hidden flex absolute top-0 opacity-10" alt="" />
-                                    <img src={bgDark} className="dark:flex absolute hidden top-0 opacity-20" alt="" />
+                                <div className="w-full h-full bg-[url('/message-bg-light.webp')] dark:bg-[url('/message-bg-dark.webp')] absolute top-0 left-0 opacity-10 dark:opacity-25 overflow-clip z-10">
                                 </div>
-
-                                {getConversationMessages()?.map(message => (
-                                    <MessageBubble 
-                                        key={message.id}
-                                        singleMessageId={message.id}
-                                        senderId={message.sender_id}
-                                        receiverId={message.receiver_id}
-                                        userId={userId}
-                                        message={message.message}
-                                        createdAt={message.created_at}
-                                        deleting={isDeleting}
-                                    />
-                                ))}
+                                <div className="relative w-full overflow-scroll z-40">
+                                    {getConversationMessages()?.map(message => (
+                                        <MessageBubble 
+                                            key={message.id}
+                                            singleMessageId={message.id}
+                                            senderId={message.sender_id}
+                                            receiverId={message.receiver_id}
+                                            userId={userId}
+                                            message={message.message}
+                                            createdAt={message.created_at}
+                                            deleting={isDeleting}
+                                        />
+                                    ))}
+                                </div>
                             </div>
                         </div>
 
