@@ -49,7 +49,9 @@ const MessageBubble = ({singleMessageId, userId, senderId, receiverId, createdAt
                 </div></pre>
             </div>
             <div className={`w-full gap-3 flex ${senderId == userId ? "justify-end" : "justify-start"}`}>
-                <p className={`whitespace-nowrap text-neutral-600 dark:text-[#cbc9c9] text-[10px] lg:text-[8px] ${senderId == userId && 'text-right'}`}>{moment(createdAt).fromNow()}</p>
+                <p className={`whitespace-nowrap text-neutral-600 dark:text-[#cbc9c9] text-[10px] lg:text-[8px] ${senderId == userId && 'text-right'}`}>
+                    {moment(createdAt).format("Do MMM, YYYY hh:mm a") + ' . ' + moment(createdAt).fromNow()}
+                </p>
             </div>
         </div>
             {/* {triggerDeleteWarning && senderId == userId && <div className="absolute w-screen h-screen top-0 left-0 z-40"></div>} */}
