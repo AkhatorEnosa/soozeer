@@ -1,7 +1,7 @@
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { useEffect, useRef, useState } from "react"
 import ViewPostCard from "../components/ViewPostCard"
-import Footer from "../components/Footer"
+import Footer from "../sections/Footer"
 import OtherUsersCard from "../components/OtherUsersCard"
 import BackBtn from "../components/BackBtn"
 import { getPost, singlePostDelete, deleteSingleComment} from "../features/singlePostSlice"

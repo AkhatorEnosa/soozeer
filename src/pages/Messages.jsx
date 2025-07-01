@@ -4,7 +4,7 @@ import SideBar from "../components/SideBar"
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { getMessages } from "../features/messageSlice";
-import Footer from "../components/Footer";
+import Footer from "../sections/Footer";
 // import BackBtn from "../components/BackBtn";
 import Conversation from "../components/Conversation";
 import supabase from "../config/supabaseClient.config";

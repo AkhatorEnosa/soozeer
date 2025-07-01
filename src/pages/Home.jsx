@@ -3,7 +3,7 @@
 // import Navbar from "../components/Navbar"
 import { useEffect, useRef, useState } from "react"
 import PostCard from "../components/PostCard"
-import Footer from "../components/Footer"
+import Footer from "../sections/Footer"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import OtherUsersCard from "../components/OtherUsersCard"
 import { useDispatch, useSelector } from "react-redux"

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 // import Navbar from "../components/Navbar"
-import Footer from "../components/Footer"
+import Footer from "../sections/Footer"
 import OtherUsersCard from "../components/OtherUsersCard"
 import PostCard from "../components/PostCard"
 import BackBtn from "../components/BackBtn"

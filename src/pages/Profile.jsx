@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import PostCard from "../components/PostCard";
 import OtherUsersCard from "../components/OtherUsersCard";
-import Footer from "../components/Footer";
+import Footer from "../sections/Footer";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import BackBtn from "../components/BackBtn";
 import useComments from "../hooks/useComments";

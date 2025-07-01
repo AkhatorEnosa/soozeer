@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate} from "react-router-dom"
-import Footer from "../components/Footer"
+import Footer from "../sections/Footer"
 import OtherUsersCard from "../components/OtherUsersCard"
 import NotificationCard from "../components/NotificationCard"
 import { followUser, unfollow } from "../features/followSlice"
