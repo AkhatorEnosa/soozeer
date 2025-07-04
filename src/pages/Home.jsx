@@ -30,7 +30,7 @@ const Home = () => {
   const [title, setTitle] = useState('')
   const [journalText, setJournalText] = useState('')
   const [privacy, setPrivacy] = useState(null)
-  const divRef = useRef(null);
+  const textAreaRef = useRef(null);
   const [showPostInModal, setShowPostInModal] = useState(false)
   const [theme, setTheme] = useState('theme' in localStorage ? localStorage.getItem("theme") : "light")
   const [systemThemeIsDark, setSystemThemeIsDark] = useState(false)
@@ -238,16 +238,17 @@ const Home = () => {
   }
 
   useEffect(() => {
-    if (divRef.current) {
-      divRef.current.style.height = 'auto';
-      if(divRef.current.scrollHeight <= 450) {
-        divRef.current.style.height = `${divRef.current.scrollHeight}px`
-        // console.log(divRef.current.style.height)
+    if (showPostInModal && textAreaRef.current) {
+      textAreaRef.current.focus();
+      textAreaRef.current.style.height = 'auto';
+      if(textAreaRef.current.scrollHeight <= 450) {
+        textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`
+        // console.log(textAreaRef.current.style.height)
       } else {
-        divRef.current.style.height = "450px";
+        textAreaRef.current.style.height = "450px";
       }
     }
-  }, [postValue, journalText])
+  }, [showPostInModal, postValue, journalText])
 
   useEffect(() => {
     if(posted) {
@@ -305,13 +306,13 @@ const Home = () => {
         const closePostFormModal = () => {
           setShowPostInModal(false)
           setPostValue('')
-          divRef.current.textContent = ''
+          textAreaRef.current.textContent = ''
         }
 
       // render form input based on tab
       newPostForm = loggedUser !== null && 
 
-        <div className={`w-screen h-screen ${showPostInModal ? "flex" : "hidden"} flex-col justify-center items-center fixed top-0 left-0 bg-base-100/90 dark:bg-black/90 dark:text-[#cbc9c9] shadow-lg mb-4 z-[120]`}>
+        <dialog className={`w-screen h-screen ${showPostInModal ? "flex" : "hidden"} flex-col justify-center items-center fixed top-0 left-0 bg-base-100/90 dark:bg-black/90 dark:text-[#cbc9c9] shadow-lg mb-4 z-[220]`}>
           <div className="flex flex-col justify-center items-center bg-base-100 dark:bg-black p-5 gap-5 rounded-lg w-[80%] md:w-[60%] lg:w-[40%] border-[1px] border-black/10 dark:border-[#CBC9C9]/20 shadow-md dark:shadow-[#cbc9c9]/20">
             <div className="w-full flex justify-between items-center">
               <div className="flex gap-2 items-center">
@@ -324,12 +325,12 @@ const Home = () => {
             </div>
             
             <div className="w-full flex flex-col gap-4">
-              <textarea name="body" id="body" ref={divRef} className={`text-md z-20 w-full flex flex-col min-h-8 dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 outline-none resize-none`} value={postValue} placeholder="What are you thinking?" onChange={(e) => setPostValue(e.target.value)} readOnly={isAddingPost && true}></textarea>
+              <textarea name="body" id="body" ref={textAreaRef} className={`text-md z-20 w-full flex flex-col min-h-8 dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 outline-none resize-none`} value={postValue} placeholder="What are you thinking?" onChange={(e) => setPostValue(e.target.value)} readOnly={isAddingPost} autoFocus={showPostInModal}></textarea>
 
               <button className={postValue.trim() !== '' && !isAddingPost ? "px-6 py-2 bg-primary font-semibold text-white rounded-full scale-100" : "px-6 py-2 bg-primary/30 font-semibold text-white rounded-full transition-all duration-150 cursor-not-allowed"} onClick={handleSubmit} disabled={postValue.trim() == '' || isAddingPost && "disabled"}>{isAddingPost ?  'Posting...' : 'Post'}</button>
             </div>
           </div>
-        </div> 
+        </dialog> 
         
       const allPosts = posts.filter((post) => post.type == 'post')
       if(allPosts?.length > 0){
@@ -417,7 +418,7 @@ const Home = () => {
         const closePostFormModal = () => {
           setShowPostInModal(false)
           setPostValue('')
-          divRef.current.textContent = ''
+          textAreaRef.current.textContent = ''
         }
 
         // render form input based on tab
@@ -436,7 +437,7 @@ const Home = () => {
               </div>
               
               <div className="w-full flex flex-col gap-4">
-                <textarea name="body" id="body" ref={divRef} className={`text-md z-20 w-full flex flex-col h-auto min-h-8 box-border dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 outline-none resize-none`} value={postValue} placeholder="What are you thinking?" onChange={(e) => setPostValue(e.target.value).trim()} readOnly={isAddingPost && true}></textarea>
+                <textarea name="body" id="body" ref={textAreaRef} className={`text-md z-20 w-full flex flex-col h-auto min-h-8 box-border dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 outline-none resize-none`} value={postValue} placeholder="What are you thinking?" onChange={(e) => setPostValue(e.target.value).trim()} readOnly={isAddingPost && true}></textarea>
                 <button className={postValue.trim() !== '' && !isAddingPost ? "px-6 py-2 bg-primary font-semibold text-white rounded-full scale-100" : "px-6 py-2 bg-primary/30 font-semibold text-white rounded-full transition-all duration-150 cursor-not-allowed"} onClick={handleSubmit} disabled={postValue.trim() == '' || isAddingPost && "disabled"}>{isAddingPost ?  'Posting...' : 'Post'}</button>
               </div>
             </div>
@@ -560,7 +561,7 @@ const Home = () => {
             <div className="w-full flex flex-col gap-4">
               <input type="text" className={`text-md z-20 w-full flex flex-col min-h-8 dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 outline-none`} value={title} placeholder="Title" onChange={(e) => setTitle(e.target.value)}/>
 
-              <textarea name="body" id="body" ref={divRef} className={`text-md z-20 w-full flex flex-col min-h-8 dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 outline-none resize-none`} value={journalText} placeholder="Body" onChange={(e) => setJournalText(e.target.value)}></textarea>
+              <textarea name="body" id="body" ref={textAreaRef} className={`text-md z-20 w-full flex flex-col min-h-8 dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 outline-none resize-none`} value={journalText} placeholder="Body" onChange={(e) => setJournalText(e.target.value)}></textarea>
               
               <div className={`w-full flex justify-between transition-all duration-150 mt-4`}>
                 <select className="bg-accent/5 border-[1px] border-black/20 dark:border-[#CBC9C9]/20 w-full max-w-fit rounded-full text-xs font-semibold px-2 py-0 outline-none" onChange={(e) => setPrivacy(e.target.value)} defaultValue={"Change Privacy?"}>
@@ -679,7 +680,7 @@ const Home = () => {
             </div>
           </div>
 
-          {/* side bar */}
+          {/* right side bar */}
           <div className="hidden sticky top-0 lg:flex flex-col gap-5 h-fit col-span-2 py-3 z-0">
             {loggedUser?.u_id || isLoadingOtherUsers ? <>
               {/* search  */}
