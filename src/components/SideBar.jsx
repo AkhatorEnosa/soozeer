@@ -160,7 +160,7 @@ const SideBar = ({uid, page, paramsId, toggleSearchBar}) => {
     // <div className={`hidden h-fit lg:flex col-span-2 sticky left-0 top-0 text-lg md:text-xl rounded-md`}>
       <>
         { uid ?
-          <div className="w-full hidden h-screen sticky top-0 lg:flex col-span-2 text-lg md:text-xl rounded-md flex-col justify-between py-4 z-10 font-base">
+          <div className="w-full hidden h-screen sticky top-0 lg:flex col-span-2 text-lg md:text-xl rounded-md flex-col justify-between py-4 z-[200] font-base">
             <div className="h-fit">
               <div className="flex py-4 mb-4 px-10">
                 <Link to='/' className="cursor-pointer"> <img src={logo1} alt="logo" className="dark:hidden w-32 md:w-36 lg:w-44"/>  </Link>
@@ -185,24 +185,79 @@ const SideBar = ({uid, page, paramsId, toggleSearchBar}) => {
                       <span className="flex relative"><i className="bi bi-bell"></i> {notificationCount} </span>
                       Notifications</p>}
               </Link>
-              <p className={page === 'search' ?  "text-primary flex font-semibold dark:text-white bg-primary/5 rounded-full gap-4 px-10 py-5 cursor-pointer not-italic" : "hover:bg-primary/5 dark:hover:bg-primary/15 flex gap-4 px-10 py-5 cursor-pointer not-italic dark:text-[#CBC9C9] rounded-full"} onClick={toggleSearchBar}><i className={page === 'search' ? "bi bi-binoculars-fill" : "bi bi-binoculars"}></i> Search</p>
+              <button className={page === 'search' ?  "w-full text-primary flex font-semibold dark:text-white bg-primary/5 rounded-full gap-4 px-10 py-5 cursor-pointer not-italic" : "w-full hover:bg-primary/5 dark:hover:bg-primary/15 flex gap-4 px-10 py-5 cursor-pointer not-italic dark:text-[#CBC9C9] rounded-full"} onClick={toggleSearchBar}><i className={page === 'search' ? "bi bi-binoculars-fill" : "bi bi-binoculars"}></i> Search</button>
             </div>
+            
+            <div 
+              role="button"
+              tabIndex="0"
+              className="relative flex flex-col px-6 py-4 gap-5 justify-center text-base text-black dark:text-[#CBC9C9] rounded-full hover:bg-primary/5 cursor-pointer z-0"
+              onClick={() => setShowSubMenu(!showSubMenu)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setShowSubMenu(true);
+                } else if (e.key === 'Escape' && showSubMenu) {
+                  setShowSubMenu(false);
+                }
+              }}
+              aria-haspopup="true"
+              aria-expanded={showSubMenu}
+              aria-label="User menu"
+            >
+              {showSubMenu && (
+                <div 
+                  className="fixed left-0 top-0 w-full h-full cursor-default" 
+                  onClick={() => setShowSubMenu(false)}
+                  onKeyDown={(e) => e.key === 'Escape' && setShowSubMenu(false)}
+                  tabIndex="-1"
+                  aria-hidden="true"
+                />
+              )}
 
-            <div className="relative flex flex-col px-6 py-4 gap-5 justify-center text-base text-black dark:text-[#CBC9C9] rounded-full hover:bg-primary/5 cursor-pointer z-50" onClick={()=> setShowSubMenu(!showSubMenu)}>
-
-              {showSubMenu && <div className="fixed left-0 top-0 w-full h-full cursor-default" onClick={()=> setShowSubMenu(false)}></div>}
-
-              <div className={showSubMenu ? "absolute opacity-100 w-full flex flex-col gap-2 items-center -top-[12rem] left-0 text-base font-semibold py-5 px-3 transition-all duration-200" : "absolute w-full flex flex-col gap-2 items-center opacity -top-[12rem] -left-[100vw]  px-3 py-5 transition-all duration-200"}>
-                <p className="w-full flex gap-2 items-center bg-base-100 dark:bg-black rounded-full border-[1px] border-neutral-100 shadow-sm dark:shadow-primary/40 text-base font-semibold dark:bg-primary/5  dark:border-neutral-500 rounded-full/40 hover:bg-primary/5 dark:hover:bg-primary/15 px-10 py-5" onClick={() => setTriggerLogout(true)}>Logout</p>
-                <ThemeToggleButton handleThemeToggle={handleThemeToggle} theme={theme} systemTheme={systemThemeIsDark}/>
+              <div 
+                className={showSubMenu ? 
+                  "absolute opacity-100 w-full flex flex-col gap-2 items-center -top-[12rem] left-0 text-base font-semibold py-5 px-3 transition-all duration-200 bg-red-400 z-50" : 
+                  "absolute w-full flex flex-col gap-2 items-center opacity -top-[12rem] -left-[100vw] px-3 py-5 transition-all duration-200"
+                }
+                role="menu"
+              >
+                <ThemeToggleButton 
+                  handleThemeToggle={handleThemeToggle} 
+                  theme={theme} 
+                  systemTheme={systemThemeIsDark}
+                  role="menuitem"
+                  tabIndex={showSubMenu ? 0 : -1}  // Only focusable when menu is open
+                />
+                
+                <button 
+                  className="w-full flex gap-2 items-center bg-base-100 dark:bg-black rounded-full border-[1px] border-neutral-100 shadow-sm dark:shadow-primary/40 text-base font-semibold dark:bg-primary/5 dark:border-neutral-500 rounded-full/40 hover:bg-primary/5 dark:hover:bg-primary/15 px-10 py-5"
+                  onClick={() => setTriggerLogout(true)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setTriggerLogout(true);
+                    } else if (e.key === 'Escape') {
+                      setShowSubMenu(false);
+                    }
+                  }}
+                  role="menuitem"
+                  tabIndex={showSubMenu ? 0 : -1}  // Only focusable when menu is open
+                >
+                  Logout
+                </button>
               </div>
 
-              <div className="flex gap-2 items-center justify-between" >
+              <div className="flex gap-2 items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <img src={loggedUser.u_img} alt="profile_pic" className="w-6 h-6 md:w-10 md:h-10 border-[1px] border-black/30 rounded-full"/>
-                  <li className="hidden md:flex tracking-tight">{loggedUser.name}</li>
+                  <img 
+                    src={loggedUser.u_img} 
+                    alt="User profile" 
+                    className="w-6 h-6 md:w-10 md:h-10 border-[1px] border-black/30 rounded-full"
+                  />
+                  <span className="hidden md:flex tracking-tight">{loggedUser.name}</span>
                 </div>
-                <i className="bi bi-three-dots"></i>
+                <i className="bi bi-three-dots" aria-hidden="true"></i>
               </div>
             </div>
 
