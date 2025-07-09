@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { v4 as uuidv4 } from 'uuid';
 import { addMessage } from "../features/messageSlice"
@@ -49,7 +49,7 @@ const Conversation = ({messageId, messages, userId, users, name, img}) => {
     }
 
     // scroll to current message onload 
-    useEffect(() => {
+    useMemo(() => {
         if(messageId !== 'conversations' && messagesRef.current !== null) {
             messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
             messagesRef.current.scrollIntoView({
@@ -57,6 +57,18 @@ const Conversation = ({messageId, messages, userId, users, name, img}) => {
             })
         }
     }, [messageId, messages])
+  
+    useMemo(() => {
+        if (divRef.current) {
+            divRef.current.style.height = 'auto';
+            if(divRef.current.scrollHeight <= 150) {
+                divRef.current.style.height = `${divRef.current.scrollHeight}px`
+                // console.log(divRef.current.style.height)
+            } else {
+                divRef.current.style.height = "150px";
+            }
+        }
+    }, [messageValue])
 
     // send message 
     const handleSubmit = (e) => {
@@ -72,18 +84,6 @@ const Conversation = ({messageId, messages, userId, users, name, img}) => {
             }))
         }
     }
-  
-    useEffect(() => {
-        if (divRef.current) {
-            divRef.current.style.height = 'auto';
-            if(divRef.current.scrollHeight <= 150) {
-                divRef.current.style.height = `${divRef.current.scrollHeight}px`
-                // console.log(divRef.current.style.height)
-            } else {
-                divRef.current.style.height = "150px";
-            }
-        }
-    }, [messageValue])
 
 
     useMemo(() => {

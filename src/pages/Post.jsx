@@ -374,8 +374,12 @@ const Post = () => {
       // render form input
       newCommentForm = loggedUser?.u_id !== null && !isLoadingPost && 
       <div className={`relative w-full h-auto flex gap-2 p-2 z-40`}>
-        <img src={loggedUser?.u_img} alt="" className="relative z-20 size-8 object-cover object-center rounded-full  shadow-sm cursor-default" width={80} height={80} loading="lazy"/>
-        <textarea name="body" id="body" ref={textareaRef} className={`text-md z-20 w-full flex flex-col h-auto min-h-8 box-border dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 outline-none resize-none`} value={newComment} placeholder={currentPost?.type == 'post' ? 'Comment...' : 'Reply...'} onChange={(e) => setNewComment(e.target.value)} readOnly={isPosting && true}></textarea>
+        <div className="flex w-full gap-2 items-start relative">
+          <div className="flex w-8 h-8 overflow-clip z-20 rounded-full  shadow-sm cursor-default">
+            <img src={loggedUser?.u_img} alt="" className="relative object-cover object-center" width={80} height={80} loading="lazy"/>
+          </div>
+          <textarea name="body" id="body" ref={textareaRef} className={`w-full text-md z-20 flex flex-col h-auto min-h-8 box-border dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 outline-none resize-none`} value={newComment} placeholder={currentPost?.type == 'post' ? 'Comment...' : 'Reply...'} onChange={(e) => setNewComment(e.target.value)} readOnly={isPosting && true}></textarea>
+        </div>
 
         <div className={`flex justify-end ${newComment.trim() !== '' || isPosting ? "h-fit" : "h-0"}`}>
           <button className={`px-6 py-2 bg-primary font-semibold text-white rounded-full ${newComment.trim() !== '' ? "scale-100" : "scale-0"} ${isPosting && "opacity-50"} transition-all duration-150`} onClick={handleSubmit} disabled={isPosting && "disabled"}>{isPosting ?  <span className="loading loading-spinner loading-sm text-white"></span> : currentPost?.type == 'post' ? 'Comment' : 'Reply'}</button>

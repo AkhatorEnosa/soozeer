@@ -651,11 +651,11 @@ const Home = () => {
           {/* main section  */}
           <div className={loggedUser?.u_id !== null ? "w-full flex flex-col col-span-4 border-r-[1px] border-l-[1px] mt-5 border-black/5 dark:border-[#CBC9C9]/20" : "w-full flex flex-col col-span-4 border-r-[1px] border-l-[1px] border-black/5 dark:border-[#CBC9C9]/20 justify-center items-center"}>
 
-            {loggedUser?.u_id && <ul className="sticky top-0 flex justify-evenly text-center dark:text-[#CBC9C9] w-full bg-base-100/90 dark:bg-black/90 backdrop-blur-md overflow-scroll no-scrollbar text-sm md:text-base font-medium z-40">
-              <li className={`w-full ${tab === 'forYou' && "bg-primary/5 font-bold border-b-2 border-primary"} py-3 px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('forYou')}>For you</li>
-              <li className={`w-full ${tab === 'following' && "bg-primary/5 font-bold border-b-[1px] border-primary"} py-3 px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('following')}>Following</li>
-              <li className={`w-full ${tab === 'journal' && "bg-accent/5 font-bold border-b-[1px] border-accent"} py-3 px-10 hover:bg-accent/5 cursor-pointer`} onClick={() => setTab('journal')}>Journal</li>
-            </ul>}
+            {loggedUser?.u_id && <div className="sticky top-0 flex justify-evenly text-center dark:text-[#CBC9C9] w-full bg-base-100/90 dark:bg-black/90 backdrop-blur-md overflow-scroll no-scrollbar text-sm md:text-base font-medium z-40">
+              <button className={`w-full ${tab === 'forYou' && "bg-primary/5 font-bold border-b-2 border-primary"} py-3 px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('forYou')}>For you</button>
+              <button className={`w-full ${tab === 'following' && "bg-primary/5 font-bold border-b-[1px] border-primary"} py-3 px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('following')}>Following</button>
+              <button className={`w-full ${tab === 'journal' && "bg-accent/5 font-bold border-b-[1px] border-accent"} py-3 px-10 hover:bg-accent/5 cursor-pointer`} onClick={() => setTab('journal')}>Journal</button>
+            </div>}
 
 
             

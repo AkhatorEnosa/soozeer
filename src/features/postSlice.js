@@ -31,290 +31,363 @@ const initialState = {
 // }
 
 
-export const getPosts = createAsyncThunk('posts/getPosts', async () =>{
-
-    const {data, error} = await supabase.from('posts')
-    .select()
-    .eq('post_id', 0)
-    .order('created_at', {ascending: false})
-    // .order('body', {ascending: false})
-    // .limit(limit)
-    // .range(offset, offset + limit - 1);
-
-    if(error) {
-        console.log(error)
-        return error
+export const getPosts = createAsyncThunk('posts/getPosts', async () => {
+    try {
+        const { data, error } = await supabase
+            .from('posts')
+            .select()
+            .eq('post_id', 0)
+            .order('created_at', { ascending: false });
+  
+        if (error) {
+            console.error('Error fetching posts:', error);
+            return error;
+        }
+    
+        return data;
+    } catch (err) {
+      console.error('getPosts failed:', err);
+      return 'error';
     }
+});
+  
 
-    if(data) {
-        return data
-    } 
+export const getReplies = createAsyncThunk('posts/getReplies', async () => {
+    try {
+        const { data, error } = await supabase
+            .from('posts')
+            .select()
+            .neq('post_id', 0)
+            .order('created_at', { ascending: false });
+        // .limit(15)
 
-})
-
-export const getReplies = createAsyncThunk('posts/getReplies', async () =>{
-
-    const {data, error} = await supabase.from('posts')
-    .select()
-    .neq('post_id', 0)
-    .order('created_at', {ascending: false})
-    // .limit(15)
-
-    if(error) {
-        console.log(error)
-        return error
-    }
-
-    if(data) {
-        return data
-    } 
-
-})
-
-export const userLikedPosts = createAsyncThunk('posts/userLikedPosts', async (profileId) =>{
-    const { data, error } = await supabase
-    .from('posts')
-    .select('*, likes!inner(*)')
-    .eq('likes.u_id', profileId)
-
-    if(error) {
-        console.log(error)
-        return error
-    }
-
-    if(data) {
-        return data
-    } 
-
-})
-
-export const userBookmarkedPosts = createAsyncThunk('posts/userBookmarkedPosts', async (profileId) =>{
-    const { data, error } = await supabase
-    .from('posts')
-    .select('*, bookmarks!inner(*)')
-    .eq('bookmarks.u_id', profileId)
-
-    if(error) {
-        console.log(error)
-        return error
-    }
-
-    if(data) {
-        return data
-    } 
-
-})
-
-export const addPost = createAsyncThunk('posts/addPost', async (userData) => {
-    const { data,error } = await supabase
-      .from('posts')
-      .insert({
-          body: userData.body,
-          u_name: userData.name,
-          u_id: userData.u_id,
-          u_img: userData.u_img,
-          post_id: userData.paramsId,
-          title: userData.title,
-          journal: userData.journal,
-          privacy: userData.privacy,
-          type: userData.type
-        })
-        .select()
-
-        if(error) {
-            console.log(error)
-          toast.error("Oops something went wrong. Please try again later", {className: "text-sm  font-semibold", autoClose: 2000, position: 'top-right', closeOnClick: true, transition: Flip, hideProgressBar: true})
-          return error
+        if (error) {
+            console.error('Error fetching replies:', error);
+            return error;
         }
 
-        if(data) {
-          toast.success(PostedLink, {className: "text-sm  font-semibold", autoClose: 2000, position: 'top-right', closeOnClick: true, transition: Flip, hideProgressBar: true})
-          return data[0]
+        return data;
+    } catch (err) {
+        console.error('getReplies failed:', err);
+        return 'error';
+    }
+});
+  
+
+export const userLikedPosts = createAsyncThunk('posts/userLikedPosts', async (profileId) => {
+    try {
+        const { data, error } = await supabase
+            .from('posts')
+            .select('*, likes!inner(*)')
+            .eq('likes.u_id', profileId);
+
+        if (error) {
+            console.error('Error fetching liked posts:', error);
+            return error;
         }
-})
+
+        return data;
+    } catch (err) {
+        console.error('userLikedPosts failed:', err);
+        return 'error';
+    }
+});
+
+export const userBookmarkedPosts = createAsyncThunk('posts/userBookmarkedPosts', async (profileId) => {
+    try {
+        const { data, error } = await supabase
+            .from('posts')
+            .select('*, bookmarks!inner(*)')
+            .eq('bookmarks.u_id', profileId);
+
+        if (error) {
+            console.error('Error fetching bookmarked posts:', error);
+            return error;
+        }
+
+        return data;
+    } catch (err) {
+        console.error('userBookmarkedPosts failed:', err);
+        return 'error';
+    }
+});export const addPost = createAsyncThunk('posts/addPost', async (userData) => {
+    try {
+        const { data, error } = await supabase
+            .from('posts')
+            .insert({
+                body: userData.body,
+                u_name: userData.name,
+                u_id: userData.u_id,
+                u_img: userData.u_img,
+                post_id: userData.paramsId,
+                title: userData.title,
+                journal: userData.journal,
+                privacy: userData.privacy,
+                type: userData.type
+            })
+            .select();
+
+        if (error) {
+            console.error('Error inserting post:', error);
+            toast.error("Oops something went wrong. Please try again later", {
+                className: "text-sm font-semibold",
+                autoClose: 2000,
+                position: 'top-right',
+                closeOnClick: true,
+                transition: Flip,
+                hideProgressBar: true
+            });
+            return error;
+        }
+
+        if (data) {
+            toast.success(PostedLink, {
+                className: "text-sm font-semibold",
+                autoClose: 2000,
+                position: 'top-right',
+                closeOnClick: true,
+                transition: Flip,
+                hideProgressBar: true
+            });
+            return data[0];
+        }
+    } catch (err) {
+        console.error('addPost failed:', err);
+        toast.error("Unexpected error occurred", {
+            className: "text-sm font-semibold",
+            autoClose: 2000,
+            position: 'top-right',
+            closeOnClick: true,
+            transition: Flip,
+            hideProgressBar: true
+        });
+        return 'error';
+    }
+});
+
 
 export const deletePost = createAsyncThunk('posts/deletePost', async (details) => {
-    const {data, error} = await supabase
-        .from('posts')
-        .delete()
-        .eq('id', details.id)
-        .select()
+    try {
+        const { data, error } = await supabase
+            .from('posts')
+            .delete()
+            .eq('id', details.id)
+            .select();
 
-    if(error) return
+        if (error) {
+            console.error('Error deleting post:', error);
+            return error;
+        }
 
-    if (data){
-        await supabase
-        .from('posts')
-        .delete()
-        .eq('post_id', details.id)
-        return data[0]
+        if (data) {
+            await supabase
+                .from('posts')
+                .delete()
+                .eq('post_id', details.id);
+
+            return data[0];
+        }
+    } catch (err) {
+        console.error('deletePost failed:', err);
+        return 'error';
     }
-})
+});
 
 export const getLikes = createAsyncThunk('posts/getLikes', async () => {
+    try {
+        const { data, error } = await supabase
+            .from('likes')
+            .select();
 
-    const {data, error} = await supabase
-    .from('likes')
-    .select()
+        if (error) {
+            console.error('Error fetching likes:', error);
+            return error;
+        }
 
-    if(error) {
-      return
+        return data;
+    } catch (err) {
+        console.error('getLikes failed:', err);
+        return 'error';
     }
-
-    if(data) {
-      return data
-    }
-})
+});
 
 export const likePost = createAsyncThunk('posts/likePost', async (props) => {
-
-    const {data, error} = await supabase
-    .from('likes')
-    .insert({
-        "post_id": props.postId,
-        "u_id": props.creatorUid,
-        "for": props.for
-    })
-    .select()
-    
-    if(error) {
-        return
-    }
-
-    if(data) {
-        if(props.creatorUid !== null) {
-            await supabase
-            .from('notifications')
+    try {
+        const { data, error } = await supabase
+            .from('likes')
             .insert({
-                "for": data[0].for == 'post' ? 'like' : data[0].for + '_like',
-                "post_id": props.postId,
-                "like_id": data[0].id,
-                "receiver_id": props.postUid,
-                "creator_name": props.creatorName,
-                "creator_id": props.creatorUid,
-                "post_snippet": props.postBody,
-                "creator_img": props.creatorImg,
-                "comment_id": data[0].for !== 'post' && props.commentId
+                post_id: props.postId,
+                u_id: props.creatorUid,
+                for: props.for
             })
-            .select()
-        }
-        return data[0]
-    }
+            .select();
 
-})
+        if (error) {
+            console.error('Error liking post:', error);
+            return error;
+        }
+
+        if (data && props.creatorUid !== null) {
+            await supabase
+                .from('notifications')
+                .insert({
+                    for: data[0].for === 'post' ? 'like' : data[0].for + '_like',
+                    post_id: props.postId,
+                    like_id: data[0].id,
+                    receiver_id: props.postUid,
+                    creator_name: props.creatorName,
+                    creator_id: props.creatorUid,
+                    post_snippet: props.postBody,
+                    creator_img: props.creatorImg,
+                    comment_id: data[0].for !== 'post' && props.commentId
+                })
+                .select();
+        }
+
+        return data[0];
+    } catch (err) {
+        console.error('likePost failed:', err);
+        return 'error';
+    }
+});
 
 export const unlike = createAsyncThunk('posts/unlike', async (id) => {
+    try {
+        const { data, error } = await supabase
+            .from('likes')
+            .delete()
+            .eq('id', id)
+            .select();
 
-    const {data, error} = await supabase
-    .from('likes')
-    .delete()
-    .eq('id', id)
-    .select()
+        if (error) {
+            console.error('Error unliking post:', error);
+            return error;
+        }
 
-    if(error) return
-    return data[0]
-
-})
+        return data[0];
+    } catch (err) {
+        console.error('unlike failed:', err);
+        return 'error';
+    }
+});
 
 export const getBookmarks = createAsyncThunk('posts/getBookmarks', async () => {
+    try {
+        const { data, error } = await supabase
+            .from('bookmarks')
+            .select();
 
-    const {data, error} = await supabase
-    .from('bookmarks')
-    .select()
+        if (error) {
+            console.error('Error fetching bookmarks:', error);
+            return error;
+        }
 
-    if(error) {
-      return
+        return data;
+    } catch (err) {
+        console.error('getBookmarks failed:', err);
+        return 'error';
     }
-
-    if(data) {
-      return data
-    }
-})
+});
 
 export const bookmarkPost = createAsyncThunk('posts/bookmarkPost', async (props) => {
-
-    const {data, error} = await supabase
-    .from('bookmarks')
-    .insert({
-        "post_id": props.postId,
-        "u_id": props.creatorUid,
-        "for": props.for
-    })
-    .select()
-    
-    if(error) {
-        return
-    }
-
-    if(data) {
-        if(props.creatorUid !== null) {
-            await supabase
-            .from('notifications')
+    try {
+        const { data, error } = await supabase
+            .from('bookmarks')
             .insert({
-                "for": data[0].for == 'post' ? 'bookmark' : data[0].for + '_bookmark',
-                "post_id": props.postId,
-                "bookmark_id": data[0].id,
-                "receiver_id": props.postUid,
-                "creator_name": props.creatorName,
-                "creator_id": props.creatorUid,
-                "post_snippet": props.postBody,
-                "creator_img": props.creatorImg,
-                "comment_id": data[0].for !== 'post' && props.commentId
+                post_id: props.postId,
+                u_id: props.creatorUid,
+                for: props.for
             })
-            .select()
-        }
-        return data[0]
-    }
+            .select();
 
-})
+        if (error) {
+            console.error('Error bookmarking post:', error);
+            return error;
+        }
+
+        if (data && props.creatorUid !== null) {
+            await supabase
+                .from('notifications')
+                .insert({
+                    for: data[0].for === 'post' ? 'bookmark' : data[0].for + '_bookmark',
+                    post_id: props.postId,
+                    bookmark_id: data[0].id,
+                    receiver_id: props.postUid,
+                    creator_name: props.creatorName,
+                    creator_id: props.creatorUid,
+                    post_snippet: props.postBody,
+                    creator_img: props.creatorImg,
+                    comment_id: data[0].for !== 'post' && props.commentId
+                })
+                .select();
+        }
+
+        return data[0];
+    } catch (err) {
+        console.error('bookmarkPost failed:', err);
+        return 'error';
+    }
+});
 
 export const unBookmark = createAsyncThunk('posts/unBookmark', async (id) => {
+    try {
+        const { data, error } = await supabase
+            .from('bookmarks')
+            .delete()
+            .eq('id', id)
+            .select();
 
-    const {data, error} = await supabase
-    .from('bookmarks')
-    .delete()
-    .eq('id', id)
-    .select()
+        if (error) {
+            console.error('Error removing bookmark:', error);
+            return error;
+        }
 
-    if(error) return
-    return data[0]
-
-})
+        return data[0];
+    } catch (err) {
+        console.error('unBookmark failed:', err);
+        return 'error';
+    }
+});
 
 export const getPostComments = createAsyncThunk('posts/getPostComments', async () => {
+    try {
+        const { data, error } = await supabase
+            .from('posts')
+            .select()
+            .neq('post_id', 0);
 
-    const {data, error} = await supabase.from('posts')
-    .select()
-    .neq('post_id', 0)
+        if (error) {
+            console.error('Error fetching comments:', error);
+            return error;
+        }
 
-    if(error) {
-      return
+        return data;
+    } catch (err) {
+        console.error('getPostComments failed:', err);
+        return 'error';
     }
-
-    if(data) {
-      return data
-    }
-
-})
+});
 
 export const searchedPostQuery = createAsyncThunk('posts/searchedPostQuery', async (params) => {
-          const { data,error } = await supabase
-          .from('posts')
-          .select()
-          .or(`body.ilike.%${params.id}%,journal.ilike.%${params.id}%,title.ilike.%${params.id}%`)
-          .order('created_at', {ascending: false})
+    try {
+        const { data, error } = await supabase
+            .from('posts')
+            .select()
+            .or(`body.ilike.%${params.id}%,journal.ilike.%${params.id}%,title.ilike.%${params.id}%`)
+            .order('created_at', { ascending: false });
 
-          const postData = data
-          const postError = error
-              if(postError) {
-                console.log(postError)
-                return error
-              }
+        if (error) {
+            console.error('Search error:', error);
+            return error;
+        }
 
-              if(postData) {
-                return postData
-              }
-})
+        return data;
+    } catch (err) {
+        console.error('searchedPostQuery failed:', err);
+        return 'error';
+    }
+});
+
 
 const postSlice = createSlice({
     name: 'posts',
