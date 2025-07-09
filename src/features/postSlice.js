@@ -23,6 +23,18 @@ const initialState = {
     hasNextPage: true
 }
 
+const showToast = (type, message) => {
+    toast[type](message, {
+        className: "text-sm font-semibold",
+        autoClose: 2000,
+        position: 'top-right',
+        closeOnClick: true,
+        transition: Flip,
+        hideProgressBar: true
+    });
+};
+
+
 // const randomizeSortFilter = () => {
 //     const seeds = [ 'created_at', 'body', 'journal']
 //     const seed = seeds[Math.floor(Math.random() * seeds.length)]
@@ -129,38 +141,17 @@ export const userBookmarkedPosts = createAsyncThunk('posts/userBookmarkedPosts',
 
         if (error) {
             console.error('Error inserting post:', error);
-            toast.error("Oops something went wrong. Please try again later", {
-                className: "text-sm font-semibold",
-                autoClose: 2000,
-                position: 'top-right',
-                closeOnClick: true,
-                transition: Flip,
-                hideProgressBar: true
-            });
+            showToast('error', "Oops something went wrong. Please try again later");
             return error;
         }
 
         if (data) {
-            toast.success(PostedLink, {
-                className: "text-sm font-semibold",
-                autoClose: 2000,
-                position: 'top-right',
-                closeOnClick: true,
-                transition: Flip,
-                hideProgressBar: true
-            });
+            showToast('success', PostedLink);
             return data[0];
         }
     } catch (err) {
         console.error('addPost failed:', err);
-        toast.error("Unexpected error occurred", {
-            className: "text-sm font-semibold",
-            autoClose: 2000,
-            position: 'top-right',
-            closeOnClick: true,
-            transition: Flip,
-            hideProgressBar: true
-        });
+        showToast('error', "Oops something went wrong. Please try again later");
         return 'error';
     }
 });
