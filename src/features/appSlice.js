@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import supabase from "../config/supabaseClient.config";
-import { Flip, toast } from "react-toastify";
+import { showErrorToast, showSuccessToast } from "../utils/toastNotify";
 
 const initialState = {
     profileUser: null,
@@ -28,300 +28,336 @@ const initialState = {
     return seed
   }
 
-export const signIn = createAsyncThunk('app/signIn', async (userInput) =>{
-
-    const {data, error} = await supabase.auth.signInWithPassword({
-        email: userInput.email,
-        password: userInput.password
-    })
-
-    if(error) {
-        toast.error("Password or email incorrect", {className: "text-sm  font-semibold", autoClose: 2000, position: 'top-right', closeOnClick: true, transition: Flip, hideProgressBar: true})
-        console.log(error)
-        return null
-    }
-
-    if(data) {
-      toast.success("Successful Login", {className: "text-sm  font-semibold", autoClose: 2000, position: 'top-right', closeOnClick: true, transition: Flip, hideProgressBar: true})
-
-      window.location.replace("#");
-      return data
-    }
-})
-
-export const register = createAsyncThunk('app/register', async (userInput) =>{
-
-  // check if username is already registered 
-  const {data, error} = await supabase
-  .from('profiles')
-  .select('u_name')
-  .eq('u_name', userInput.u_name) 
-
-    if(error) {
-        console.log(error)
-        return null
-    }
-
-    if(data.length < 1) {
-      const { data, error } = await supabase.auth.signUp({
-        email: userInput.email,
-        password: userInput.password
-      })
-
-      if(error) {
-          toast.error("Email password already used by another user!", {className: "text-sm  font-semibold", autoClose: 2000, position: 'top-right', closeOnClick: true, transition: Flip, hideProgressBar: true})
-          console.log(error)
-          return null
-      }
-
-      if(data) {
-          const { data:profileData, error:profileError } = await supabase
-          .from('profiles')
-          .insert([{ 
-            name: userInput.name,
-            u_name: userInput.u_name,
+  export const signIn = createAsyncThunk('app/signIn', async (userInput) => {
+    try {
+        const { data, error } = await supabase.auth.signInWithPassword({
             email: userInput.email,
-            gender: userInput.gender,
-            dob: userInput.dob,
-            u_img: `https://api.dicebear.com/9.x/fun-emoji/svg?seed=${userInput.u_name}+backgroundType`,
-            u_id: data.user.id
-          }]).select()
+            password: userInput.password
+        });
 
-          if(profileError) {
-              toast.error(profileError, {className: "text-sm  font-semibold", autoClose: 4000, position: 'top-right', closeOnClick: true})
-              console.log(profileError)
+        if (error) {
+            console.error('Sign-in error:', error);
+            showErrorToast("Password or email incorrect");
+            return null;
+        }
 
-              return null
-          }
-
-          if(profileData) {
-              toast.success("Registered Successfully", {className: "text-sm  font-semibold", autoClose: 2000, position: 'top-right', closeOnClick: true});
-
-              window.location.replace("#");
-              return profileData[0]
-          }
+        showSuccessToast("Successful Login");
+        window.location.replace("#");
+        return data;
+    } catch (err) {
+        console.error('signIn failed:', err);
+        showErrorToast("Unexpected login error");
+        return null;
     }
+});
 
-    } else {
-      toast.error("Please select a username unique to you.", {className: "text-sm  font-semibold", autoClose: 2000, position: 'top-right', closeOnClick: true})
+export const register = createAsyncThunk('app/register', async (userInput) => {
+    try {
+        const { data: existingUser, error: checkError } = await supabase
+            .from('profiles')
+            .select('u_name')
+            .eq('u_name', userInput.u_name);
+
+        if (checkError) {
+            console.error('Username check error:', checkError);
+            return null;
+        }
+
+        if (existingUser.length > 0) {
+            showErrorToast("Please select a username unique to you.");
+            return null;
+        }
+
+        const { data: authData, error: signUpError } = await supabase.auth.signUp({
+            email: userInput.email,
+            password: userInput.password
+        });
+
+        if (signUpError) {
+            console.error('Sign-up error:', signUpError);
+            showErrorToast("Email or password already used by another user!");
+            return null;
+        }
+
+        const { data: profileData, error: profileError } = await supabase
+            .from('profiles')
+            .insert([{
+                name: userInput.name,
+                u_name: userInput.u_name,
+                email: userInput.email,
+                gender: userInput.gender,
+                dob: userInput.dob,
+                u_img: `https://api.dicebear.com/9.x/fun-emoji/svg?seed=${userInput.u_name}+backgroundType`,
+                u_id: authData.user.id
+            }])
+            .select();
+
+        if (profileError) {
+            console.error('Profile creation error:', profileError);
+            showErrorToast("Could not create profile. Try again later.");
+            return null;
+        }
+
+        showSuccessToast("Registered Successfully");
+        window.location.replace("#");
+
+        return profileData?.[0];
+
+    } catch (err) {
+        console.error('register thunk failed:', err);
+        showErrorToast("Unexpected registration error");
+        return null;
     }
+});
 
-})
 
-export const getUser = createAsyncThunk('app/getUser', async()=> {
-    const { data } = await supabase.auth.getUser()
+export const getUser = createAsyncThunk('app/getUser', async () => {
+    try {
+        const { data } = await supabase.auth.getUser();
 
-   if(data.user !== null) {
-      const { data:profileData, error } = await supabase
-      .from('profiles')
-      .select()
-      .eq("u_id", data.user.id)
+        if (data?.user) {
+            const { data: profileData, error } = await supabase
+                .from('profiles')
+                .select()
+                .eq('u_id', data.user.id);
 
-      if(error) {
-          console.log(error)
-          return null
-      }
-      
-      if(profileData) {
-          return profileData[0]
-      }
-    } else {
-      return data.user
+            if (error) {
+                console.error('Error fetching user profile:', error);
+                return null;
+            }
+
+            return profileData?.[0] || null;
+        }
+
+        return null;
+    } catch (err) {
+        console.error('getUser failed:', err);
+        return null;
     }
-})
+});
+
 
 export const getProfile = createAsyncThunk('app/getProfile', async (profileId) => {
-  const {data, error} = await supabase.from('profiles')
-  .select()
-  .eq("u_id", profileId)
+  try {
+      const { data, error } = await supabase
+          .from('profiles')
+          .select()
+          .eq('u_id', profileId);
 
-  if(error) {
-    return "error"
-  }
+      if (error) {
+          console.error('Error fetching profile:', error);
+          return 'error';
+      }
 
-  if(data) {
-    return data[0]
+      return data?.[0] || null;
+  } catch (err) {
+      console.error('getProfile failed:', err);
+      return 'error';
   }
-})
+});
+
 
 export const getOtherUsers = createAsyncThunk('app/getOtherUsers', async (uid) => {
-  if(uid !== null) {
-    const {data, error} = await supabase.from('profiles')
-    .select()
-    .neq("u_name", "Pussey")
-    .or(`u_id.neq.${uid.currentId}, u_id.neq.${uid.loggedId}`)
-    // .neq("u_id", uid.currentId)
-    // .neq("u_id", uid.loggedId)
-    .order(randomizeSortFilter(), {ascending: false})
-    // .limit(4)
+    try {
+        if (!uid) {
+            console.error('Missing uid prop');
+            return null;
+        }
 
-    if(error) {
-      return
-    }
+        const { data, error } = await supabase
+            .from('profiles')
+            .select()
+            .neq('u_name', 'Pussey')
+            .or(`u_id.neq.${uid.currentId},u_id.neq.${uid.loggedId}`)
+            .order(randomizeSortFilter(), { ascending: false });
 
-    if(data) {
-      return data
+        if (error) {
+            console.error('Error fetching other users:', error);
+            return null;
+        }
+
+        return data || [];
+    } catch (err) {
+        console.error('getOtherUsers failed:', err);
+        return null;
     }
-  } else {
-    console.log("Error with uid prop")
-  }
-})
+});
+
 
 export const getNotifications = createAsyncThunk('app/getNotifications', async (uid) => {
-  if(uid !== null) {
-    const {data, error} = await supabase.from('notifications')
-    .select()
-    .eq('receiver_id', uid.uid)
-    .neq('creator_id', uid.uid)
-    // .eq('viewed', false)
-
-
-    if(error) return error
-
-    if(data) return data
-  }    
-})
-
-export const resetPassword = createAsyncThunk('app/resetPassword', async (email) => {
-  if(email !== '' || email !== null) {
-    try {
-      await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.href.replace('reset', 'update')}`,
-        // redirectTo: 'http://localhost:5173/#/account/update-password',
-      })
-      console.log("Recovery email sent")
-    } catch (error) {
-      console.log(error)
-
-      toast.error(error, {className: "text-sm  font-semibold", autoClose: 2000, position: 'top-right', closeOnClick: true, transition: Flip, hideProgressBar: true})
-    }
-
-  }
-})
-
-export const updatePassword = createAsyncThunk('app/updatePassword', async (props) => {
-  if(props.password !== '' || props.password !== null) {
-    try {
-      console.log(props.password)
-      const { data, error } = await supabase.auth.refreshSession({ refresh_token: props.refresh_token })
-
-      if(data !== null) {
-        const {data: updateData, error} = await supabase.auth.updateUser({ password: props.password })
-        if (updateData){
-          console.log(updateData)
-          console.log("success")
-
-          toast.success("Password updated successfully", {className: "text-sm  font-semibold", autoClose: 2000, position: 'top-right', closeOnClick: true, transition: Flip, hideProgressBar: true})
-
-          location.reload(true);
-        }
-
-        if (error) console.log(error)
-      }
-
-      if(error) {
-        console.log(error)
-        return error
-      }
-
-    } catch (error) {
-      console.log(error)
-
-      toast.error(error, {className: "text-sm  font-semibold", autoClose: 2000, position: 'top-right', closeOnClick: true, transition: Flip, hideProgressBar: true})
-    }
-
-  }
-})
-
-export const logOut = createAsyncThunk('app/logOut', async()=> {
-  const {error} = await supabase.auth.signOut()
-
-  if(error) throw error
-
-  window.location.replace("/#/");
-})
-
-export const searchedUserQuery = createAsyncThunk('app/searchedUserQuery', async (params) => {
-
-  const sanitizeParams = (param) => {
-    const getFirstChar = param.id.slice(0, 1)
-    if(getFirstChar == "@") {
-      return param.id.slice(1)
-    }
-
-    return param.id
-  }
-
-    const { data,error } = await supabase
-    .from('profiles')
-    .select()
-    .or(`name.ilike.%${sanitizeParams(params)}%,u_name.ilike.%${sanitizeParams(params)}%`)
-    .order('name', {ascending: false})
-
-    if(error) {
-      console.log(error)
-      return error
-    }
-
-    if(data ) {
-      return data
-    }
-
-})
-
-export const profileEdit = createAsyncThunk('app/profileEdit', async (props) => {
+  try {
+      if (!uid) return null;
 
       const { data, error } = await supabase
-      .from('profiles')
-      .update({ 
-          name: props.name, 
-          bio: props.bio, 
-          dob: new Date(Date.parse(props.dob)),
-          dob_privacy: props.dob_privacy,
-          u_img: props.u_img
-        })
-      .eq('u_id', props.u_id)
-      .select()
-
-      if(data) {
-        const { error: response } = await supabase
-        .from('posts')
-        .update({ u_name: props.name, u_img: props.u_img})
-        .eq('u_id', props.u_id)
-
-        if(response === null) {
-          // update comments table 
-          await supabase
-          .from('comments')
-          .update({ name: props.name, u_img: props.u_img})
-          .eq('u_id', props.u_id)
-
-
-          // update messages table 
-          await supabase
-          .from('messages')
-          .update({ sender_name: props.name, sender_img: props.u_img})
-          // .or(`sender_id.eq.${loggedUser?.u_id}, receiver_id.eq.${loggedUser?.u_id}`)
-          .or(`sender_id.eq.${props.u_id}`)
-
-          // update notifications table 
-          await supabase
           .from('notifications')
-          .update({ creator_name: props.name, creator_img: props.u_img})
-          .eq('creator_id', props.u_id)
-          toast.success("Bio Updated Successfully!", {className: "bg-success text-white bg-success text-xs", autoClose: 2000, position: 'top-right', closeOnClick: true, transition: Flip, hideProgressBar: true})
-          location.reload(true);
+          .select()
+          .eq('receiver_id', uid.uid)
+          .neq('creator_id', uid.uid);
+
+      if (error) {
+          console.error('Error fetching notifications:', error);
+          return error;
+      }
+
+      return data || [];
+  } catch (err) {
+      console.error('getNotifications failed:', err);
+      return 'error';
+  }
+});
+
+
+export const resetPassword = createAsyncThunk('app/resetPassword', async (email) => {
+    try {
+        if (!email) return null;
+
+        await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: `${window.location.href.replace('reset', 'update')}`,
+        });
+
+        console.log("Recovery email sent");
+        return 'sent';
+    } catch (error) {
+        console.error('resetPassword failed:', error);
+        showErrorToast("Unable to send recovery email.");
+        return 'error';
+    }
+});
+
+export const updatePassword = createAsyncThunk('app/updatePassword', async (props) => {
+    try {
+        if (!props.password) return null;
+
+        const { data: sessionData, error: refreshError } = await supabase.auth.refreshSession({
+            refresh_token: props.refresh_token
+        });
+
+        if (refreshError || !sessionData) {
+            console.error('Session refresh error:', refreshError);
+            showErrorToast("Unable to refresh session");
+            return 'error';
         }
 
-        // console.log("Data Output", data[0])
-        return data[0]
-      } 
-      
-      if(error) {
-        console.log(error)
-        toast.error("Could not Update bio. Try again later", {className: "bg-error text-white text-xs", autoClose: 2000, position: 'top-right', closeOnClick: true, transition: Flip, hideProgressBar: true})
+        const { data: updateData, error: updateError } = await supabase.auth.updateUser({
+            password: props.password
+        });
+
+        if (updateError) {
+            console.error('Password update error:', updateError);
+            showErrorToast("Failed to update password");
+            return updateError;
+        }
+
+        if (updateData) {
+            console.log('Password updated:', updateData);
+            showSuccessToast("Password updated successfully");
+            location.reload(true);
+            return updateData;
+        }
+    } catch (err) {
+        console.error('updatePassword thunk failed:', err);
+        showErrorToast("Unexpected error updating password");
+        return 'error';
+    }
+});
+
+
+export const logOut = createAsyncThunk('app/logOut', async () => {
+    try {
+        const { error } = await supabase.auth.signOut();
+
+        if (error) {
+            console.error('Logout error:', error);
+            return error;
+        }
+
+        window.location.replace('/#/');
+        return 'logged_out';
+    } catch (err) {
+        console.error('logOut thunk failed:', err);
+        return 'error';
+    }
+});
+
+
+export const searchedUserQuery = createAsyncThunk('app/searchedUserQuery', async (params) => {
+  try {
+      const sanitizeParams = (param) => {
+          return param.id.startsWith('@') ? param.id.slice(1) : param.id;
+      };
+
+      const query = sanitizeParams(params);
+
+      const { data, error } = await supabase
+          .from('profiles')
+          .select()
+          .or(`name.ilike.%${query}%,u_name.ilike.%${query}%`)
+          .order('name', { ascending: false });
+
+      if (error) {
+          console.error('Search query error:', error);
+          return error;
       }
-})
+
+      return data || [];
+  } catch (err) {
+      console.error('searchedUserQuery thunk failed:', err);
+      return 'error';
+  }
+});
+
+
+export const profileEdit = createAsyncThunk('app/profileEdit', async (props) => {
+  try {
+      const { data, error } = await supabase
+          .from('profiles')
+          .update({
+              name: props.name,
+              bio: props.bio,
+              dob: new Date(Date.parse(props.dob)),
+              dob_privacy: props.dob_privacy,
+              u_img: props.u_img
+          })
+          .eq('u_id', props.u_id)
+          .select();
+
+      if (error) {
+          console.error('Profile update error:', error);
+          showErrorToast("Could not update bio. Try again later.");
+          return null;
+      }
+
+      // Cascade updates to other tables
+      await supabase
+          .from('posts')
+          .update({ u_name: props.name, u_img: props.u_img })
+          .eq('u_id', props.u_id);
+
+      await supabase
+          .from('comments')
+          .update({ name: props.name, u_img: props.u_img })
+          .eq('u_id', props.u_id);
+
+      await supabase
+          .from('messages')
+          .update({ sender_name: props.name, sender_img: props.u_img })
+          .or(`sender_id.eq.${props.u_id}`);
+
+      await supabase
+          .from('notifications')
+          .update({ creator_name: props.name, creator_img: props.u_img })
+          .eq('creator_id', props.u_id);
+
+      showSuccessToast("Bio Updated Successfully!");
+      location.reload(true);
+
+      return data?.[0];
+  } catch (err) {
+      console.error('profileEdit failed:', err);
+      showErrorToast("Unexpected error occurred during profile update.");
+      return null;
+  }
+});
 
 const appSlice = createSlice({
     name: 'app',

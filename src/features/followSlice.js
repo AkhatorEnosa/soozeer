@@ -10,75 +10,83 @@ const initialState = {
 
 
 export const follows = createAsyncThunk('follow/follows', async () => {
+    try {
+        const { data, error } = await supabase
+            .from('follows')
+            .select();
 
-    const {data, error} = await supabase
-    .from('follows')
-    .select()
-    // .from('profiles')
-    // .select('*, follows!inner(*)')
-    // .or(`follows.followed_id.eq.${profileId}, follows.follower_id.eq.${profileId}`)
+        if (error) {
+            console.error('Error fetching follows:', error);
+            return error;
+        }
 
-    if(error) {
-      return error
+        return data || [];
+    } catch (err) {
+        console.error('follows thunk failed:', err);
+        return 'error';
     }
-
-    if(data) {
-        // console.log(data)
-      return data
-    }
-
-})
+});
 
 export const followUser = createAsyncThunk('follow/followUser', async (props) => {
+    try {
+        const { data, error } = await supabase
+            .from('follows')
+            .insert({
+                followed_id: props.receiverUid,
+                followed_name: props.receiverName,
+                followed_img: props.receiverImg,
+                follower_id: props.uid,
+                follower_name: props.creatorName,
+                follower_img: props.creatorImg
+            })
+            .select();
 
-    const {data, error} = await supabase
-    .from('follows')
-    .insert({
-        "followed_id": props.receiverUid,
-        "followed_name": props.receiverName,
-        "followed_img": props.receiverImg,
-        "follower_id": props.uid,
-        "follower_name": props.creatorName,
-        "follower_img": props.creatorImg
-    })
-    .select()
-    
-    if(error) {
-        return
-    }
-
-    if(data) {
-        if(props.uid !== null ) {
-        await supabase
-        .from('notifications')
-        .insert({
-            "for": "follow",
-            "follow_id": data[0].id,
-            "receiver_id": props.receiverUid,
-            "creator_name": props.creatorName,
-            "creator_id": props.uid,
-            "creator_img": props.creatorImg
-        })
-        .select()
+        if (error) {
+            console.error('Error inserting follow:', error);
+            return error;
         }
-        return data[0]
-    }
 
-})
+        if (data?.length > 0 && props.uid) {
+            await supabase
+                .from('notifications')
+                .insert({
+                    for: 'follow',
+                    follow_id: data[0].id,
+                    receiver_id: props.receiverUid,
+                    creator_name: props.creatorName,
+                    creator_id: props.uid,
+                    creator_img: props.creatorImg
+                });
+        }
+
+        return data[0];
+    } catch (err) {
+        console.error('followUser thunk failed:', err);
+        return 'error';
+    }
+});
+
 
 export const unfollow = createAsyncThunk('follow/unfollow', async (id) => {
+    try {
+        const { data, error } = await supabase
+            .from('follows')
+            .delete()
+            .eq('id', id)
+            .select();
 
-    const {data, error} = await supabase
-    .from('follows')
-    .delete()
-    .eq('id', id)
-    .select()
+        if (error) {
+            console.error('Error deleting follow:', error);
+            return error;
+        }
 
-    if(error) return
+        return data?.[0];
+    } catch (err) {
+        console.error('unfollow thunk failed:', err);
+        return 'error';
+    }
+});
 
-    return data[0]
-
-})
 
 const followSlice = createSlice({
     name: 'follows',

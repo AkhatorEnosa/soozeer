@@ -18,345 +18,343 @@ const initialState = {
     errorComment: false
 }
 
+const showToast = (type, message) => {
+    toast[type](message, {
+        className: "text-sm font-semibold",
+        autoClose: 2000,
+        position: 'top-right',
+        closeOnClick: true,
+        transition: Flip,
+        hideProgressBar: true
+    });
+};
+
+
 export const getPost = createAsyncThunk('singlePost/getPost', async (paramsId) => {
+    try {
+        const { data, error } = await supabase
+            .from('posts')
+            .select()
+            .eq('id', paramsId);
 
-      const {data, error} = await supabase.from('posts')
-      .select()
-      .eq('id', paramsId)
+        if (error) {
+            console.error('Error fetching post:', error);
+            return 'error';
+        }
 
-      if(error) {
-        return "error"
-      }
+        if (data?.length > 0) {
+            return data[0];
+        } else {
+            window.location.replace('/#/404');
+            return null;
+        }
+    } catch (err) {
+        console.error('getPost failed:', err);
+        return 'error';
+    }
+});
 
-      if(data && data.length > 0) {
-        return data[0]
-      } else {
-        window.location.replace("/#/404")
-      }
-})
 
 export const singlePostDelete = createAsyncThunk('singlePost/singlePostDelete', async (id) => {
-
-    const {data, error} = await supabase
-        .from('posts')
-        .delete()
-        .eq('id', id)
-        .select()
-
-    if(error) {
-        // console.log(error)
-        return error
-    }
-
-    if(data) {
-       const {commentData, commentError} = await supabase
-        .from('posts')
-        .delete()
-        .eq('post_id', data[0].id)
-
-        if(commentError) return error
-
-        if(commentData) {
-            await supabase
+    try {
+        const { data, error } = await supabase
             .from('posts')
             .delete()
-            .eq('post_id', commentData[0].id)
+            .eq('id', id)
+            .select();
 
+        if (error) {
+            console.error('Error deleting single post:', error);
+            return error;
         }
-            data[0].post_id !== 0 ? window.location.replace(`/#/post/${data[0].post_id}`) : window.location.replace(`/#/`)
-        // return data[0]
+
+        if (data?.length > 0) {
+            const postId = data[0].id;
+
+            const { data: commentData, error: commentError } = await supabase
+                .from('posts')
+                .delete()
+                .eq('post_id', postId);
+
+            if (commentError) {
+                console.error('Error deleting related comments:', commentError);
+                return commentError;
+            }
+
+            if (commentData?.length > 0) {
+                await supabase
+                    .from('posts')
+                    .delete()
+                    .eq('post_id', commentData[0].id);
+            }
+
+            const redirectPath = data[0].post_id !== 0 
+                ? `/#/post/${data[0].post_id}` 
+                : '/#/';
+
+            window.location.replace(redirectPath);
+
+            return data[0];
+        }
+
+    } catch (err) {
+        console.error('singlePostDelete failed:', err);
+        return 'error';
     }
-})
+});
 
-export const getComments = createAsyncThunk('singlePost/getComments', async (paramsId) =>{
 
-      const {data, error} = await supabase.from('posts')
-      .select()
-      .eq('post_id', paramsId)
-        .order('id', {ascending: false})
+export const getComments = createAsyncThunk('singlePost/getComments', async (paramsId) => {
+    try {
+        const { data, error } = await supabase
+            .from('posts')
+            .select()
+            .eq('post_id', paramsId)
+            .order('id', { ascending: false });
 
-      if(error) {
-        return error
-      }
+        if (error) {
+            console.error('Error fetching comments:', error);
+            return error;
+        }
 
-      if(data) {
-        // console.log(data)
-        return data
-      } 
+        return data;
+    } catch (err) {
+        console.error('getComments failed:', err);
+        return 'error';
+    }
+});
 
-})
 
 export const addComment = createAsyncThunk('singlePost/addComment', async (userData) => {
+    try {
+        const { data, error } = await supabase
+            .from('posts')
+            .insert({
+                body: userData.body,
+                u_name: userData.name,
+                u_id: userData.u_id,
+                u_img: userData.u_img,
+                post_id: userData.paramsId,
+                type: userData.type
+            })
+            .select();
 
-    const { data,error } = await supabase
-    .from('posts')
-    .insert({ 
-        body: userData.body,
-        u_name: userData.name,
-        u_id: userData.u_id,
-        u_img: userData.u_img,
-        post_id: userData.paramsId,
-        type: userData.type
-        // origin_id: userData.paramsId
-    })
-    .select()
+        if (error) {
+            console.error('Error adding comment:', error);
+            showToast('error', 'Failed to post comment. Please try again later.');
+            return error;
+        }
 
-    if(error) {
-        toast.error("Oops something went wrong. Please try again later", {className: "text-sm  font-semibold", autoClose: 2000, position: 'top-right', closeOnClick: true, transition: Flip, hideProgressBar: true})
+        if (data?.length > 0) {
+            showToast('success', 'Comment Posted!');
+
+            await supabase
+                .from('notifications')
+                .insert({
+                    for: data[0].type,
+                    post_id: userData.paramsId,
+                    post_snippet: userData.body,
+                    receiver_id: userData.postUid,
+                    creator_name: userData.name,
+                    creator_id: userData.u_id,
+                    creator_img: userData.u_img
+                });
+
+            return data[0];
+        }
+    } catch (err) {
+        console.error('addComment failed:', err);
+        showToast('error', 'Failed to post comment. Please try again later.');
+        return 'error';
     }
-
-    if(data) {
-        toast.success('Comment Posted!', {className: "text-sm  font-semibold", autoClose: 2000, position: 'top-right', closeOnClick: true, transition: Flip, hideProgressBar: true})
-
-
-        await supabase
-        .from('notifications')
-        .insert({
-            "for": data[0].type,
-            "post_id": userData.paramsId,
-            "post_snippet": userData.body,
-            "receiver_id": userData.postUid,
-            "creator_name": userData.name,
-            "creator_id": userData.u_id,
-            "creator_img": userData.u_img
-        })
-        // .select()
-        return data[0]
-    }
-})
+});
 
 export const deleteSingleComment = createAsyncThunk('singlePost/deleteSingleComment', async (id) => {
-      const {data, error} = await supabase
-        .from('posts')
-        .delete()
-        .eq('id', id)
-        .select()
+    try {
+        const { data, error } = await supabase
+            .from('posts')
+            .delete()
+            .eq('id', id)
+            .select();
 
-      if(error){
-        console.log("Error", error)
-        return error
-      }
+        if (error) {
+            console.error('Error deleting comment:', error);
+            return error;
+        }
 
-      if(data) {
-        await supabase
-        .from('posts')
-        .delete()
-        .eq('post_id', id)
+        if (data?.length > 0) {
+            await supabase
+                .from('posts')
+                .delete()
+                .eq('post_id', id);
 
-        await supabase
-        .from('notifications')
-        .delete()
-        .eq('post_id', id)
-        return data[0]
-      } 
-})
+            await supabase
+                .from('notifications')
+                .delete()
+                .eq('post_id', id);
+
+            return data[0];
+        }
+    } catch (err) {
+        console.error('deleteSingleComment failed:', err);
+        return 'error';
+    }
+});
 
 export const getCommentLikes = createAsyncThunk('comments/getCommentLikes', async () => {
+    try {
+        const { data, error } = await supabase
+            .from('likes')
+            .select();
 
-    const {data, error} = await supabase
-    .from('likes')
-    .select()
+        if (error) {
+            console.error('Error fetching comment likes:', error);
+            return error;
+        }
 
-    if(error) {
-        console.log(error)
-      return error
+        return data;
+    } catch (err) {
+        console.error('getCommentLikes failed:', err);
+        return 'error';
     }
-
-    if(data) {
-      return data
-    }
-})
+});
 
 export const commentBookmarks = createAsyncThunk('comments/commentBookmarks', async () => {
+    try {
+        const { data, error } = await supabase
+            .from('bookmarks')
+            .select();
 
-    const {data, error} = await supabase
-    .from('bookmarks')
-    .select()
+        if (error) {
+            console.error('Error fetching comment bookmarks:', error);
+            return error;
+        }
 
-    if(error) {
-      return
+        return data;
+    } catch (err) {
+        console.error('commentBookmarks failed:', err);
+        return 'error';
     }
-
-    if(data) {
-      return data
-    }
-})
+});
 
 export const likeComment = createAsyncThunk('singlePost/likeComment', async (props) => {
-
-    const {data, error} = await supabase
-    .from('likes')
-    .insert({
-        "comment_id": props.commentId,
-        "u_id": props.creatorUid,
-        "for": ""
-    })
-    .select()
-    
-    if(error) {
-        return
-    }
-
-    if(data) {
-        await supabase
-        .from('notifications')
-        .insert({
-            "for": "comment_like",
-            "post_id": props.postId,
-            "comment_id": props.commentId,
-            "like_id": data[0].id,
-            "receiver_id": props.commentUid,
-            "creator_name": props.creatorName,
-            "creator_id": props.creatorUid,
-            "post_snippet": props.comment,
-            "creator_img": props.creatorImg
-        })
-        // .select()
-        console.log(data[0])
-        return data[0]
-    }
-
-})
-export const bookmarkComment = createAsyncThunk('singlePost/bookmarkComment', async (props) => {
-
-    const {data, error} = await supabase
-    .from('bookmarks')
-    .insert({
-        "comment_id": props.commentId,
-        "u_id": props.creatorUid
-    })
-    .select()
-    
-    if(error) {
-        return
-    }
-
-    if(data) {
-        if(props.creatorUid !== null) {
-            await supabase
-            .from('notifications')
+    try {
+        const { data, error } = await supabase
+            .from('likes')
             .insert({
-                "for": "comment_bookmark",
-                "post_id": props.postId,
-                "comment_id": props.commentId,
-                "bookmark_id": data[0].id,
-                "receiver_id": props.commentUid,
-                "creator_name": props.creatorName,
-                "creator_id": props.creatorUid,
-                "post_snippet": props.comment,
-                "creator_img": props.creatorImg
+                comment_id: props.commentId,
+                u_id: props.creatorUid,
+                for: ""
             })
-            .select()
-        }
-        return data[0]
-    }
+            .select();
 
-})
+        if (error) {
+            console.error('Error liking comment:', error);
+            return error;
+        }
+
+        if (data?.length > 0) {
+            await supabase
+                .from('notifications')
+                .insert({
+                    for: "comment_like",
+                    post_id: props.postId,
+                    comment_id: props.commentId,
+                    like_id: data[0].id,
+                    receiver_id: props.commentUid,
+                    creator_name: props.creatorName,
+                    creator_id: props.creatorUid,
+                    post_snippet: props.comment,
+                    creator_img: props.creatorImg
+                });
+
+            console.log(data[0]);
+            return data[0];
+        }
+    } catch (err) {
+        console.error('likeComment failed:', err);
+        return 'error';
+    }
+});
+
+export const bookmarkComment = createAsyncThunk('singlePost/bookmarkComment', async (props) => {
+    try {
+        const { data, error } = await supabase
+            .from('bookmarks')
+            .insert({
+                comment_id: props.commentId,
+                u_id: props.creatorUid
+            })
+            .select();
+
+        if (error) {
+            console.error('Error bookmarking comment:', error);
+            return error;
+        }
+
+        if (data?.length > 0 && props.creatorUid !== null) {
+            await supabase
+                .from('notifications')
+                .insert({
+                    for: "comment_bookmark",
+                    post_id: props.postId,
+                    comment_id: props.commentId,
+                    bookmark_id: data[0].id,
+                    receiver_id: props.commentUid,
+                    creator_name: props.creatorName,
+                    creator_id: props.creatorUid,
+                    post_snippet: props.comment,
+                    creator_img: props.creatorImg
+                });
+        }
+
+        return data[0];
+    } catch (err) {
+        console.error('bookmarkComment failed:', err);
+        return 'error';
+    }
+});
 
 export const unlikeComment = createAsyncThunk('singlePost/unlikeComment', async (id) => {
+    try {
+        const { data, error } = await supabase
+            .from('likes')
+            .delete()
+            .eq('id', id)
+            .select();
 
-    const {data, error} = await supabase
-    .from('likes')
-    .delete()
-    .eq('id', id)
-    .select()
+        if (error) {
+            console.error('Error unliking comment:', error);
+            return error;
+        }
 
-    if(error) return
-    // console.log(data[0])
-    return data[0]
-
-})
+        return data?.[0];
+    } catch (err) {
+        console.error('unlikeComment failed:', err);
+        return 'error';
+    }
+});
 
 export const unBookmarkComment = createAsyncThunk('singlePost/unBookmarkComment', async (id) => {
+    try {
+        const { data, error } = await supabase
+            .from('bookmarks')
+            .delete()
+            .eq('id', id)
+            .select();
 
-    const {data, error} = await supabase
-    .from('bookmarks')
-    .delete()
-    .eq('id', id)
-    .select()
+        if (error) {
+            console.error('Error removing comment bookmark:', error);
+            return error;
+        }
 
-    if(error) return
-    // console.log(data[0])
-    return data[0]
+        return data?.[0];
+    } catch (err) {
+        console.error('unBookmarkComment failed:', err);
+        return 'error';
+    }
+});
 
-})
-
-// export const unlike = createAsyncThunk('posts/unlike', async (id) => {
-
-//     const {data, error} = await supabase
-//     .from('commentLikes')
-//     .delete()
-//     .eq('id', id)
-//     .select()
-
-//     if(error) return
-//     console.log(data[0])
-//     return data[0]
-
-// })
-
-// export const commentBookmarks = createAsyncThunk('posts/commentBookmarks', async () => {
-
-//     const {data, error} = await supabase
-//     .from('commentBookmarks')
-//     .select()
-
-//     if(error) {
-//       return
-//     }
-
-//     if(data) {
-//       return data
-//     }
-// })
-
-// export const unBookmark = createAsyncThunk('posts/unBookmark', async (id) => {
-
-//     const {data, error} = await supabase
-//     .from('commentBookmarks')
-//     .delete()
-//     .eq('id', id)
-//     .select()
-
-//     if(error) return
-//     return data[0]
-
-// })
-
-// export const comments = createAsyncThunk('posts/comments', async () => {
-
-//     const {data, error} = await supabase
-//     .from('comments')
-//     .select()
-
-//     if(error) {
-//       return
-//     }
-
-//     if(data) {
-//       return data
-//     }
-
-// })
-
-// export const searchedPostQuery = createAsyncThunk('singlePost/searchedPostQuery', async (params) => {
-//           const { data,error } = await supabase
-//           .from('posts')
-//           .select()
-//           .ilike('body', `%${params.id}%`)
-//           .order('body', {ascending: false})
-
-//           const postData = data
-//           const postError = error
-//               if(postError) {
-//                 console.log(postError)
-//                 return error
-//               }
-
-//               if(postData) {
-//                 return postData
-//               }
-// })
 
 const singlePostSlice = createSlice({
     name: 'singlePost',
@@ -482,17 +480,6 @@ const singlePostSlice = createSlice({
                 state.errorComment = action.error.message
                 state.isBookmarkingComment = false
             })
-            // .addCase(commentBookmarks.pending, (state) => {
-            //     state.isLoadingPosts = true;
-            // })
-            // .addCase(commentBookmarks.fulfilled, (state, action) => {
-            //     state.commentBookmarks = action.payload,
-            //     state.isLoadingPosts = false
-            // })
-            // .addCase(commentBookmarks.rejected, (state, action) => {
-            //     state.errorPost = action.error.message
-            //     state.isLoadingPosts = false
-            // })
             .addCase(bookmarkComment.pending, (state) => {
                 state.isBookmarkingComment = true;
             })
@@ -504,39 +491,6 @@ const singlePostSlice = createSlice({
                 state.errorComment = action.error.message
                 state.isBookmarkingComment = false
             })
-            // .addCase(unBookmark.pending, (state) => {
-            //     state.isLoadingPosts = false;
-            // })
-            // .addCase(unBookmark.fulfilled, (state, action) => {
-            //     state.bookmarkedPosts = state.bookmarkedPosts.filter(x => x.id !== action.payload.post_id)
-            //     state.commentBookmarks = state.commentBookmarks.filter(x => x.id !== action.payload.id)
-            // })
-            // .addCase(unBookmark.rejected, (state, action) => {
-            //     state.errorPost = action.error.message
-            // })
-            // .addCase(comments.pending, (state) => {
-            //     state.isLoadingPosts = true;
-            // })
-            // .addCase(comments.fulfilled, (state, action) => {
-            //     state.comments = action.payload,
-            //     state.isLoadingPosts = false
-            // })
-            // .addCase(comments.rejected, (state, action) => {
-            //     state.errorPost = action.error.message
-            //     state.isLoadingPosts = false
-            // })
-            // .addCase(searchedPostQuery.pending, (state) => {
-            //     state.isLoadingPosts = true;
-            // })
-            // .addCase(searchedPostQuery.fulfilled, (state, action) => {
-            //     state.posts = action.payload,
-            //     state.isLoadingPosts = false
-            // })
-            // .addCase(searchedPostQuery.rejected, (state, action) => {
-            //     state.errorPost = action.error.message
-            //     state.posts = null,
-            //     state.isLoadingPosts = false
-            // })
     }
 })
 
