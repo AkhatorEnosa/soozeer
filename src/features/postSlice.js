@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import supabase from "../config/supabaseClient.config"
-import { Flip, toast } from "react-toastify"
 import PostedLink from "../components/PostedLink"
+import { showErrorToast, showSuccessToast } from "../utils/toastNotify"
 
 const initialState = {
     posts: [],
@@ -22,17 +22,6 @@ const initialState = {
     errorPost: false,
     hasNextPage: true
 }
-
-const showToast = (type, message) => {
-    toast[type](message, {
-        className: "text-sm font-semibold",
-        autoClose: 2000,
-        position: 'top-right',
-        closeOnClick: true,
-        transition: Flip,
-        hideProgressBar: true
-    });
-};
 
 
 // const randomizeSortFilter = () => {
@@ -141,17 +130,17 @@ export const userBookmarkedPosts = createAsyncThunk('posts/userBookmarkedPosts',
 
         if (error) {
             console.error('Error inserting post:', error);
-            showToast('error', "Oops something went wrong. Please try again later");
+            showErrorToast("Oops something went wrong. Please try again later");
             return error;
         }
 
         if (data) {
-            showToast('success', PostedLink);
+            showSuccessToast(PostedLink);
             return data[0];
         }
     } catch (err) {
         console.error('addPost failed:', err);
-        showToast('error', "Oops something went wrong. Please try again later");
+        showErrorToast("Oops something went wrong. Please try again later");
         return 'error';
     }
 });

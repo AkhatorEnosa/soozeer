@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import supabase from "../config/supabaseClient.config"
-import { Flip, toast } from "react-toastify"
+import { showErrorToast, showSuccessToast } from "../utils/toastNotify";
 
 const initialState = {
     currentPost: null,
@@ -17,18 +17,6 @@ const initialState = {
     isDeletingComment: false,
     errorComment: false
 }
-
-const showToast = (type, message) => {
-    toast[type](message, {
-        className: "text-sm font-semibold",
-        autoClose: 2000,
-        position: 'top-right',
-        closeOnClick: true,
-        transition: Flip,
-        hideProgressBar: true
-    });
-};
-
 
 export const getPost = createAsyncThunk('singlePost/getPost', async (paramsId) => {
     try {
@@ -141,12 +129,12 @@ export const addComment = createAsyncThunk('singlePost/addComment', async (userD
 
         if (error) {
             console.error('Error adding comment:', error);
-            showToast('error', 'Failed to post comment. Please try again later.');
+            showErrorToast('Failed to post comment. Please try again later.');
             return error;
         }
 
         if (data?.length > 0) {
-            showToast('success', 'Comment Posted!');
+            showSuccessToast('Comment Posted!');
 
             await supabase
                 .from('notifications')
@@ -164,7 +152,7 @@ export const addComment = createAsyncThunk('singlePost/addComment', async (userD
         }
     } catch (err) {
         console.error('addComment failed:', err);
-        showToast('error', 'Failed to post comment. Please try again later.');
+        showErrorToast('Failed to post comment. Please try again later.');
         return 'error';
     }
 });
