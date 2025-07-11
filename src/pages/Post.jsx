@@ -31,8 +31,6 @@ const Post = () => {
 
   const [search, setSearch] = useState('')
   const [newComment, setNewComment] = useState('')
-  const [theme, setTheme] = useState(localStorage.getItem("theme") === "dark" ? localStorage.getItem("theme") : "light")
-  const [systemThemeIsDark, setSystemThemeIsDark] = useState(false)
   const textareaRef = useRef(null);
 
 
@@ -57,30 +55,6 @@ const Post = () => {
   // useComments()
   useFollows()
   // useCommentLikes()
-
-  // handle theme
-  const htmlClassList = document.querySelector('html').classList
-  const checkForDark = window.matchMedia(`(prefers-color-scheme: dark)`)
-
-   useEffect(() => {
-      if(('theme' in localStorage)) {
-        setTheme(localStorage.getItem("theme"))
-        htmlClassList.remove("dark")
-        htmlClassList.remove("light")
-        htmlClassList.add(theme)
-      }
-      setSystemThemeIsDark(checkForDark.matches)
-
-      if(systemThemeIsDark == true) {
-        setTheme("dark")
-        localStorage.setItem("theme", "dark")
-        htmlClassList.add("dark")
-
-        if(htmlClassList.contains("light")) {
-            htmlClassList.remove("light")
-        }
-      } 
-  }, [theme, htmlClassList, systemThemeIsDark, checkForDark])
 
   useEffect(() => {
       supabase

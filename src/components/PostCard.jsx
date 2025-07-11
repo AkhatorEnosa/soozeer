@@ -48,7 +48,7 @@ const PostCard = ({userId, postId, liking, bookmarking, deleting, postUserId, po
   }
 
   return ( 
-    <div className={"relative w-full flex flex-col items-start dark:bg-black  text-sm border-y-[1px] border-black/5  dark:border-neutral-300/10 duration-200 transition-all dark:text-[#CBC9C9]"}>
+    <div className={"relative w-full flex flex-col items-start  text-sm border-y-[1px] border-black/5  dark:border-neutral-300/10 duration-200 transition-all dark:text-[#CBC9C9]"}>
         <Link to={`/post/${postId}`} className="absolute top-0 w-full h-full z-0"></Link>
       <div className="w-full h-full">
         <div className="flex w-full gap-3  px-3 ">

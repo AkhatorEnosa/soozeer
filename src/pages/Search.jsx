@@ -23,8 +23,8 @@ import JournalCard from "../components/JournalCard"
 
 const Search = () => {
   const [search, setSearch] = useState("")
-  const [theme, setTheme] = useState(localStorage.getItem("theme") === "dark" ? localStorage.getItem("theme") : "light")
-  const [systemThemeIsDark, setSystemThemeIsDark] = useState(false)
+  // const [theme, setTheme] = useState(localStorage.getItem("theme") === "dark" ? localStorage.getItem("theme") : "light")
+  // const [systemThemeIsDark, setSystemThemeIsDark] = useState(false)
 
   const params = useParams()
   const navigate = useNavigate();
@@ -44,31 +44,6 @@ const Search = () => {
   useFollows()
   const {mutate:others} = useOtherUsers()
   const {mutate:searchQuery} = useSearchQuery()
-
-
-  // handle theme
-  const htmlClassList = document.querySelector('html').classList
-  const checkForDark = window.matchMedia(`(prefers-color-scheme: dark)`)
-
-   useEffect(() => {
-      if(('theme' in localStorage)) {
-        setTheme(localStorage.getItem("theme"))
-        htmlClassList.remove("dark")
-        htmlClassList.remove("light")
-        htmlClassList.add(theme)
-      }
-      setSystemThemeIsDark(checkForDark.matches)
-
-      if(systemThemeIsDark == true) {
-        setTheme("dark")
-        localStorage.setItem("theme", "dark")
-        htmlClassList.add("dark")
-
-        if(htmlClassList.contains("light")) {
-            htmlClassList.remove("light")
-        }
-      } 
-  }, [theme, htmlClassList, systemThemeIsDark, checkForDark])
 
   // fetch all other users asides the one logged in or the one whose profile is being view at the moment
   const getOtherusers = (uid) => {

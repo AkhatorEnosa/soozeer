@@ -1,37 +1,9 @@
 
-import { useEffect, useState } from 'react'
 import logo from '../assets/png/logo-no-background.png'
 
 import { Link } from "react-router-dom"
 
 const NotFound = () => {
-    const [theme, setTheme] = useState(localStorage.getItem("theme") === "dark" ? localStorage.getItem("theme") : "light")
-  const [systemThemeIsDark, setSystemThemeIsDark] = useState(false)
-
-  // handle theme
-  const htmlClassList = document.querySelector('html').classList
-  const checkForDark = window.matchMedia(`(prefers-color-scheme: dark)`)
-
-   useEffect(() => {
-      if(('theme' in localStorage)) {
-        setTheme(localStorage.getItem("theme"))
-        htmlClassList.remove("dark")
-        htmlClassList.remove("light")
-        htmlClassList.add(theme)
-      }
-      setSystemThemeIsDark(checkForDark.matches)
-
-      if(systemThemeIsDark == true) {
-        setTheme("dark")
-        localStorage.setItem("theme", "dark")
-        htmlClassList.add("dark")
-
-        if(htmlClassList.contains("light")) {
-            htmlClassList.remove("light")
-        }
-      } 
-  }, [theme, htmlClassList, systemThemeIsDark, checkForDark])
-
   return (
     <div className='w-full h-screen flex flex-col'>
       <header className='w-full flex justify-between items-center px-5 md:px-20 py-3 md:py-5 shadow-sm top-0 bg-white/30 backdrop-blur-lg z-50'>

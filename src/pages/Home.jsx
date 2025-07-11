@@ -32,9 +32,6 @@ const Home = () => {
   const [privacy, setPrivacy] = useState(null)
   const textAreaRef = useRef(null);
   const [showPostInModal, setShowPostInModal] = useState(false)
-  const [theme, setTheme] = useState('theme' in localStorage ? localStorage.getItem("theme") : "light")
-  const [systemThemeIsDark, setSystemThemeIsDark] = useState(false)
-  // const [offset, setOffset] = useState(0)
 
   const {id: paramsId} = useParams()
   const navigate = useNavigate()
@@ -51,30 +48,6 @@ const Home = () => {
   useBookmarks()
   useFollows()
   const {mutate:others} = useOtherUsers()
-  // handle theme
-  const htmlClassList = document.querySelector('html').classList
-  const checkForDark = window.matchMedia(`(prefers-color-scheme: dark)`)
-
-  useEffect(() => {
-      if(('theme' in localStorage)) {
-        setTheme(localStorage.getItem("theme"))
-        htmlClassList.remove("dark")
-        htmlClassList.remove("light")
-        htmlClassList.add(theme)
-      }
-      setSystemThemeIsDark(checkForDark.matches)
-
-      if(systemThemeIsDark == true) {
-        setTheme("dark")
-        localStorage.setItem("theme", "dark")
-        htmlClassList.add("dark")
-
-        if(htmlClassList.contains("light")) {
-            htmlClassList.remove("light")
-        }
-      } 
-  }, [theme, htmlClassList, systemThemeIsDark, checkForDark])
-
 
   // useEffect(() => {
   //   dispatch(getPosts({ limit: 10, offset }));

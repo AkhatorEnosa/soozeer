@@ -16,8 +16,6 @@ import SearchModal from "../components/SearchModal"
 
 const Notifications = () => {
   const [search, setSearch] = useState('')
-  const [theme, setTheme] = useState(localStorage.getItem("theme") === "dark" ? localStorage.getItem("theme") : "light")
-  const [systemThemeIsDark, setSystemThemeIsDark] = useState(false)
 
   const {notifications, loggedUser, otherUsers, isLoading, isLoadingOtherUsers} = useSelector((state) => state.app)
   const {mutate} = useNotifications()
@@ -28,30 +26,6 @@ const Notifications = () => {
   const { follows, isLoadingFollows } = useSelector((state) => state.follows)
   useFollows()
   const {mutate:others} = useOtherUsers()
-
-  // handle theme
-  const htmlClassList = document.querySelector('html').classList
-  const checkForDark = window.matchMedia(`(prefers-color-scheme: dark)`)
-
-   useEffect(() => {
-      if(('theme' in localStorage)) {
-        setTheme(localStorage.getItem("theme"))
-        htmlClassList.remove("dark")
-        htmlClassList.remove("light")
-        htmlClassList.add(theme)
-      }
-      setSystemThemeIsDark(checkForDark.matches)
-
-      if(systemThemeIsDark == true) {
-        setTheme("dark")
-        localStorage.setItem("theme", "dark")
-        htmlClassList.add("dark")
-
-        if(htmlClassList.contains("light")) {
-            htmlClassList.remove("light")
-        }
-      } 
-  }, [theme, htmlClassList, systemThemeIsDark, checkForDark])
 
   const getNotifications = async(uid) => {
     if(loggedUser?.u_id !== null && uid !== undefined) {
