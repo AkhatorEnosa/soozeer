@@ -5,12 +5,11 @@ export default {
     darkMode: 'class',
     content: [
         "./index.html",
-        "./src/**/*.{js,jsx,html}", // JSX project
+        "./src/**/*.{js,jsx,html}",
     ],
     theme: {
         extend: {
             colors: {
-                // 🌞 Light Theme Tokens
                 primary: '#007AFF',
                 secondary: '#F91880',
                 success: '#28C76F',
@@ -18,25 +17,32 @@ export default {
                 error: '#d10001',
                 info: '#00CFE8',
                 accent: '#d4af37',
-                neutral: '#1A1A1A',
+                neutral: {
+                    lightest: '#FFFFFF',
+                    lighter: '#F0F2F5',
+                    light: '#E4E6EB',
+                    DEFAULT: '#606770',
+                    dark: '#1A1A1A',
+                },
                 bg: {
-                    DEFAULT: '#FFFFFF',     // Main light background
-                    muted: '#F0F2F5',       // Soft surface
-                    card: '#E4E6EB'         // Light card/panel
+                    DEFAULT: '#FFFFFF',
+                    muted: '#F5F5F5',
+                    card: '#E4E6EB',
                 },
-
-                // 🌚 Dark Theme Tokens (prefixed for clarity)
                 'dark-bg': {
-                    DEFAULT: '#121212',     // Main dark background
-                    muted: '#1A1A1A',       // Dark surface
-                    card: '#1E1E1E'         // Card/panel background
+                    DEFAULT: '#121212',
+                    muted: '#1A1A1A',
+                    card: '#1E1E1E',
                 },
-                'dark-neutral': '#CBC9C9' // Light text for dark mode
+                'dark-neutral': {
+                    DEFAULT: '#FFFFFF',
+                    muted: '#C0C0C0',
+                },
             }
         }
     },
     plugins: [daisyui],
     daisyui: {
-        themes: false // Keeps DaisyUI components working without preset themes
+        themes: false // 💥 Completely disables built-in themes
     }
 }

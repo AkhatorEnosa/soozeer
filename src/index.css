@@ -15,7 +15,6 @@
   /* letter-spacing: 0.5px; */
 
   max-width: 1800px;
-  @apply dark:bg-dark-bg;
 }
 
 /* input {

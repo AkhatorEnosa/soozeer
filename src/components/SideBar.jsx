@@ -162,7 +162,7 @@ const SideBar = ({uid, page, paramsId, toggleSearchBar}) => {
 
               <div 
                 className={showSubMenu ? 
-                  "absolute opacity-100 w-full flex flex-col gap-2 items-center -top-[12rem] left-0 text-base font-semibold py-5 px-3 transition-all duration-200 bg-red-400 z-50" : 
+                  "absolute opacity-100 w-full flex flex-col gap-2 items-center -top-[12rem] left-0 text-base font-semibold py-5 px-3 transition-all duration-200 z-50" : 
                   "absolute w-full flex flex-col gap-2 items-center opacity -top-[12rem] -left-[100vw] px-3 py-5 transition-all duration-200"
                 }
                 role="menu"

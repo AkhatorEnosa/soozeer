@@ -11,7 +11,9 @@ const ThemeToggleButton = ({handleThemeToggle, theme}) => {
       }}
       aria-label={`${theme} mode`}
       onClick={handleThemeToggle}>
-        {theme == "dark" ? <p className="w-fit flex gap-2 items-center"><i className="bi bi-brightness-high lg:text-2xl"></i><span className="hidden lg:flex">Light Mode</span></p> : <p className="w-full flex gap-2 items-center"><i className="bi bi-moon lg:text-2xl"></i><span className="hidden lg:flex"> Dark Mode</span></p>}
+        {/* {theme == "dark" ? <p className="w-fit flex gap-2 items-center"><i className="bi bi-brightness-high lg:text-2xl"></i><span className="hidden lg:flex">Light Mode</span></p> : <p className="w-full flex gap-2 items-center"><i className="bi bi-moon lg:text-2xl"></i><span className="hidden lg:flex"> Dark Mode</span></p>} */}
+
+        <span className={"w-fit flex gap-2 items-center"}><i className={`bi ${theme === "dark" ? "bi-brightness-high" : "bi-moon"} lg:text-2xl`}></i> {theme === "dark" ? "Go Light" : "Go Dark"}</span>
     </button>
   )
 }

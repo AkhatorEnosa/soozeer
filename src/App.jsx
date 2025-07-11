@@ -17,7 +17,7 @@ const UpdatePassword = lazy(() => import("./pages/account/UpdatePassword"))
 
 const App = () => {
   return (
-    <div>
+    <div className="dark:bg-dark-bg">
       <Router>
         <Navbar />
         <Routes>
