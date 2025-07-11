@@ -34,8 +34,8 @@ export default {
                     muted: '#1A1A1A',
                     card: '#1E1E1E',
                 },
-                'dark-neutral': {
-                    DEFAULT: '#FFFFFF',
+                'dark-text': {
+                    DEFAULT: '#CBC9C9',
                     muted: '#C0C0C0',
                 },
             }

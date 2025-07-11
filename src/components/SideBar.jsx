@@ -112,31 +112,31 @@ const SideBar = ({uid, page, paramsId, toggleSearchBar}) => {
                 <Link to='/' className="cursor-pointer"> <img src={logo2} alt="logo" className="hidden dark:flex w-32 md:w-36 lg:w-44"/> </Link>
               </div>
 
-              <Link to={'/'} className="w-full text-black dark:text-dark-neutral rounded-full">
+              <Link to={'/'} className="w-full text-black dark:text-dark-text rounded-full">
                   <p className={page === 'home' ? "text-primary flex font-semibold dark:text-white bg-primary/5 rounded-full gap-4 px-10 py-5 cursor-pointer" : "hover:bg-primary/5 dark:hover:bg-primary/15 rounded-full flex gap-4 px-10 py-5  cursor-pointer"}><i className={page === 'home' ? "bi bi-house-door-fill" : "bi bi-house-door"}></i> Home</p>
               </Link>
-              <Link to={`/${uid}`} className="w-full text-black dark:text-dark-neutral rounded-full">
-                  <p className={page === 'profile' && paramsId === uid ? "text-primary flex font-semibold dark:text-white bg-primary/5 rounded-full gap-4 px-10 py-5 cursor-pointer" : "hover:bg-primary/5 dark:hover:bg-primary/15 flex gap-4 px-10 py-5 cursor-pointer dark:text-dark-neutral rounded-full"}><i className={page === 'profile' && paramsId === uid ? "bi bi-person-fill" : "bi bi-person"}></i> Profile</p>
+              <Link to={`/${uid}`} className="w-full text-black dark:text-dark-text rounded-full">
+                  <p className={page === 'profile' && paramsId === uid ? "text-primary flex font-semibold dark:text-white bg-primary/5 rounded-full gap-4 px-10 py-5 cursor-pointer" : "hover:bg-primary/5 dark:hover:bg-primary/15 flex gap-4 px-10 py-5 cursor-pointer dark:text-dark-text rounded-full"}><i className={page === 'profile' && paramsId === uid ? "bi bi-person-fill" : "bi bi-person"}></i> Profile</p>
               </Link>
-              <Link to={`/messages/conversations`} className="w-full text-black dark:text-dark-neutral rounded-full">
+              <Link to={`/messages/conversations`} className="w-full text-black dark:text-dark-text rounded-full">
                   {page === 'messages' ? <p className="text-primary flex font-semibold dark:text-white bg-primary/5 rounded-full gap-4 px-10 py-5 cursor-pointer not-italic"><i className="bi bi-envelope-fill"></i> Messages</p> : 
-                  <p className="hover:bg-primary/5 dark:hover:bg-primary/15 flex gap-4 px-10 py-5 cursor-pointer not-italic dark:text-dark-neutral rounded-full">
+                  <p className="hover:bg-primary/5 dark:hover:bg-primary/15 flex gap-4 px-10 py-5 cursor-pointer not-italic dark:text-dark-text rounded-full">
                       <span className="flex relative"><i className="bi bi-envelope"></i> {messageCount} </span>
                       Messages</p>}
               </Link>
-              <Link to={`/notifications`} className="w-full text-black dark:text-dark-neutral rounded-full">
+              <Link to={`/notifications`} className="w-full text-black dark:text-dark-text rounded-full">
                   {page === 'notification' ? <p className="text-primary flex font-semibold dark:text-white bg-primary/5 rounded-full gap-4 px-10 py-5 cursor-pointer not-italic"><i className="bi bi-bell-fill"></i> Notifications</p> : 
-                  <p className="hover:bg-primary/5 dark:hover:bg-primary/15 flex gap-4 px-10 py-5 cursor-pointer not-italic dark:text-dark-neutral rounded-full">
+                  <p className="hover:bg-primary/5 dark:hover:bg-primary/15 flex gap-4 px-10 py-5 cursor-pointer not-italic dark:text-dark-text rounded-full">
                       <span className="flex relative"><i className="bi bi-bell"></i> {notificationCount} </span>
                       Notifications</p>}
               </Link>
-              <button className={page === 'search' ?  "w-full text-primary flex font-semibold dark:text-white bg-primary/5 rounded-full gap-4 px-10 py-5 cursor-pointer not-italic" : "w-full hover:bg-primary/5 dark:hover:bg-primary/15 flex gap-4 px-10 py-5 cursor-pointer not-italic dark:text-dark-neutral rounded-full"} onClick={toggleSearchBar}><i className={page === 'search' ? "bi bi-binoculars-fill" : "bi bi-binoculars"}></i> Search</button>
+              <button className={page === 'search' ?  "w-full text-primary flex font-semibold dark:text-dark-text bg-primary/5 rounded-full gap-4 px-10 py-5 cursor-pointer not-italic" : "w-full hover:bg-primary/5 dark:hover:bg-primary/15 flex gap-4 px-10 py-5 cursor-pointer not-italic dark:text-dark-text rounded-full"} onClick={toggleSearchBar}><i className={page === 'search' ? "bi bi-binoculars-fill" : "bi bi-binoculars"}></i> Search</button>
             </div>
             
             <div 
               role="button"
               tabIndex="0"
-              className="relative flex flex-col px-6 py-4 gap-5 justify-center text-base text-black dark:text-dark-neutral rounded-full hover:bg-primary/5 cursor-pointer z-0"
+              className="relative flex flex-col px-6 py-4 gap-5 justify-center text-base text-black dark:text-dark-text rounded-full hover:bg-primary/5 cursor-pointer z-0"
               onClick={() => setShowSubMenu(!showSubMenu)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
@@ -211,7 +211,7 @@ const SideBar = ({uid, page, paramsId, toggleSearchBar}) => {
         {
             triggerLogout && uid && 
           <div className="fixed w-screen h-screen flex justify-center px-10 bg-base-100/80 dark:bg-black/80 items-center top-0 left-0 cursor-default z-[1000]">
-                <div className="w-[85%] md:w-[50%] bg-base-100 dark:bg-black dark:text-dark-neutral p-5 rounded-[1rem] flex flex-col gap-2 border-[1px] border-black/10 dark:border-dark-netext-dark-neutral/20 shadow-md dark:shadow-dark-netext-dark-neutral/20">
+                <div className="w-[85%] md:w-[50%] bg-base-100 dark:bg-black dark:text-dark-text p-5 rounded-[1rem] flex flex-col gap-2 border-[1px] border-black/10 dark:border-dark-netext-dark-neutral/20 shadow-md dark:shadow-dark-netext-dark-neutral/20">
                     <h1 className="text-2xl lg:text-3xl font-semibold">Logout?</h1>
                     <p>Accepting will log you out of your account. Do you want to proceed?</p>
                     {
