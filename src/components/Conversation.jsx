@@ -34,6 +34,12 @@ const Conversation = ({messageId, messages, userId, users, name, img}) => {
     //     .subscribe()
     // }, [])
 
+    const content = 
+                    <div className="hidden md:flex flex-col text-center justify-center items-center h-96 text-neutral-dark dark:text-dark-text col-span-3 border-[1px] border-black/5 dark:border-neutral-300/10 px-4 py-4 rounded-md">
+                        <h1 className="font-bold text-3xl">Select a message</h1>
+                        <p>Choose from your existing conversations, start a new one, or just keep soozing 😂 .</p>
+                    </div>
+
     const findMessage = messages?.find(message => message.message_id == messageId)
     // console.log(findMessage)
     
@@ -146,19 +152,13 @@ const Conversation = ({messageId, messages, userId, users, name, img}) => {
                 )
             } else {
                 return (
-                    <div className="hidden md:flex flex-col text-center justify-center items-center h-96 col-span-3 border-[1px] border-black/5 dark:border-neutral-300/10 px-4 py-4 rounded-md">
-                        <h1 className="font-bold text-3xl">Select a message</h1>
-                        <p>Choose from your existing conversations, start a new one, or just keep soozing 😂 .</p>
-                    </div>
+                    content
                 )
             }
         }
     } else {
         return (
-            <div className="hidden md:flex flex-col text-center justify-center items-center h-96 col-span-3 border-[1px] border-black/5 dark:border-neutral-300/10 px-4 py-4 rounded-md">
-                <h1 className="font-bold text-3xl">Select a message</h1>
-                <p>Choose from your existing conversations, start a new one, or just keep soozing 😂 .</p>
-            </div>
+            content
         )
     }
 }

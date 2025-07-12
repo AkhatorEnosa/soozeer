@@ -447,9 +447,11 @@ const appSlice = createSlice({
       })
       .addCase(getNotifications.pending, (state) => {
         state.notifications = null;
+        state.isLoading = true;
       })
       .addCase(getNotifications.fulfilled, (state, action) => {
         state.notifications = action.payload;
+        state.isLoading = false;
       })
       .addCase(getNotifications.rejected, (state, action) => {
         state.error = action.error;

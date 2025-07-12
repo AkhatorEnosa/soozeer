@@ -17,68 +17,71 @@ const UpdatePassword = lazy(() => import("./pages/account/UpdatePassword"))
 
 const App = () => {
   return (
-    <div className="bg-bg dark:bg-dark-bg">
-      <Router>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={
-            <Suspense>
-              <Home />
-            </Suspense>
-          }/>
+    <div>
+      <div className="fixed w-screen h-screen top-0 left-0 bg-bg dark:bg-dark-bg z-0"></div>
+      <div className="relative z-10"> 
+        <Router>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={
+              <Suspense>
+                <Home />
+              </Suspense>
+            }/>
 
-          <Route path="/login" element={
-            <Suspense>
-              <Login />
-            </Suspense>}/>
+            <Route path="/login" element={
+              <Suspense>
+                <Login />
+              </Suspense>}/>
 
-          <Route path="/register" element={
-            <Suspense>
-              <Register />
-            </Suspense>}/>
+            <Route path="/register" element={
+              <Suspense>
+                <Register />
+              </Suspense>}/>
 
-          <Route path="/account/reset-password" element={
-            <Suspense>
-              <ResetPassword />
-            </Suspense>}/>
+            <Route path="/account/reset-password" element={
+              <Suspense>
+                <ResetPassword />
+              </Suspense>}/>
 
-          <Route path="/account/update-password" element={
-            <Suspense>
-              <UpdatePassword />
-            </Suspense>}/>
+            <Route path="/account/update-password" element={
+              <Suspense>
+                <UpdatePassword />
+              </Suspense>}/>
 
-          <Route path="/search/:id" element={
-            <Suspense>
-              <Search />
-            </Suspense>
-          }/>
+            <Route path="/search/:id" element={
+              <Suspense>
+                <Search />
+              </Suspense>
+            }/>
 
-          <Route path="/:id" element={
-            <Suspense>
-              <Profile />
-            </Suspense>
-          }/>
+            <Route path="/:id" element={
+              <Suspense>
+                <Profile />
+              </Suspense>
+            }/>
 
-          <Route path="/post/:id" element={
-            <Suspense>
-              <Post />
-            </Suspense>
-          }/>
+            <Route path="/post/:id" element={
+              <Suspense>
+                <Post />
+              </Suspense>
+            }/>
 
-          <Route path="/notifications" element={
-            <Suspense>
-              <Notifications />
-            </Suspense>
-          }/>
+            <Route path="/notifications" element={
+              <Suspense>
+                <Notifications />
+              </Suspense>
+            }/>
 
-          <Route path="/messages/:id" element={
-            <Suspense>
-              <Messages />
-            </Suspense>
-          }/>
-        </Routes>
-        <ToastContainer />
-      </Router>
+            <Route path="/messages/:id" element={
+              <Suspense>
+                <Messages />
+              </Suspense>
+            }/>
+          </Routes>
+          <ToastContainer />
+        </Router>
+      </div>
     </div>
   )
 }

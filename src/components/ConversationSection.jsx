@@ -6,14 +6,14 @@ import MessageBubble from "./MessageBubble";
 const ConversationSection = ({toUId, toImg, toName, messagesRef, divRef, messageValue, setMessageValue, isAddingMessage, handleSubmit, getConversationMessages, isDeleting, userId }) => {
     const navigate = useNavigate();
   return (
-    <div className="absolute top-0 left-0 w-full h-screen md:relative flex flex-col md:h-fit col-span-3 lg:border-[1px] border-black/5 dark:border-neutral-300/10 lg:px-1 py-4 rounded-t-lg rounded-b-3xl pb-24 md:pb-2 bg-base-100 dark:bg-black dark:text-[#CBC9C9] gap-2 justify-between lg:pt-5">
+    <div className="absolute top-0 left-0 w-full h-screen md:relative flex flex-col md:h-fit col-span-3 lg:border-[1px] border-black/5 dark:border-neutral-300/10 lg:px-1 py-4 rounded-t-lg rounded-b-3xl pb-24 md:pb-2 bg-base-100 dark:bg-black gap-2 justify-between lg:pt-5">
         <div className="flex flex-col w-full h-full gap-4">
             <div className="w-full flex flex-col px-4 bg-base-100 dark:bg-black lg:px-0 lg:justify-between items-center z-30">
                 {/* back button */}
                 <div className="w-full flex bg-base-100 dark:bg-black px-4 md:hidden">
                     <BackBtn link={() => navigate('../messages/conversations')} title={'Back'}/>
                 </div>
-                <Link to={`/${toUId}`} className="px-3 md:px-5 w-full flex md:flex-col items-center justify-center gap-2 text-neutral dark:text-[#CBC9C9]">
+                <Link to={`/${toUId}`} className="px-3 md:px-5 w-full flex md:flex-col items-center justify-center gap-2 text-neutral-dark dark:text-dark-text">
                     <img src={toImg} className="w-8 h-8 object-cover object-center rounded-full cursor-default"/>
                     <b className="md:text-md">{toName}</b>
                 </Link> 

@@ -11,67 +11,10 @@ const Navbar = () => {
   const [showSubMenu, setShowSubMenu] = useState(false)
   const [triggerLogout, setTriggerLogout] = useState(false)
   const {loggedUser, isLoading, exiting} = useSelector((state) => state.app)
-  const [theme, setTheme] = useState(localStorage.getItem("theme") === "dark" ? localStorage.getItem("theme") : "light")
-  const [systemThemeIsDark, setSystemThemeIsDark] = useState(false)
   const body = document.body
 
   const dispatch = useDispatch()
   useGetUser();
-
-  // handle theme
-  const htmlClassList = document.querySelector('html').classList
-  const checkForDark = window.matchMedia(`(prefers-color-scheme: dark)`)
-
-  useEffect(() => {
-    if(('theme' in localStorage)) {
-      setTheme(theme)
-      htmlClassList.add(theme)
-    }
-    setSystemThemeIsDark(checkForDark.matches)
-
-    if(systemThemeIsDark == true) {
-      setTheme("dark")
-      localStorage.setItem("theme", "dark")
-      htmlClassList.add("dark")
-
-      if(htmlClassList.contains("light")) {
-          htmlClassList.remove("light")
-      }
-    }
-
-    checkForDark.addEventListener('change', ({ matches }) => {
-      if(matches == true){
-        setTheme("dark")
-        localStorage.setItem("theme", "dark")
-        htmlClassList.add("dark")
-
-        if(htmlClassList.contains("light")) {
-            htmlClassList.remove("light")
-        }
-      }
-    })
-    
-  }, [theme, htmlClassList, systemThemeIsDark, checkForDark])
-
-  const handleThemeToggle = () => {
-    if(systemThemeIsDark == false) {
-      if(theme == "light") {
-        localStorage.setItem("theme", "dark")
-        setTheme("dark")
-        htmlClassList.add("dark")
-        if(htmlClassList.contains("light")) {
-          htmlClassList.remove("light")
-        }
-      } else {
-        localStorage.setItem("theme", "light")
-        setTheme("light")
-        htmlClassList.add("light")
-        if(htmlClassList.contains("dark")) {
-          htmlClassList.remove("dark")
-        }
-      }
-    }
-  }
 
   useEffect(() => {
     if(triggerLogout || showSubMenu) {
@@ -122,7 +65,27 @@ const Navbar = () => {
                   {showSubMenu && <div className="fixed left-0 top-0 w-screen h-screen cursor-default" onClick={()=> setShowSubMenu(false)}></div>}
                   <div className={showSubMenu ? "absolute opacity-100 w-fit flex flex-col gap-2 top-11 right-0 transition-all duration-200 cursor-pointer" : "absolute w-fit flex flex-col gap-2 items-center opacity-0 -top-64 right-0 transition-all duration-200"}>
 
-                    <ThemeToggleButton handleThemeToggle={handleThemeToggle} theme={theme} systemTheme={systemThemeIsDark}/>
+
+                    <div className="w-full grid grid-cols-3 items-center justify-center bg-base-100 dark:bg-primary/5 rounded-full border-[1px] border-neutral-100 shadow-sm dark:shadow-primary/40 text-xs lg:text-base dark:border-neutral-500 overflow-hidden"
+                      role="menuitem"
+                      tabIndex={showSubMenu ? 0 : -1}
+                    >
+                      <ThemeToggleButton
+                        currentTheme={"light"}
+                        icon={"bi-brightness-high-fill"}
+                        variant={"text-orange-500 dark:text-orange-500"}
+                      />
+                      <ThemeToggleButton
+                        currentTheme={"dark"}
+                        icon={"bi-moon-fill"}
+                        variant={"text-yellow-200 dark:text-yellow-200"}
+                      />
+                      <ThemeToggleButton
+                        currentTheme={"system"}
+                        icon={"bi-cpu-fill"}
+                        variant={"text-blue-500 dark:text-blue-500"}
+                      />
+                    </div>
                     <p className="w-full flex gap-2 items-center justify-center bg-base-100 dark:bg-black rounded-full border-[1px] border-neutral-100 shadow-sm dark:shadow-primary/40 text-xs font-semibold dark:border-primary/40 bg-primary/5 px-4 py-2" onClick={() => setTriggerLogout(true)}>Logout</p>
                   </div>
               </div>}

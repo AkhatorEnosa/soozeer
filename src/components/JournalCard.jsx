@@ -43,11 +43,11 @@ const JournalCard = ({privacy, postUserIdVal, postUserId, title, journal, uImg, 
   }
 
   return (
-    <div className={`w-full px-5 py-4 flex flex-col dark:bg-black dark:text-[#cbc9c9] gap-3`}>
+    <div className={`w-full px-5 py-4 flex flex-col dark:text-dark-text gap-3`}>
         <div className="w-full p-2 shadow-sm">
             <div className="flex justify-center items-center">
                 <div className="w-full flex flex-col gap-0">
-                    <h1 className="text-xl lg:text-lg font-semibold">{title}</h1>
+                    <h1 className="text-xl lg:text-lg font-semibold dark:text-white">{title}</h1>
                     <div className="w-fit flex gap-2 items-center">
                       <i className="text-[10px] not-italic text-neutral-400">{moment(datetime).format("Do MMM, YYYY hh:mm a") + ' . ' + moment(datetime).fromNow()}</i>
                       <span className="flex gap-1 justify-center items-center text-[8px] px-2 border-[1px] border-accent text-accent bg-accent/10 font-semibold rounded-full"><i className="bi bi-person-fill-lock"></i>{privacy}</span>
