@@ -1,47 +1,61 @@
 /* eslint-disable react/prop-types */
-import { createContext, useEffect, useMemo, useState, useCallback } from 'react';
+import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
 
 export const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
+
   const [theme, setTheme] = useState(() => {
+    // Get saved theme from localStorage
     const savedTheme = localStorage.getItem('theme');
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    return savedTheme || (systemPrefersDark ? 'dark' : 'light');
+    
+    // Handle system preference check
+    const getSystemTheme = () => 
+      window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  
+    // Return priority: saved theme > system preference
+    return ['dark', 'light'].includes(savedTheme) ? savedTheme : getSystemTheme();
   });
-
-  const applyTheme = useCallback((newTheme) => {
-    document.documentElement.classList.toggle('dark', newTheme === 'dark');
-    localStorage.setItem('theme', newTheme);
+  
+  const themeHandler = useCallback((newTheme) => {
+    const resolvedTheme = newTheme === 'system'
+      ? window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+      : newTheme;
+  
+    setTheme(resolvedTheme);
+    localStorage.setItem('theme', newTheme); // Store the preference (even if 'system')
   }, []);
-
-  const themeHandler = useCallback(() => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    applyTheme(newTheme);
-  }, [theme, applyTheme]);
-
+  
   useEffect(() => {
-    applyTheme(theme);
-
+    // Safely apply theme class
+    document.documentElement.classList.remove('light', 'dark');
+    document.documentElement.classList.add(theme);
+    
+    // Optional: Store actual theme being used
+    localStorage.setItem('theme', theme);
+    console.log(theme, 'theme applied');
+  }, [theme]);
+  
+  // Bonus: System preference change listener
+  useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleSystemThemeChange = (e) => {
-      if (!localStorage.getItem('theme')) {
-        const newTheme = e.matches ? 'dark' : 'light';
-        setTheme(newTheme);
-        applyTheme(newTheme);
+    const handleChange = () => {
+      if (localStorage.getItem('theme') === 'system') {
+        setTheme(mediaQuery.matches ? 'dark' : 'light');
       }
     };
-
-    mediaQuery.addEventListener('change', handleSystemThemeChange);
-    return () => mediaQuery.removeEventListener('change', handleSystemThemeChange);
-  }, [applyTheme, theme]);
+    
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+  
+  
 
   const contextValue = useMemo(() => ({
     theme,
     setTheme,
     themeHandler
-  }), [theme, themeHandler]);
+  }), [theme]);
 
   return (
     <ThemeContext.Provider value={contextValue}>

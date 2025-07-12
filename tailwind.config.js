@@ -1,4 +1,4 @@
-import daisyui from "daisyui";
+// import daisyui from "daisyui";
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -30,7 +30,7 @@ export default {
                     card: '#E4E6EB',
                 },
                 'dark-bg': {
-                    DEFAULT: '#121212',
+                    DEFAULT: '#030303',
                     muted: '#1A1A1A',
                     card: '#1E1E1E',
                 },
@@ -41,8 +41,8 @@ export default {
             }
         }
     },
-    plugins: [daisyui],
-    daisyui: {
-        themes: false // 💥 Completely disables built-in themes
-    }
+    // plugins: [daisyui],
+    // daisyui: {
+    //     themes: false // 💥 Completely disables built-in themes
+    // }
 }

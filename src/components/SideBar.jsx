@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { useContext, useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import useNotifications from "../hooks/useNotifications"
 import logo1 from '../assets/logo-grayscale.png'
@@ -7,12 +7,10 @@ import logo2 from '../assets/logo-grayscale-white.png'
 import { logOut } from "../features/appSlice"
 import { getMessages } from "../features/messageSlice"
 import ThemeToggleButton from "./ThemeToggleButton"
-import { ThemeContext } from "../context/ThemeContext"
 // import supabase from "../config/supabaseClient.config"
 
 /* eslint-disable react/prop-types */
 const SideBar = ({uid, page, paramsId, toggleSearchBar}) => {
-  const { theme, themeHandler } = useContext(ThemeContext)
   const body = document.body
   const [triggerLogout, setTriggerLogout] = useState(false)
   const [showSubMenu, setShowSubMenu] = useState(false)
@@ -162,20 +160,35 @@ const SideBar = ({uid, page, paramsId, toggleSearchBar}) => {
 
               <div 
                 className={showSubMenu ? 
-                  "absolute opacity-100 w-full flex flex-col gap-2 items-center -top-[12rem] left-0 text-base font-semibold py-5 px-3 transition-all duration-200 z-50" : 
+                  "absolute opacity-100 w-full flex flex-col gap-2 items-center -top-[12rem] left-0 text-base py-5 px-3 transition-all duration-200 z-50" : 
                   "absolute w-full flex flex-col gap-2 items-center opacity -top-[12rem] -left-[100vw] px-3 py-5 transition-all duration-200"
                 }
                 role="menu"
               >
-                <ThemeToggleButton 
-                  handleThemeToggle={themeHandler} 
-                  theme={theme}
+                <div className="w-full grid grid-cols-3 items-center justify-center bg-base-100 dark:bg-primary/5 rounded-full border-[1px] border-neutral-100 shadow-sm dark:shadow-primary/40 text-xs lg:text-base dark:border-neutral-500 overflow-hidden"
                   role="menuitem"
-                  tabIndex={showSubMenu ? 0 : -1}  // Only focusable when menu is open
-                />
+                  tabIndex={showSubMenu ? 0 : -1}
+                >
+                  <ThemeToggleButton
+                    currentTheme={"light"}
+                    icon={"bi-brightness-high-fill"}
+                    variant={"text-orange-500 dark:text-orange-500"}
+                  />
+                  <ThemeToggleButton
+                    currentTheme={"dark"}
+                    icon={"bi-moon-fill"}
+                    variant={"text-yellow-200 dark:text-yellow-200"}
+                  />
+                  <ThemeToggleButton
+                    currentTheme={"system"}
+                    icon={"bi-cpu-fill"}
+                    variant={"text-blue-500 dark:text-blue-500"}
+                  />
+
+                </div>
                 
                 <button 
-                  className="w-full flex gap-2 items-center bg-base-100 dark:bg-black rounded-full border-[1px] border-neutral-100 shadow-sm dark:shadow-primary/40 text-base font-semibold dark:bg-primary/5 dark:border-neutral-500 rounded-full/40 hover:bg-primary/5 dark:hover:bg-primary/15 px-10 py-5"
+                  className="w-full flex gap-2 items-center bg-base-100 dark:bg-black rounded-full border-[1px] border-neutral-100 shadow-sm dark:shadow-primary/40 text-base dark:bg-primary/5 dark:border-neutral-500 rounded-full/40 hover:bg-primary/5 dark:hover:bg-primary/15 px-10 py-5"
                   onClick={() => setTriggerLogout(true)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
@@ -186,7 +199,7 @@ const SideBar = ({uid, page, paramsId, toggleSearchBar}) => {
                     }
                   }}
                   role="menuitem"
-                  tabIndex={showSubMenu ? 0 : -1}  // Only focusable when menu is open
+                  tabIndex={showSubMenu ? 0 : -1}
                 >
                   Logout
                 </button>
