@@ -380,7 +380,7 @@ const Search = () => {
             uid={loggedUser !== null ? loggedUser.u_id : null} 
             page={'search'} />
 
-            <div className="main w-full flex flex-col col-span-4 border-[1px] border-black/5  dark:border-neutral-300/10 py-4 lg:px-5 lg:py-7 gap-2 lg:gap-5 rounded-md">
+            <div className="main w-full flex flex-col col-span-4 border-[1px] border-black/5  dark:border-neutral-300/10 py-4 lg:px-5 lg:py-7 gap-2 lg:gap-5 text-neutral-dark dark:text-dark-text rounded-md">
 
               <div className="w-full flex px-3 bg-base-100/50 dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">
                 <BackBtn link={() => navigate(-1)} title={'Back'}/>
@@ -392,21 +392,21 @@ const Search = () => {
                   <form 
                   onSubmit={handlePostSearch} 
                   className="flex flex-col gap-7 mt-2 px-2">
-                    <label className="input input-bordered bg-primary/5 rounded-full flex items-center gap-3 dark:bg-black/50 border-[1px] dark:border-[#CBC9C9]/40 outline-none dark:focus:bg-black/50"><i className="bi bi-binoculars-fill"></i>
+                    <label className="input input-bordered bg-primary/5 rounded-full flex items-center text-sm gap-3 dark:bg-black/50 border-[1px] dark:border-[#CBC9C9]/40 outline-none dark:focus:bg-black/50"><i className="bi bi-binoculars-fill"></i>
                       <input type="text" name="search" id="search" value={search} placeholder={params.id} className="w-full placeholder:text-inherit" onChange={(e)=>setSearch(e.target.value)}/>
                     </label>
                   </form>
               </div>
 
                   <>
-                    <div className="w-full people">
+                    <div className="w-full people text-neutral-dark dark:text-neutral-lighter">
                       <h1 className={searchedUsers?.length > 0 ? "text-lg mb-2 px-3 lg:px-0 lg:text-xl font-bold w-full flex gap-3 justify-between items-center" : "hidden"}>People <i className="bi bi-people-fill"></i></h1>
                       <div className="divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
                         {people}
                       </div>
                     </div>
 
-                    <div className="w-full content">
+                    <div className="w-full content text-neutral-dark dark:text-neutral-lighter">
                       <h1 className={searchedPosts?.length > 0 ? "text-lg mb-2 px-3 lg:px-0 lg:text-xl font-bold w-full flex gap-3 justify-between items-center" : "hidden"}>Posts/Comments/Replies/Journals <i className="bi bi-chat-square-text-fill"></i></h1>
                       <div className="divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
                         {content} 
@@ -420,7 +420,7 @@ const Search = () => {
           <div className="hidden sticky right-0 top-5 lg:flex flex-col gap-5 h-fit col-span-2 py-3 border-[1px] border-black/5 dark:border-neutral-300/10 rounded-md">
 
             <div>
-              <h2 className="capitalize font-bold text-xl px-3 mb-4">Other Interests</h2>
+              <h2 className="capitalize font-bold text-xl px-3 mb-4 text-neutral-dark dark:text-neutral-lighter">Other Interests</h2>
               {isLoadingOtherUsers ? <div className="w-full flex flex-col gap-4">
                 <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
                 <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>

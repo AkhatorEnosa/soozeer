@@ -43,7 +43,7 @@ const Navbar = () => {
 
   // if(loggedUser) {
     return (
-      <header className='lg:hidden relative top-0 w-full flex justify-between items-center dark:bg-black px-5 md:px-20 py-2 md:py-3 backdrop-blur-lg z-[120]'>
+      <header className='lg:hidden relative top-0 w-full flex justify-between items-center dark:bg-black px-2 md:px-10 lg:px-20 py-2 md:py-3 backdrop-blur-lg z-[120]'>
           <div className="flex h-full justify-center items-center">
             <Link to='/' className="lg:py-5 cursor-pointer"> <img src={logo1} alt="logo" className="dark:hidden w-32 md:w-36 lg:w-44"/>  </Link>
             <Link to='/' className="lg:py-5 cursor-pointer"> <img src={logo2} alt="logo" className="hidden dark:flex w-32 md:w-36 lg:w-44"/> </Link>
@@ -66,7 +66,7 @@ const Navbar = () => {
                   <div className={showSubMenu ? "absolute opacity-100 w-fit flex flex-col gap-2 top-11 right-0 transition-all duration-200 cursor-pointer" : "absolute w-fit flex flex-col gap-2 items-center opacity-0 -top-64 right-0 transition-all duration-200"}>
 
 
-                    <div className="w-full grid grid-cols-3 items-center justify-center bg-base-100 dark:bg-primary/5 rounded-full border-[1px] border-neutral-100 shadow-sm dark:shadow-primary/40 text-xs lg:text-base dark:border-neutral-500 overflow-hidden"
+                    <div className="w-[150px] grid grid-cols-3 items-center justify-center bg-bg-muted dark:bg-dark-bg rounded-full border-[1px] border-neutral-100 shadow-sm dark:shadow-primary/40 text-xs font-semibold dark:border-primary/40 bg-primary/5 overflow-hidden"
                       role="menuitem"
                       tabIndex={showSubMenu ? 0 : -1}
                     >
@@ -86,7 +86,10 @@ const Navbar = () => {
                         variant={"text-blue-500 dark:text-blue-500"}
                       />
                     </div>
-                    <p className="w-full flex gap-2 items-center justify-center bg-base-100 dark:bg-black rounded-full border-[1px] border-neutral-100 shadow-sm dark:shadow-primary/40 text-xs font-semibold dark:border-primary/40 bg-primary/5 px-4 py-2" onClick={() => setTriggerLogout(true)}>Logout</p>
+                    <p className="w-full flex gap-2 items-center justify-center bg-bg-muted dark:bg-dark-bg rounded-full border-[1px] border-neutral-100 shadow-sm dark:shadow-primary/40 text-xs font-semibold dark:border-primary/40 bg-primary/5 px-4 py-2" onClick={() => setTriggerLogout(true)}>
+                      <i className="bi bi-box-arrow-right"></i>
+                      Logout
+                    </p>
                   </div>
               </div>}
             </ul>

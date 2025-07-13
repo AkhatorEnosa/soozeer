@@ -658,7 +658,7 @@ const Home = () => {
             {loggedUser?.u_id || isLoadingOtherUsers ? <>
               {/* search  */}
               <form onSubmit={handleSearch} className="flex flex-col gap-5 py-2 bg-base-100 dark:bg-black dark:text-[#cbc9c9] z-50">
-                  <input type="text" name="search" id="search" value={search} placeholder="Search..." className="w-full px-4 py-2  border-[1px] dark:border-[#CBC9C9]/40 placeholder:text-inherit outline-none dark:bg-black dark:focus-within:bg-black/50 rounded-full" onChange={(e)=> setSearch(e.target.value).trim()}/>
+                  <input type="text" name="search" id="search" value={search} placeholder="Search..." className="w-full px-4 py-2 border-[1px] dark:border-[#CBC9C9]/40 text-neutral-dark dark:text-dark-text text-sm placeholder:text-inherit outline-none dark:bg-black dark:focus-within::bg-black/50 rounded-full" onChange={(e)=> setSearch(e.target.value).trim()}/>
               </form>
               <div className="py-3 border-t-[1px] border-[1px] border-black/5  dark:border-[#CBC9C9]/20 rounded-md">
                 <h2 className="font-bold text-xl px-5 pb-4 dark:text-[#CBC9C9]">Suggested</h2>

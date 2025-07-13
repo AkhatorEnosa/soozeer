@@ -61,7 +61,7 @@ const PostCard = ({userId, postId, liking, bookmarking, deleting, postUserId, po
                 <div className="w-full flex flex-col">
                   <div className="w-full flex justify-between items-center mb-2">
                     <div className="w-fit flex flex-col">
-                      <Link to={userId && `/${postUserIdVal}`} className="w-fit relative z-20 "><h3 className="w-fit font-bold text-left hover:underline text-neutral dark:text-[#CBC9C9] cursor-default">{uName}</h3></Link>
+                      <Link to={userId && `/${postUserIdVal}`} className="w-fit relative z-20 "><h3 className="w-fit font-bold text-left hover:underline text-neutral-dark dark:text-neutral-lighter cursor-default">{uName}</h3></Link>
                       <span className="w-full text-start text-[0.5rem] text-neutral-400">{moment(datetime).format("Do MMM, YYYY hh:mm a") + ' . ' + moment(datetime).fromNow()}</span>
                     </div>
                   </div>

@@ -252,11 +252,11 @@ const Profile = () => {
           />
         ))
       } else {
-        userList = <h1 className="w-full h-56 flex flex-col gap-4 justify-center items-center z-50 text-5xl text-black/50 py-5"><i className="bi bi-people"></i> <p className="text-base">No body to see, yet!</p></h1>
+        userList = <h1 className="w-full h-56 flex flex-col gap-4 justify-center items-center z-50 text-5xl text-neutral-dark dark:text-dark-text py-5"><i className="bi bi-people"></i> <p className="text-base">No body to see, yet!</p></h1>
       }
       }
     } else {
-      userList = <h1 className="w-full h-56 flex flex-col gap-4 justify-center items-center z-50 text-5xl text-black/50 py-5"><i className="bi bi-people"></i> <p className="text-base">No body to see, yet!</p></h1>
+      userList = <h1 className="w-full h-56 flex flex-col gap-4 justify-center items-center z-50 text-5xl text-neutral-dark dark:text-dark-text py-5"><i className="bi bi-people"></i> <p className="text-base">No body to see, yet!</p></h1>
     }
 
     // render posts based on tab 
@@ -904,26 +904,26 @@ const Profile = () => {
 
                     {isLoadingProfile ? 
                       <div className="skeleton dark:bg-slate-600 h-48 w-full opacity-15 z-40"></div> : 
-                      <div className="relative w-full flex gap-2 px-2 md:px-8 md:gap-4 items-start z-40">
+                      <div className="relative w-full flex gap-2 px-2 md:px-8 md:gap-4 text-neutral-dark dark:text-dark-text items-start z-40">
                           <img src={currentProfile?.u_img} alt="" className="w-20 h-20 object-cover object-center rounded-md z-50" width={80} height={80} onClick={() => window.open(currentProfile.u_img, '_blank').focus()} loading="lazy"/>
                           <div className="w-full flex flex-col md:flex-row md:justify-between gap-3">
                             <div className="w-full flex flex-col gap-2">
                               <div className="w-full">
-                                <h1 className="md:text-2xl font-semibold dark:text-[#CBC9C9]">{fullNameVal === '' ? currentProfile?.name : fullNameVal}</h1>
+                                <h1 className="md:text-2xl font-semibold text-neutral-dark dark:text-neutral-light">{fullNameVal === '' ? currentProfile?.name : fullNameVal}</h1>
                                 <div className="relative -top-1 ">
-                                  <h3 className="text-[10px] md:text-xs text-neutral-400">@{currentProfile?.u_name}</h3>
+                                  <h3 className="text-[10px] md:text-xs text-neutral-dark dark:text-neutral">@{currentProfile?.u_name}</h3>
                                   <p className={currentProfile?.bio === null || currentProfile?.bio === '' ? "hidden" : "w-full text-xs md:text-sm text-left mt-1"}>{bioVal === '' ? currentProfile?.bio : bioVal}</p>
                                 </div>
-                                {currentProfile?.u_id == loggedUser?.u_id || currentProfile?.dob !== null && currentProfile?.dob_privacy == false  ? <div className="w-full flex items-center text-inherit dark:text-[#cbc9c9] gap-2 text-neutral-500 font-semibold">
+                                {currentProfile?.u_id == loggedUser?.u_id || currentProfile?.dob !== null && currentProfile?.dob_privacy == false  ? <div className="w-full flex items-center text-inherit text-neutral-dark dark:text-dark-text gap-2 font-semibold">
                                   {currentProfile?.dob !== null && <><span className="w-fit flex gap-2 text-xs items-center"><i className="bi bi-cake2-fill"></i>Birthday on {moment(currentProfile?.dob).format("MMMM Do, YYYY")}</span>
                                   {currentProfile?.u_id == loggedUser?.u_id && <span className="flex gap-1 justify-center items-center text-[8px] px-2 border-[1px] border-info text-info bg-info/10 font-semibold rounded-full"><i className="bi bi-person-fill-lock"></i>{currentProfile?.dob_privacy == true ? "For Me" : "Everyone"}</span>}</>}
                                 </div> : "" 
                                 }
-                                <p className="w-full flex items-center text-xs dark:text-[#cbc9c9] gap-2 text-neutral-500 font-semibold"><i className="bi bi-calendar3"></i>Joined {moment(currentProfile?.created_at).format('MMMM YYYY')}</p>
+                                <p className="w-full flex items-center text-xs text-neutral-dark dark:text-dark-text gap-2 font-semibold"><i className="bi bi-calendar3"></i>Joined {moment(currentProfile?.created_at).format('MMMM YYYY')}</p>
                               </div>
 
 
-                              <div className="w-full flex gap-3 text-xs md:text-sm font-bold">
+                              <div className="w-full flex gap-3 text-xs md:text-sm font-bold text-neutral-dark dark:text-neutral-light">
                                 <p className="hover:underline cursor-pointer" onClick={() => setShowFollowsModal(true) & setFollowType('followings')}>{getFollowings()?.length} Followings</p>
                                 <p className="hover:underline cursor-pointer" onClick={() => setShowFollowsModal(true) & setFollowType('followers')}>{getFollowers()?.length} Followers</p>
                               </div>
@@ -966,12 +966,12 @@ const Profile = () => {
                   </div>
 
                   <div className="tabs divide-y-[1px] divide-black/5 dark:divide-slate-500/20 flex flex-col items-center">
-                    <ul className={`grid ${loggedUser?.u_id === profileId ? "w-full grid-cols-5" : "w-full md:w-[60%] grid-cols-3"} justify-between overflow-scroll no-scrollbar text-sm md:text-base font-medium bg-base-100/50 dark:bg-black/50 backdrop-blur-sm sticky top-10 z-[100]`} ref={tabsRef}>
-                      <li className={tab === 'posts' ? "w-full text-center border-b-2 border-primary py-3 px-0 cursor-pointer" : "w-full text-center hover:border-b-2 border-primary/30 hover:bg-primary/5 py-3 px-0 cursor-pointer"} onClick={() => setTab('posts')}>Posts</li>
-                      <li className={tab === 'replies' ? "w-full text-center border-b-2 border-primary py-3 px-0 cursor-pointer" : "w-full text-center hover:border-b-2 border-primary/30 hover:bg-primary/5 py-3 px-0 cursor-pointer"} onClick={() => setTab('replies')}>Replies</li>
-                      <li className={tab === 'journals' ? "w-full text-center border-b-2 border-primary py-3 px-0 cursor-pointer" : "w-full text-center hover:border-b-2 border-primary/30 hover:bg-primary/5 py-3 px-0 cursor-pointer"} onClick={() => setTab('journals')}>Journals</li>
-                      {loggedUser?.u_id === profileId && <li className={tab === 'likes' ? "w-full text-center border-b-2 border-primary py-3 px-0 cursor-pointer" : "w-full text-center hover:border-b-2 border-primary/30 hover:bg-primary/5 py-3 px-0 cursor-pointer"} onClick={() => setTab('likes')}>Likes</li>}
-                      {loggedUser?.u_id === profileId && <li className={tab === 'bookmarks' ? "w-full text-center border-b-2 border-primary py-3 px-0 cursor-pointer" : "w-full text-center hover:border-b-2 border-primary/30 hover:bg-primary/5 py-3 px-0 cursor-pointer"} onClick={() => setTab('bookmarks')}>Bookmarks</li>}
+                    <ul className={`grid ${loggedUser?.u_id === profileId ? "w-full grid-cols-5" : "w-full md:w-[60%] grid-cols-3"} justify-between overflow-scroll no-scrollbar text-sm md:text-base font-medium text-neutral-dark dark:text-dark-text bg-base-100/50 dark:bg-black/50 backdrop-blur-sm sticky top-10 z-[100]`} ref={tabsRef}>
+                      <li className={tab === 'posts' ? "w-full text-center border-b-2 border-primary dark:text-neutral-lightest py-3 px-0 cursor-pointer" : "w-full text-center hover:border-b-2 border-primary/30 hover:bg-primary/5 py-3 px-0 cursor-pointer"} onClick={() => setTab('posts')}>Posts</li>
+                      <li className={tab === 'replies' ? "w-full text-center border-b-2 border-primary dark:text-neutral-lightest py-3 px-0 cursor-pointer" : "w-full text-center hover:border-b-2 border-primary/30 hover:bg-primary/5 py-3 px-0 cursor-pointer"} onClick={() => setTab('replies')}>Replies</li>
+                      <li className={tab === 'journals' ? "w-full text-center border-b-2 border-primary dark:text-neutral-lightest py-3 px-0 cursor-pointer" : "w-full text-center hover:border-b-2 border-primary/30 hover:bg-primary/5 py-3 px-0 cursor-pointer"} onClick={() => setTab('journals')}>Journals</li>
+                      {loggedUser?.u_id === profileId && <li className={tab === 'likes' ? "w-full text-center border-b-2 border-primary dark:text-neutral-lightest py-3 px-0 cursor-pointer" : "w-full text-center hover:border-b-2 border-primary/30 hover:bg-primary/5 py-3 px-0 cursor-pointer"} onClick={() => setTab('likes')}>Likes</li>}
+                      {loggedUser?.u_id === profileId && <li className={tab === 'bookmarks' ? "w-full text-center border-b-2 border-primary dark:text-neutral-lightest py-3 px-0 cursor-pointer" : "w-full text-center hover:border-b-2 border-primary/30 hover:bg-primary/5 py-3 px-0 cursor-pointer"} onClick={() => setTab('bookmarks')}>Bookmarks</li>}
                     </ul>
                     {<div className="w-full content">
                       {isLoadingPosts || isLoadingProfile ? <div className="w-full flex flex-col gap-4">
@@ -993,10 +993,10 @@ const Profile = () => {
                 {loggedUser?.u_id ? <>
                   {/* search  */}
                   <form onSubmit={handleSearch} className="flex flex-col gap-5 py-2 bg-base-100 dark:bg-black z-50">
-                      <input type="text" name="search" id="search" value={search} placeholder="Search..." className="w-full px-4 py-2 border-[1px] dark:border-[#CBC9C9]/40 placeholder:text-inherit outline-none dark:bg-black dark:focus-within::bg-black/50 rounded-full" onChange={(e)=>setSearch(e.target.value)}/>
+                      <input type="text" name="search" id="search" value={search} placeholder="Search..." className="w-full px-4 py-2 border-[1px] dark:border-[#CBC9C9]/40 text-neutral-dark dark:text-dark-text text-sm placeholder:text-inherit outline-none dark:bg-black dark:focus-within::bg-black/50 rounded-full" onChange={(e)=>setSearch(e.target.value)}/>
                   </form>
                   <div className="py-3 border-t-[1px] border-[1px] border-black/5  dark:border-slate-500/20 rounded-md">
-                    <h2 className="capitalize font-bold text-xl px-5 mb-3 dark:text-[#CBC9C9]">Other Interests</h2>
+                    <h2 className="capitalize font-bold text-xl px-5 mb-3 text-neutral-dark dark:text-neutral-lighter">Other Interests</h2>
                     {isLoading || isLoadingOtherUsers ? <div className="w-full flex flex-col gap-4">
                       <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
                       <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
@@ -1010,8 +1010,8 @@ const Profile = () => {
                       <p>Join Us to</p>
                       <h1 className="font-bold text-4xl">Explore</h1>
                       <ul className="flex mt-10 gap-4">
-                        <Link to={'/login'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral dark:border-slate-200 dark:text-[#CBC9C9]   hover:bg-black hover:text-base-100 dark:hover:bg-slate-200">Login</li></Link>
-                        <Link to={'/register'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral dark:border-slate-200 dark:text-[#CBC9C9]   hover:bg-black hover:text-base-100 dark:hover:bg-slate-200">Register</li></Link>
+                        <Link to={'/login'}><li className="py-2 px-4 border-[1px] rounded-full border-black dark:border-slate-200 text-neutral-dark dark:text-dark-text   hover:bg-black hover:text-base-100 dark:hover:bg-slate-200">Login</li></Link>
+                        <Link to={'/register'}><li className="py-2 px-4 border-[1px] rounded-full border-black dark:border-slate-200 text-neutral-dark dark:text-dark-text   hover:bg-black hover:text-base-100 dark:hover:bg-slate-200">Register</li></Link>
                       </ul>
                   </div>}
                 </div>
@@ -1020,7 +1020,7 @@ const Profile = () => {
           </div>
 
         {/* bio edit modal  */}
-        <div className={showEdit == false ? 'hidden' : "fixed w-screen h-screen flex justify-center px-10 bg-base-100/90 dark:bg-black/90 items-center top-0 left-0 cursor-default z-[1000]"} >
+        <div className={showEdit == false ? 'hidden' : "fixed w-screen h-screen flex justify-center px-10 bg-base-100/90 dark:bg-black/90 text-neutral-dark dark:text-neutral-lighter items-center top-0 left-0 cursor-default z-[1000]"} >
           <div className="w-full flex flex-col md:w-[80%] lg:w-[50%] max-h-[90%] bg-base-100 dark:bg-black px-2 md:px-4 py-2 md:py-5 rounded-md gap-6 border-[1px] border-black/10 dark:border-[#CBC9C9]/20 shadow-md dark:shadow-[#cbc9c9]/20 overflow-scroll">
             <div className="w-full flex justify-between items-center">
               <h1 className="font-bold w-fit flex gap-2 justify-center items-center text-lg md:text-xl">Edit <i className="bi bi-pencil-square"></i></h1>
@@ -1036,13 +1036,13 @@ const Profile = () => {
                   <p className="font-bold text-xs md:text-sm text-primary dark:text-white">{`${fullNameValCount}/50`}</p>
                 </div>
                 <input name="fullname" id="fullname" maxLength={50}
-                  className={fullNameVal !== '' ? "w-full rounded-lg p-2 dark:bg-black placeholder:text-sm text-sm md:text-xl border-[1px] dark:border-[#CBC9C9]/40 outline-none" : "w-full rounded-lg p-2 dark:bg-black placeholder:text-sm text-sm md:text-xl border border-error bg-error/5 dark:bg-black/50 outline-none"} value={fullNameVal} placeholder="Fullname" onChange={handleFullNameChange}/>
+                  className={fullNameVal !== '' ? "w-full rounded-lg p-2 dark:text-dark-text dark:bg-black placeholder:text-sm text-sm md:text-xl border-[1px] dark:border-[#CBC9C9]/40 outline-none" : "w-full rounded-lg p-2 dark:bg-black dark:text-dark-text placeholder:text-sm text-sm md:text-xl border border-error bg-error/5 dark:bg-black/50 outline-none"} value={fullNameVal} placeholder="Fullname" onChange={handleFullNameChange}/>
               </label>
 
 
               <label className="w-full flex flex-col gap-2">
                 <p className="font-semibold text-xs md:text-sm">Display Picture</p>
-                <div className="w-full flex gap-5 items-center border-[1px] px-2 py-4 rounded-lg md:p-3 group dark:bg-black/50 hover:bg-primary-content/5  dark:border-[#CBC9C9]/40 cursor-pointer">
+                <div className="w-full flex gap-5 items-center border-[1px] px-2 py-4 rounded-lg md:p-3 group dark:bg-black/50 hover:bg-primary-content/5  dark:border-[#CBC9C9]/40 dark:text-dark-text cursor-pointer">
                   <div className="relative w-fit flex justify-center items-center">
                     <img src={profilePic} alt="profilepic" className="w-10 h-10 md:w-48 md:h-48 z-30 object-cover object-center rounded-full" width={80} height={80} loading="lazy"/>
                       <div className="absolute w-full h-full flex flex-col justify-center gap-1 z-50 text-white/70 transition-all duration-200 bg-black/50 rounded-full">
@@ -1064,7 +1064,7 @@ const Profile = () => {
                   <p className="font-bold text-sm text-primary dark:text-white">{`${bioValCount}/150`}</p>
                 </div>
                 <textarea rows={5} maxLength={150} name="post" id="edit" 
-                  className="w-full rounded-lg p-2 placeholder:text-sm text-sm md:text-base border dark:bg-black/50 dark:border-[#CBC9C9]/40 outline-none" value={bioVal} placeholder="Bio..." onChange={handleBioChange}/>
+                  className="w-full rounded-lg p-2 placeholder:text-sm text-sm md:text-base dark:text-dark-text border dark:bg-black/50 dark:border-[#CBC9C9]/40 outline-none" value={bioVal} placeholder="Bio..." onChange={handleBioChange}/>
               </label>
 
               <label className="w-full flex flex-col gap-2">
@@ -1077,7 +1077,7 @@ const Profile = () => {
                   </select>
                 </div>
                 <input name="dob" id="dob" type="date" max={getTodayDate()}
-                  className={dob !== '' ? "w-full rounded-lg p-2 dark:text-[#cbc9c9] dark:bg-black placeholder:text-sm text-sm md:text-xl border-[1px] dark:border-[#CBC9C9]/40 outline-none" : "w-full rounded-lg p-2 dark:text-[#cbc9c9] dark:bg-black placeholder:text-sm text-sm md:text-xl border border-error bg-error/5 dark:bg-black/50 outline-none"} value={moment(dob).format("YYYY-MM-DD")} placeholder="Enter your Date of Birth" onChange={(e) => setDob(e.target.value)}/>
+                  className={dob !== '' ? "w-full rounded-lg p-2 text-neutral-dark dark:text-dark-text dark:bg-black placeholder:text-sm text-sm md:text-xl border-[1px] dark:border-[#CBC9C9]/40 outline-none" : "w-full rounded-lg p-2 text-neutral-dark dark:text-dark-text dark:bg-black placeholder:text-sm text-sm md:text-xl border border-error bg-error/5 dark:bg-black/50 outline-none"} value={moment(dob).format("YYYY-MM-DD")} placeholder="Enter your Date of Birth" onChange={(e) => setDob(e.target.value)}/>
               </label>
 
               {fullNameVal !== '' && dob !== '' && <button className="w-full btn btn-primary text-white rounded-full" onClick={handleEdit} disabled={isUpdatingProfile && "disabled"}>{isUpdatingProfile ?  <span className="loading loading-spinner loading-sm text-white"></span> : 'Update'}</button>}
@@ -1087,20 +1087,20 @@ const Profile = () => {
         </div>
 
         {/* followings/followers modal  */}
-        <div className={`w-screen h-screen ${showFollowsModal ? "flex" : "hidden"} flex-col justify-center items-center fixed top-0 left-0 bg-base-100/90 dark:bg-black/90 shadow-lg mb-4 z-[120]`}>
+        <div className={`w-screen h-screen ${showFollowsModal ? "flex" : "hidden"} flex-col justify-center items-center fixed top-0 left-0 bg-base-100/90 dark:bg-black/90 shadow-lg mb-4 z-[201]`}>
           <div className="flex flex-col justify-center items-center bg-base-100 dark:bg-black p-5 rounded-lg w-[80%] md:w-[60%] lg:w-[40%] border-[1px] border-black/10 dark:border-[#CBC9C9]/20 shadow-md dark:shadow-[#cbc9c9]/20">
             <div className="w-full flex justify-between items-center mb-5">
               <div className="flex gap-2 items-center">
-                <h1 className="font-semibold text-lg lg:text-2xl">{followType == 'followers' ? "Followers" : "Followings"}</h1>
+                <h1 className="font-semibold text-lg lg:text-2xl text-neutral-dark dark:text-neutral-lighter">{followType == 'followers' ? "Followers" : "Followings"}</h1>
               </div>
 
               {/* closePostFormModal button */}
-              <span className="size-10 flex justify-center items-center p-2 bg-black/5 lg:bg-none hover:bg-black/5 rounded-full" onClick={() => setShowFollowsModal(!showFollowsModal)}><i className="bi bi-x-lg cursor-pointer"></i></span>
+              <span className="size-10 flex justify-center items-center p-2 hover:bg-black/5 text-neutral-dark dark:text-dark-text dark:hover:bg-neutral-light/10 rounded-full" onClick={() => setShowFollowsModal(!showFollowsModal)}><i className="bi bi-x-lg cursor-pointer"></i></span>
             </div>
 
             {followType == "followers" && getFollowers()?.length > 0 ? getFollowers()?.map((follower) => (
               <div key={follower.id} className="px-3 py-2 lg:py-3 flex items-center justify-between gap-3 w-full text-neutral dark:text-neutral-content hover:bg-primary/5">
-              <Link to={`../${follower.follower_id}`} className="w-full flex items-center text-inherit dark:text-[#cbc9c9] underline hover:no-underline gap-2">
+              <Link to={`../${follower.follower_id}`} className="w-full flex items-center text-inherit text-neutral-dark dark:text-dark-text underline hover:no-underline gap-2">
                 <img src={follower.follower_img} className="size-8 lg:size-10 object-cover rounded-full cursor-default" loading="lazy"/>
                 <div className="flex flex-col">
                   <b className="text-xs lg:text-sm">{follower.follower_name}</b> 
@@ -1127,7 +1127,7 @@ const Profile = () => {
             </div> 
             )) : followType == "followings" && getFollowings()?.length > 0 ? getFollowings()?.map((following) => (
               <div key={following.id} className="px-3 py-2 lg:py-3 flex items-center justify-between gap-3 w-full text-neutral dark:text-neutral-content hover:bg-primary/5">
-              <Link to={`../${following.followed_id}`} className="w-full flex items-center text-inherit dark:text-[#cbc9c9] underline hover:no-underline gap-2">
+              <Link to={`../${following.followed_id}`} className="w-full flex items-center text-inherit text-neutral-dark dark:text-dark-text underline hover:no-underline gap-2">
                 <img src={following.followed_img} className="size-8 lg:size-10 object-cover rounded-full cursor-default" loading="lazy"/>
                 <div className="flex flex-col">
                   <b className="text-xs lg:text-sm">{following.followed_name}</b> 

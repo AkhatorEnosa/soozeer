@@ -86,7 +86,7 @@ const Footer = ({uid, page, paramsId, toggleSearchBar}) => {
   // }
 
   return (
-    <>{uid && <div className='lg:hidden w-full h-20 flex fixed justify-center bottom-0 bg-base-100 dark:bg-black px-4 md:px-20 z-40 border-t-[1px] border-primary/20 text-lg md:text-2xl dark:text-[#CBC9C9]'>
+    <>{uid && <div className='lg:hidden w-full h-20 flex fixed justify-center bottom-0 bg-bg/90 backdrop-blur-sm dark:bg-dark-bg/90 px-4 md:px-20 z-40 border-t-[1px] border-primary/20 text-lg md:text-2xl dark:text-[#CBC9C9]'>
         <ul className='w-full h-full lg:max-w-[90%] grid grid-cols-5'>
             <Link to={'/'} className=" text-neutral dark:text-[#CBC9C9]">
                 <li className={page === 'home' ? "text-primary backdrop-blur-none border-b-2 border-primary h-full flex flex-col justify-center items-center cursor-pointer" : "hover:text-primary hover hover:border-b-2 hover:border-primary h-full flex flex-col justify-center items-center cursor-pointer"}><i className={page === 'home' ? "bi-house-door-fill" : "bi-house-door"}></i></li>
@@ -105,25 +105,6 @@ const Footer = ({uid, page, paramsId, toggleSearchBar}) => {
             <li className={page === 'search' ?  "text-primary border-b-2 border-primary h-full flex flex-col justify-center items-center cursor-pointer" : "hover:text-primary hover hover:border-b-2 hover:border-primary h-full flex flex-col justify-center items-center cursor-pointer"} onClick={toggleSearchBar}><i className={page === 'search' ? "bi bi-binoculars-fill" : "bi bi-binoculars"}></i></li>
         </ul>
     </div>}
-      {/* {
-          triggerLogout && uid && 
-          <div className="fixed w-full h-full flex justify-center px-10 bg-white/20 dark:bg-neutral/20 backdrop-blur-sm items-center top-0 left-0 cursor-default z-[60]">
-                <div className="w-[85%] md:w-[50%] shadow-lg bg-white p-5 rounded-[1rem] flex flex-col gap-2">
-                  <h1 className="text-2xl lg:text-3xl font-semibold">Logout?</h1>
-                  <p>Accepting will log you out of your account. Do you want to proceed?</p>
-                  {
-                      !exiting ? 
-                          <div className="w-full flex gap-2 mt-10 font-bold justify-end">
-                              <button className="w-fit px-4 py-2 rounded-full bg-error text-white lg:hover:shadow-md" onClick={handleLogout}>Yes, Logout</button>
-                              <button className="w-fit px-4 py-2 rounded-full bg-black text-white lg:hover:shadow-md" onClick={() => setTriggerLogout(false)}>Cancel</button>
-                          </div> : 
-                          <div className="w-full flex gap-2 mt-10 font-bold justify-center items-center">
-                              <span className="loading loading-spinner"></span>
-                          </div> 
-                  }
-              </div>
-          </div>
-      } */}
     </>
   )
 }

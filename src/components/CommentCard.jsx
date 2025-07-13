@@ -14,7 +14,7 @@ const CommentCard = ({userId, deleting, liking, bookmarking, commentUserId, comm
               <Link to={`/${commentUserIdVal}`} className="w-fit"><img src={uImg} alt="" className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover"/></Link>
               <div className="basis-11/12 w-full flex flex-col m-0 col-span-4 gap-2">
                   <div className="w-full flex flex-col">
-                    <Link to={`/${commentUserIdVal}`} className="w-full"><h3 className="w-fit font-bold text-left hover:underline text-neutral dark:text-slate-200">{uName}</h3></Link>
+                    <Link to={`/${commentUserIdVal}`} className="w-full"><h3 className="w-fit font-bold text-left hover:underline text-neutral-dark dark:text-neutral-lighter">{uName}</h3></Link>
                     <span className="w-full text-start text-[0.5rem] text-neutral-400">{moment(datetime).format("Do MMM, YYYY . HH:MM a")}</span>
                   </div>
                 <div className="w-full">

@@ -34,7 +34,7 @@ const ViewPostCard = ({userId, deleting, liking, bookmarking, following, postUse
 
             <div className="w-full flex justify-between items-center mb-2">
               <div className="w-full flex flex-col">
-                <Link to={`/${postUserIdVal}`} className="w-full"><h3 className="w-fit text-md md:text-lg font-bold text-left hover:underline text-neutral dark:text-[#CBC9C9]">{uName}</h3></Link>
+                <Link to={`/${postUserIdVal}`} className="w-full"><h3 className="w-fit text-md md:text-lg font-bold text-left hover:underline text-neutral-dark dark:text-neutral-lighter">{uName}</h3></Link>
                 <span className="w-full text-start text-[0.6rem] lg:text-xs  text-neutral-400">{moment(datetime).format("Do MMM, YYYY . HH:MM a")}</span>
               </div>
               {userId && postUserId && <button className={followed === false ? "flex gap-1 justify-center items-center text-xs px-2 py-2 text-primary border-[1px] border-primary rounded-full hover:text-black hover:border-black" : "group flex gap-1 justify-center items-center text-xs px-2 py-2 text-white bg-primary rounded-full hover:bg-neutral hover:border-neutral border-[1px] border-primary transition-all duration-300"} onClick={toggleFollow}>{following ? <span className={`loading loading-ring loading-sm ${followed ? "text-white" : "text-primary"}`}></span> : (!following && followed === false) ? <><i className="bi bi-plus-lg"></i> Follow</> : <>
