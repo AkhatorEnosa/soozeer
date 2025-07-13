@@ -203,508 +203,323 @@ const Profile = () => {
       }
     }
   }
-
-  
-  // feeding content to be rendered conditionally
-  let content;
-  let userList;
-
   // Loading? 
-  if(isLoading){
-      content =
-          <div className="w-full flex flex-col gap-4">
-            <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-            <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-            <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-            <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-          </div>
-  }else{ 
-    
-    // verify id and other users availability 
-    if(loggedUser?.u_id) {
-      if (otherUsers !== null) {
-        if(otherUsers?.length > 0 && !isLoadingOtherUsers) {
-        userList = otherUsers.slice(0,4).map(x => (
-          <OtherUsersCard 
-            key={x.id}
-            userImg={x.u_img}
-            name={x.name}
-            uName={x.u_name}
-            userIdVal = {x.u_id}
-            followed={followed(x.u_id)}
-            following={isLoadingFollows}
-            toggleFollow={() => {
-                    const verifyFollow = follows.find(follow => ((follow.followed_id == x.u_id) && (follow.follower_id == loggedUser?.u_id)))
-                      console.log(verifyFollow)
-                      if(verifyFollow == undefined) {
-                            dispatch(followUser({
-                              uid: loggedUser.u_id,
-                              creatorName: loggedUser.name,
-                              creatorImg: loggedUser.u_img,
-                              receiverUid: x.u_id,
-                              receiverName: x.name,
-                              receiverImg: x.u_img
-                            }))
-                      } else {
-                          removeFollow(verifyFollow.id)
-                      }
-                }}
-          />
-        ))
-      } else {
-        userList = <h1 className="w-full h-56 flex flex-col gap-4 justify-center items-center z-50 text-5xl text-neutral-dark dark:text-dark-text py-5"><i className="bi bi-people"></i> <p className="text-base">No body to see, yet!</p></h1>
-      }
-      }
+  // Loading state skeleton
+  const renderLoadingState = () => (
+    <div className="w-full flex flex-col gap-4">
+      {[...Array(4)].map((_, i) => (
+        <div key={i} className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
+      ))}
+    </div>
+  );
+
+  // Empty state component
+  const renderEmptyState = (icon, message) => (
+    <div className="w-full py-10 flex flex-col gap-4">
+      <h1 className="w-full h-56 flex flex-col justify-center items-center z-50 text-9xl">
+        <i className={`bi ${icon}`}></i>
+        <p className="text-base">{message}</p>
+      </h1>
+    </div>
+  );
+
+  // Common user list empty state
+  const userListEmptyState = (
+    <h1 className="w-full h-56 flex flex-col gap-4 justify-center items-center z-50 text-5xl text-neutral-dark dark:text-dark-text py-5">
+      <i className="bi bi-people"></i>
+      <p className="text-base">No body to see, yet!</p>
+    </h1>
+  );
+
+  // Render user list
+  const renderUserList = () => {
+    if (!loggedUser?.u_id) return userListEmptyState;
+    if (!otherUsers || otherUsers.length === 0 || isLoadingOtherUsers) return userListEmptyState;
+
+    return otherUsers.slice(0, 4).map((user) => (
+      <OtherUsersCard
+        key={user.id}
+        userImg={user.u_img}
+        name={user.name}
+        uName={user.u_name}
+        userIdVal={user.u_id}
+        followed={followed(user.u_id)}
+        following={isLoadingFollows}
+        toggleFollow={() => handleFollowToggle(user)}
+      />
+    ));
+  };
+
+  // Handle follow toggle logic
+  const handleFollowToggle = (user) => {
+    const verifyFollow = follows.find(
+      (follow) => follow.followed_id === user.u_id && follow.follower_id === loggedUser?.u_id
+    );
+
+    if (!verifyFollow) {
+      dispatch(
+        followUser({
+          uid: loggedUser.u_id,
+          creatorName: loggedUser.name,
+          creatorImg: loggedUser.u_img,
+          receiverUid: user.u_id,
+          receiverName: user.name,
+          receiverImg: user.u_img,
+        })
+      );
     } else {
-      userList = <h1 className="w-full h-56 flex flex-col gap-4 justify-center items-center z-50 text-5xl text-neutral-dark dark:text-dark-text py-5"><i className="bi bi-people"></i> <p className="text-base">No body to see, yet!</p></h1>
+      removeFollow(verifyFollow.id);
+    }
+  };
+
+  // Common post interaction handlers
+  const getPostInteractionHandlers = (post) => ({
+    toggleFollow: () => handleFollowToggle({ u_id: post.u_id, u_name: post.u_name, u_img: post.u_img }),
+    likePost: () => handleLikePost(post),
+    bookmarkPost: () => handleBookmarkPost(post),
+    deletePost: () => deletePost(post.id),
+  });
+
+  // Handle like post
+  const handleLikePost = (post) => {
+    const verifyLike = likes.find((like) => like.post_id === post.id && like.u_id === loggedUser.u_id);
+    
+    if (!verifyLike) {
+      dispatch(
+        likePost({
+          postId: post.id,
+          creatorUid: loggedUser.u_id,
+          creatorName: loggedUser.name,
+          creatorImg: loggedUser.u_img,
+          postUid: post.u_id,
+          postBody: post.body || post.journal,
+          ...(post.type === 'journal' && { for: post.type }),
+        })
+      );
+    } else {
+      removeLike(verifyLike.id);
+    }
+  };
+
+  // Handle bookmark post
+  const handleBookmarkPost = (post) => {
+    const verifyBookmark = bookmarks.find(
+      (bookmark) => bookmark.post_id === post.id && bookmark.u_id === loggedUser.u_id
+    );
+
+    if (!verifyBookmark) {
+      dispatch(
+        bookmarkPost({
+          postId: post.id,
+          creatorUid: loggedUser.u_id,
+          creatorName: loggedUser.name,
+          creatorImg: loggedUser.u_img,
+          postUid: post.u_id,
+          postBody: post.body,
+        })
+      );
+    } else {
+      removeBookmark(verifyBookmark.id);
+    }
+  };
+
+  // Render content based on tab
+  const renderContent = () => {
+    if (isLoading) return renderLoadingState();
+
+    switch (tab) {
+      case 'posts':
+        return renderPosts();
+      case 'likes':
+        return renderLikes();
+      case 'replies':
+        return renderReplies();
+      case 'journals':
+        return renderJournals();
+      default:
+        return renderBookmarks();
+    }
+  };
+
+  // Render posts
+  const renderPosts = () => {
+    const filteredPost = posts?.filter((post) => post?.u_id === profileId && post.type === 'post');
+    
+    if (!filteredPost?.length) {
+      return renderEmptyState('bi-chat-text', 'No Posts yet!');
     }
 
-    // render posts based on tab 
-    if(tab === 'posts') {
-      // if(tabsRef.current !== null) {
-      //       tabsRef.current.scrollLeft = tabsRef.current.scrollWidth;
-      //   }
+    return filteredPost.map((post) => (
+      <PostCard
+        key={post.id}
+        userId={loggedUser?.u_id}
+        postUserId={post.u_id === loggedUser?.u_id}
+        postUserIdVal={post.u_id}
+        uImg={post.u_img}
+        openComment={() => navigate(`/post/${post.id}`)}
+        uName={post.u_name}
+        postContent={post.body}
+        datetime={post.created_at}
+        postId={post.id}
+        liking={isLiking}
+        bookmarking={isBookmarking}
+        deleting={isDeletingPost}
+        following={isLoadingFollows}
+        followed={followed(post.u_id)}
+        comments={countComments(post.id)}
+        likes={countLikes(post.id)}
+        liked={likedPost(post.id)}
+        bookmarks={countBookmarks(post.id)}
+        bookmarked={bookmarkedPost(post.id)}
+        {...getPostInteractionHandlers(post)}
+      />
+    ));
+  };
 
-      const filteredPost = posts?.filter((post) => post?.u_id == profileId && post.type == 'post')
-      if(filteredPost?.length > 0) {
-        content = filteredPost.map(post => (
-                    <PostCard 
-                      key={post.id}
-                      userId={loggedUser?.u_id}
-                      postUserId={post.u_id === loggedUser?.u_id ? true : false}
-                      postUserIdVal = {post.u_id}
-                      uImg={post.u_img} 
-                      openComment={() => {
-                        navigate(`/post/${post.id}`)
-                      }}
-                      uName={post.u_name} 
-                      postContent={post.body}
-                      datetime={post.created_at}
-                      postId={post.id}
-                      liking={isLiking}
-                      bookmarking={isBookmarking}
-                      deleting={isDeletingPost}
-                      following={isLoadingFollows}
-                      toggleFollow={() => {
-                              const verifyFollow = follows.find(x => ((x.followed_id == post.u_id) && (x.follower_id == loggedUser.u_id)))
-                                // console.log(verifyFollow)
-                                if(verifyFollow == undefined) {
-                                  // console.log(follows)
-                                  dispatch(followUser({
-                                    uid: loggedUser.u_id,
-                                    creatorName: loggedUser.name,
-                                    creatorImg: loggedUser.u_img,
-                                    receiverUid: post.u_id,
-                                    receiverName: post.u_name,
-                                    receiverImg: post.u_img
-                                  }))
-                                } else {
-                                    removeFollow(verifyFollow.id)
-                                }
-                          }}
-                      followed={followed(post.u_id)}
-                      comments={countComments(post.id)}
-                      likes={countLikes(post.id)}
-                      liked={likedPost(post.id)}
-                      bookmarks={countBookmarks(post.id)}
-                      bookmarked={bookmarkedPost(post.id)}
-                      likePost={() => {
-                              const verifyLike = likes.find(x => ((x.post_id == post.id) && (x.u_id == loggedUser.u_id)))
-                                // console.log(verifyLike)
-                                if(verifyLike == undefined) {
-                                  dispatch(likePost({
-                                    postId: post.id, 
-                                    creatorUid: loggedUser.u_id,
-                                    creatorName: loggedUser.name,
-                                    creatorImg: loggedUser.u_img,
-                                    postUid: post.u_id,
-                                    postBody: post.body,
-                                    profileId: profileId
-                                    }))
-                                    
-                                } else {
-                                    removeLike(verifyLike.id)
-                                }
-                          }}
-                      bookmarkPost={() => {
-                              const verifyBookmark = bookmarks.find(x => ((x.post_id == post.id) && (x.u_id == loggedUser.u_id)))
-                                // console.log(verifyBookmark)
-                                if(verifyBookmark == undefined) {
-                                    dispatch(bookmarkPost({
-                                      postId: post.id, 
-                                      creatorUid: loggedUser.u_id,
-                                      creatorName: loggedUser.name,
-                                      creatorImg: loggedUser.u_img,
-                                      postUid: post.u_id,
-                                      postBody: post.body,
-                                    }))
-                                } else {
-                                    removeBookmark(verifyBookmark.id)
-                                }
-                          }}
-                      deletePost={()=> deletePost(post.id)}
-                    />
-                    ))
-      } else {content = <div className="w-full py-10 flex flex-col gap-4">
-        <h1 className="w-full h-56 flex flex-col justify-center items-center z-50 text-9xl"><i className="bi bi-chat-text"></i> <p className="text-base">No Posts yet!</p></h1>
-      </div>
-      }
-    } 
-    else if(tab === 'likes') {
-      if(loggedUser?.u_id == profileId) {
-        const sortLikedPosts = JSON.parse(JSON.stringify(likedPosts)).sort((a, b) => b.likes[0].id - a.likes[0].id)
-        // const filterLikes  = sortLikedPosts(post => post.type)
-        if(sortLikedPosts.length > 0) {
-          content = sortLikedPosts.map(post => (
-                    (post.type == 'post') ? (
-                      <PostCard 
-                        key={post.id}
-                        userId={loggedUser?.u_id}
-                        postUserId={post.u_id === loggedUser?.u_id ? true : false}
-                        postUserIdVal = {post.u_id}
-                        uImg={post.u_img} 
-                        openComment={() => {
-                          navigate(`/post/${post.id}`)
-                        }}
-                        uName={post.u_name} 
-                        postContent={post.body}
-                        datetime={post.created_at}
-                        postId={post.id}
-                        liking={isLiking}
-                        bookmarking={isBookmarking}
-                        deleting={isDeletingPost}
-                        following={isLoadingFollows}
-                        toggleFollow={() => {
-                                const verifyFollow = follows.find(x => ((x.followed_id == post.u_id) && (x.follower_id == loggedUser.u_id)))
-                                  // console.log(verifyFollow)
-                                  if(verifyFollow == undefined) {
-                                    // console.log(follows)
-                                    dispatch(followUser({
-                                      uid: loggedUser.u_id,
-                                      creatorName: loggedUser.name,
-                                      creatorImg: loggedUser.u_img,
-                                      receiverUid: post.u_id,
-                                      receiverName: post.u_name,
-                                      receiverImg: post.u_img
-                                    }))
-                                  } else {
-                                      removeFollow(verifyFollow.id)
-                                  }
-                            }}
-                        followed={followed(post.u_id)}
-                        comments={countComments(post.id)}
-                        likes={countLikes(post.id)}
-                        liked={likedPost(post.id)}
-                        bookmarks={countBookmarks(post.id)}
-                        bookmarked={bookmarkedPost(post.id)}
-                        likePost={() => {
-                                const verifyLike = likes.find(x => ((x.post_id == post.id) && (x.u_id == loggedUser.u_id)))
-                                  // console.log(verifyLike)
-                                  if(verifyLike == undefined) {
-                                    dispatch(likePost({
-                                      postId: post.id, 
-                                      creatorUid: loggedUser.u_id,
-                                      creatorName: loggedUser.name,
-                                      creatorImg: loggedUser.u_img,
-                                      postUid: post.u_id,
-                                      postBody: post.body,
-                                      }))
-                                  } else {
-                                      removeLike(verifyLike.id)
-                                  }
-                            }}
-                        bookmarkPost={() => {
-                                const verifyBookmark = bookmarks.find(x => ((x.post_id == post.id) && (x.u_id == loggedUser.u_id)))
-                                  // console.log(verifyBookmark)
-                                  if(verifyBookmark == undefined) {
-                                      dispatch(bookmarkPost({
-                                        postId: post.id, 
-                                        creatorUid: loggedUser.u_id,
-                                        creatorName: loggedUser.name,
-                                        creatorImg: loggedUser.u_img,
-                                        postUid: post.u_id,
-                                        postBody: post.body,
-                                      }))
-                                  } else {
-                                      removeBookmark(verifyBookmark.id)
-                                  }
-                            }}
-                        deletePost={()=> deletePost(post.id)}
-                      />
-                    ) : 
-                    (post.type == 'journal') && (
-                          <JournalCard 
-                            key={post.id}
-                            postUserId={post.u_id === loggedUser?.u_id ? true : false}
-                            postUserIdVal={post.u_id}
-                            uImg={post.u_img} 
-                            uName={post.u_name}
-                            title={post.title}
-                            journal={post.journal}
-                            privacy={post.privacy}
-                            datetime={post.created_at}
-                            liking={isLiking}
-                            bookmarking={isBookmarking}
-                            deleting={isDeletingPost}
-                            likes={countLikes(post.id)}
-                            liked={likedPost(post.id)}
-                            likePost={() => {
-                                    const verifyLike = likes.find(x => ((x.post_id == post.id) && (x.u_id == loggedUser.u_id)))
-                                      // console.log(verifyLike)
-                                      if(verifyLike == undefined) {
-                                        dispatch(likePost({
-                                          postId: post.id, 
-                                          creatorUid: loggedUser.u_id,
-                                          creatorName: loggedUser.name,
-                                          creatorImg: loggedUser.u_img,
-                                          postUid: post.u_id,
-                                          postBody: post.journal,
-                                          for: post.type
-                                          }))
-                                      } else {
-                                          removeLike(verifyLike.id)
-                                      }
-                                }}
-                            deletePost={()=> deletePost(post.id)}
-                          /> 
-                    )
-          ))
-        } else {content = <div className="w-full py-10 flex flex-col gap-4"><h1 className="w-full h-56 flex flex-col justify-center items-center z-50 text-9xl"><i className="bi bi-heart"></i> <p className="text-base">No Likes yet!</p></h1></div>
-        }
-      } else {
-        setTab("posts")
-      }
-      // if(tabsRef.current !== null) {
-      //       tabsRef.current.scrollLeft = tabsRef.current.scrollWidth;
-      //   }
-      
-    }  
-    else if(tab === 'replies') {
-      // if(tabsRef.current !== null) {
-      //       tabsRef.current.scrollLeft = tabsRef.current.scrollWidth;
-      //   }
-        const filteredReplies = replies?.filter((reply) => reply?.u_id == profileId && reply?.post_id !== 0)
-      // const sortLikedPosts = JSON.parse(JSON.stringify(likedPosts)).sort((a, b) => b.likes[0].id - a.likes[0].id)
-      if(filteredReplies.length > 0) {
-        content = filteredReplies.map(reply => (
-                    <PostCard 
-                      key={reply.id}
-                      userId={loggedUser?.u_id}
-                      postUserId={reply.u_id === loggedUser?.u_id ? true : false}
-                      postUserIdVal = {reply.u_id}
-                      uImg={reply.u_img} 
-                      openComment={() => {
-                        navigate(`/post/${reply.id}`)
-                      }}
-                      uName={reply.u_name} 
-                      postContent={reply.body}
-                      datetime={reply.created_at}
-                      postId={reply.id}
-                      liking={isLiking}
-                      bookmarking={isBookmarking}
-                      deleting={isDeletingPost}
-                      following={isLoadingFollows}
-                      toggleFollow={() => {
-                              const verifyFollow = follows.find(x => ((x.followed_id == reply.u_id) && (x.follower_id == loggedUser.u_id)))
-                                // console.log(verifyFollow)
-                                if(verifyFollow == undefined) {
-                                  // console.log(follows)
-                                  dispatch(followUser({
-                                    uid: loggedUser.u_id,
-                                    creatorName: loggedUser.name,
-                                    creatorImg: loggedUser.u_img,
-                                    receiverUid: reply.u_id,
-                                    receiverName: reply.u_name,
-                                    receiverImg: reply.u_img
-                                  }))
-                                } else {
-                                    removeFollow(verifyFollow.id)
-                                }
-                          }}
-                      followed={followed(reply.u_id)}
-                      comments={countComments(reply.id)}
-                      likes={countLikes(reply.id)}
-                      liked={likedPost(reply.id)}
-                      bookmarks={countBookmarks(reply.id)}
-                      bookmarked={bookmarkedPost(reply.id)}
-                      likePost={() => {
-                              const verifyLike = likes.find(x => ((x.post_id == reply.id) && (x.u_id == loggedUser.u_id)))
-                                // console.log(verifyLike)
-                                if(verifyLike == undefined) {
-                                  dispatch(likePost({
-                                    postId: reply.id, 
-                                    creatorUid: loggedUser.u_id,
-                                    creatorName: loggedUser.name,
-                                    creatorImg: loggedUser.u_img,
-                                    postUid: reply.u_id,
-                                    postBody: reply.body,
-                                    }))
-                                } else {
-                                    removeLike(verifyLike.id)
-                                }
-                          }}
-                      bookmarkPost={() => {
-                              const verifyBookmark = bookmarks.find(x => ((x.post_id == reply.id) && (x.u_id == loggedUser.u_id)))
-                                // console.log(verifyBookmark)
-                                if(verifyBookmark == undefined) {
-                                    dispatch(bookmarkPost({
-                                      postId: reply.id, 
-                                      creatorUid: loggedUser.u_id,
-                                      creatorName: loggedUser.name,
-                                      creatorImg: loggedUser.u_img,
-                                      postUid: reply.u_id,
-                                      postBody: reply.body,
-                                    }))
-                                } else {
-                                    removeBookmark(verifyBookmark.id)
-                                }
-                          }}
-                      deletePost={()=> deletePost(reply.id)}
-                    />
-                    ))
-      } else {content = <div className="w-full py-10 flex flex-col gap-4"><h1 className="w-full h-56 flex flex-col justify-center items-center z-50 text-9xl"><i className="bi bi-chat-text"></i> <p className="text-base">No Replies Yet!</p></h1></div>
-      }
-    } 
-    else if(tab === 'journals') {
-      const getJournalsByProfiileViewer = () => {
-        if(loggedUser?.u_id === profileId) {
-          return posts.filter((post) => post.type == 'journal' && post.u_id == loggedUser?.u_id)
-        } else {
-          return posts.filter((post) => post.type == 'journal' && post.privacy == 'Everyone' && post.u_id == profileId)
-        }
-      }
-          
-        // const allJournals = posts.filter((post) => post.type == 'journal')
-        const filterJournals = getJournalsByProfiileViewer()
-        // console.log(filterJournals)
-        if(filterJournals?.length > 0){
-          // get all posts 
-          content = filterJournals.map(post => (
-                      <JournalCard 
-                        key={post.id}
-                        postUserId={post.u_id === loggedUser?.u_id ? true : false}
-                        postUserIdVal={post.u_id}
-                        uImg={post.u_img} 
-                        uName={post.u_name}
-                        title={post.title}
-                        journal={post.journal}
-                        privacy={post.privacy}
-                        datetime={post.created_at}
-                        liking={isLiking}
-                        bookmarking={isBookmarking}
-                        deleting={isDeletingPost}
-                        likes={countLikes(post.id)}
-                        liked={likedPost(post.id)}
-                        likePost={() => {
-                                const verifyLike = likes.find(x => ((x.post_id == post.id) && (x.u_id == loggedUser.u_id)))
-                                  // console.log(verifyLike)
-                                  if(verifyLike == undefined) {
-                                    dispatch(likePost({
-                                      postId: post.id, 
-                                      creatorUid: loggedUser.u_id,
-                                      creatorName: loggedUser.name,
-                                      creatorImg: loggedUser.u_img,
-                                      postUid: post.u_id,
-                                      postBody: post.journal,
-                                      for: post.type
-                                      }))
-                                  } else {
-                                      removeLike(verifyLike.id)
-                                  }
-                            }}
-                        deletePost={()=> deletePost(post.id)}
-                      />
-                      ))
-        } else {content = <div className="w-full py-10 flex flex-col gap-4"><h1 className="w-full h-56 flex flex-col justify-center items-center z-50 text-9xl"><i className="bi bi-chat-text"></i> <p className="text-base">No Journals Yet!</p></h1></div>
-      }
-    } 
-    else {
-      if(loggedUser?.u_id == profileId) {
-        const sortBookmarkedPosts = JSON.parse(JSON.stringify(bookmarkedPosts)).sort((a, b) => b.bookmarks[0].id - a.bookmarks[0].id)
-        if(sortBookmarkedPosts?.length > 0) {
-          content = sortBookmarkedPosts?.map(post => (
-                      <PostCard 
-                        key={post.id}
-                        userId={loggedUser?.u_id}
-                        postUserId={post.u_id === loggedUser?.u_id ? true : false}
-                        postUserIdVal = {post.u_id}
-                        uImg={post.u_img} 
-                        openComment={() => {
-                          navigate(`/post/${post.id}`)
-                        }}
-                        uName={post.u_name} 
-                        postContent={post.body}
-                        datetime={post.created_at}
-                        postId={post.id}
-                        liking={isLiking}
-                        bookmarking={isBookmarking}
-                        deleting={isDeletingPost}
-                        toggleFollow={() => {
-                                const verifyFollow = follows.find(x => ((x.followed_id == post.u_id) && (x.follower_id == loggedUser.u_id)))
-                                  // console.log(verifyFollow)
-                                  if(verifyFollow == undefined) {
-                                    // console.log(follows)
-                                    dispatch(followUser({
-                                      uid: loggedUser.u_id,
-                                      creatorName: loggedUser.name,
-                                      creatorImg: loggedUser.u_img,
-                                      receiverUid: post.u_id,
-                                      receiverName: post.u_name,
-                                      receiverImg: post.u_img
-                                    }))
-                                  } else {
-                                      removeFollow(verifyFollow.id)
-                                  }
-                            }}
-                        followed={followed(post.u_id)}
-                        comments={countComments(post.id)}
-                        likes={countLikes(post.id)}
-                        liked={likedPost(post.id)}
-                        bookmarks={countBookmarks(post.id)}
-                        bookmarked={bookmarkedPost(post.id)}
-                        likePost={() => {
-                                const verifyLike = likes.find(x => ((x.post_id == post.id) && (x.u_id == loggedUser.u_id)))
-                                  // console.log(verifyLike)
-                                  if(verifyLike == undefined) {
-                                    dispatch(likePost({
-                                      postId: post.id, 
-                                      creatorUid: loggedUser.u_id,
-                                      creatorName: loggedUser.name,
-                                      creatorImg: loggedUser.u_img,
-                                      postUid: post.u_id,
-                                      postBody: post.body,
-                                      }))
-                                  } else {
-                                      removeLike(verifyLike.id)
-                                  }
-                            }}
-                        bookmarkPost={() => {
-                                const verifyBookmark = bookmarks.find(x => ((x.post_id == post.id) && (x.u_id == loggedUser.u_id)))
-                                  // console.log(verifyBookmark)
-                                  if(verifyBookmark == undefined) {
-                                      dispatch(bookmarkPost({
-                                        postId: post.id, 
-                                        creatorUid: loggedUser.u_id,
-                                        creatorName: loggedUser.name,
-                                        creatorImg: loggedUser.u_img,
-                                        postUid: post.u_id,
-                                        postBody: post.body,
-                                      }))
-                                  } else {
-                                      removeBookmark(verifyBookmark.id)
-                                  }
-                            }}
-                        deletePost={()=> deletePost(post.id)}
-                      />
-                      ))
-        } else {
-          content = <div className="w-full py-10 flex flex-col gap-4"><h1 className="w-full h-56 flex flex-col justify-center items-center z-50 text-9xl"><i className="bi bi-bookmark-dash"></i> <p className="text-base">No Bookmarks yet!</p></h1></div>
-        }
-      } else {
-        setTab("posts")
-      }
+  // Render likes
+  const renderLikes = () => {
+    if (loggedUser?.u_id !== profileId) {
+      setTab('posts');
+      return null;
     }
-  } 
+
+    const sortLikedPosts = JSON.parse(JSON.stringify(likedPosts)).sort(
+      (a, b) => b.likes[0].id - a.likes[0].id
+    );
+
+    if (!sortLikedPosts.length) {
+      return renderEmptyState('bi-heart', 'No Likes yet!');
+    }
+
+    return sortLikedPosts.map((post) =>
+      post.type === 'post' ? (
+        <PostCard
+          key={post.id}
+          {...getCommonPostProps(post)}
+          {...getPostInteractionHandlers(post)}
+        />
+      ) : (
+        post.type === 'journal' && (
+          <JournalCard
+            key={post.id}
+            {...getCommonJournalProps(post)}
+            {...getPostInteractionHandlers(post)}
+          />
+        )
+      )
+    );
+  };
+
+  // Common post props
+  const getCommonPostProps = (post) => ({
+    userId: loggedUser?.u_id,
+    postUserId: post.u_id === loggedUser?.u_id,
+    postUserIdVal: post.u_id,
+    uImg: post.u_img,
+    openComment: () => navigate(`/post/${post.id}`),
+    uName: post.u_name,
+    postContent: post.body,
+    datetime: post.created_at,
+    postId: post.id,
+    liking: isLiking,
+    bookmarking: isBookmarking,
+    deleting: isDeletingPost,
+    following: isLoadingFollows,
+    followed: followed(post.u_id),
+    comments: countComments(post.id),
+    likes: countLikes(post.id),
+    liked: likedPost(post.id),
+    bookmarks: countBookmarks(post.id),
+    bookmarked: bookmarkedPost(post.id),
+  });
+
+  // Common journal props
+  const getCommonJournalProps = (post) => ({
+    postUserId: post.u_id === loggedUser?.u_id,
+    postUserIdVal: post.u_id,
+    uImg: post.u_img,
+    uName: post.u_name,
+    title: post.title,
+    journal: post.journal,
+    privacy: post.privacy,
+    datetime: post.created_at,
+    liking: isLiking,
+    bookmarking: isBookmarking,
+    deleting: isDeletingPost,
+    likes: countLikes(post.id),
+    liked: likedPost(post.id),
+  });
+
+  // Render replies
+  const renderReplies = () => {
+    const filteredReplies = replies?.filter((reply) => reply?.u_id === profileId && reply?.post_id !== 0);
+
+    if (!filteredReplies.length) {
+      return renderEmptyState('bi-chat-text', 'No Replies Yet!');
+    }
+
+    return filteredReplies.map((reply) => (
+      <PostCard
+        key={reply.id}
+        {...getCommonPostProps(reply)}
+        {...getPostInteractionHandlers(reply)}
+      />
+    ));
+  };
+
+  // Render journals
+  const renderJournals = () => {
+    const getJournalsByProfileViewer = () => {
+      if (loggedUser?.u_id === profileId) {
+        return posts.filter((post) => post.type === 'journal' && post.u_id === loggedUser?.u_id);
+      }
+      return posts.filter(
+        (post) => post.type === 'journal' && post.privacy === 'Everyone' && post.u_id === profileId
+      );
+    };
+
+    const filterJournals = getJournalsByProfileViewer();
+
+    if (!filterJournals?.length) {
+      return renderEmptyState('bi-chat-text', 'No Journals Yet!');
+    }
+
+    return filterJournals.map((post) => (
+      <JournalCard
+        key={post.id}
+        {...getCommonJournalProps(post)}
+        {...getPostInteractionHandlers(post)}
+      />
+    ));
+  };
+
+  // Render bookmarks
+  const renderBookmarks = () => {
+    if (loggedUser?.u_id !== profileId) {
+      setTab('posts');
+      return null;
+    }
+
+    const sortBookmarkedPosts = JSON.parse(JSON.stringify(bookmarkedPosts)).sort(
+      (a, b) => b.bookmarks[0].id - a.bookmarks[0].id
+    );
+
+    if (!sortBookmarkedPosts?.length) {
+      return renderEmptyState('bi-bookmark-dash', 'No Bookmarks yet!');
+    }
+
+    return sortBookmarkedPosts.map((post) => (
+      <PostCard
+        key={post.id}
+        {...getCommonPostProps(post)}
+        {...getPostInteractionHandlers(post)}
+      />
+    ));
+  };
+
+  // Main render
+  const content = isLoading ? renderLoadingState() : renderContent();
+  const userList = renderUserList();
 
   // Toggle Search Bar 
   const handleShowSearch = () => {
