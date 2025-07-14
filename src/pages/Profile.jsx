@@ -812,7 +812,7 @@ const Profile = () => {
                   </form>
                   <div className="py-3 border-t-[1px] border-[1px] border-black/5  dark:border-slate-500/20 rounded-md">
                     <h2 className="capitalize font-bold text-xl px-5 mb-3 text-neutral-dark dark:text-neutral-lighter">Other Interests</h2>
-                    {isLoading || isLoadingOtherUsers ? <div className="w-full flex flex-col gap-4">
+                    {isLoadingOtherUsers ? <div className="w-full flex flex-col gap-4">
                       <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
                       <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
                       <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
