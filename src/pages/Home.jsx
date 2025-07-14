@@ -614,7 +614,7 @@ const Home = () => {
         {/* <Navbar /> */}
         {newPostForm}
 
-        <div className="w-full lg:grid lg:grid-cols-8 px-2 md:px-20 mt-2 md:mt-0 pb-20 md:pb-28 lg:pb-0 md:gap-5 mb-7 md:mb-14 lg:mb-0">
+        <div className="w-full lg:grid lg:grid-cols-8 px-2 md:px-20 mt-2 md:mt-0 pb-20 md:pb-28 lg:pb-0 md:gap-2 mb-7 md:mb-14 lg:mb-0">
 
           <SideBar
           uid={loggedUser !== null ? loggedUser.u_id : null} 

@@ -102,7 +102,7 @@ const Profile = () => {
 
     getOtherusers({loggedId:loggedUser?.u_id, currentId: profileId})
     setCurrentProfile(JSON.parse(JSON.stringify(profileUser)))
-  }, [profileId, currentProfile !== null ? "" : currentProfile, loggedUser, profileUser, likedPosts])
+  }, [profileId, currentProfile !== null ? "" : currentProfile, loggedUser, profileUser])
 
   // get today's full date in YYYY-MM-DD format 
   const getTodayDate = () => {
@@ -698,7 +698,7 @@ const Profile = () => {
       {/* <Navbar /> */}
 
         {/* main section  */}
-          <div className="w-full lg:grid lg:grid-cols-8 px-2 md:px-20 mt-2 md:mt-0 mb-24 lg:pb-0 md:gap-5 mb:mb-0">
+          <div className="w-full lg:grid lg:grid-cols-8 px-2 md:px-20 mt-2 md:mt-0 mb-24 lg:pb-0 md:gap-2 mb:mb-0">
             <SideBar
             uid={loggedUser !== null ? loggedUser.u_id : null} 
             page={'profile'} 
@@ -872,7 +872,7 @@ const Profile = () => {
                   </select>
                 </div>
                 <input name="dob" id="dob" type="date" max={getTodayDate()}
-                  className={dob !== '' ? "w-full rounded-lg p-2 text-neutral-dark dark:text-dark-text dark:bg-black placeholder:text-sm text-sm md:text-xl border-[1px] dark:border-[#CBC9C9]/40 outline-none" : "w-full rounded-lg p-2 text-neutral-dark dark:text-dark-text dark:bg-black placeholder:text-sm text-sm md:text-xl border border-error bg-error/5 dark:bg-black/50 outline-none"} value={moment(dob).format("YYYY-MM-DD")} placeholder="Enter your Date of Birth" onChange={(e) => setDob(e.target.value)}/>
+                  className={dob !== '' ? "w-full rounded-lg p-2 text-neutral-dark dark:text-dark-text dark:bg-black placeholder:text-sm text-sm md:text-xl border-[1px] dark:border-[#CBC9C9]/40 outline-none" : "w-full rounded-lg p-2 text-neutral-dark dark:text-dark-text dark:bg-black placeholder:text-sm text-sm md:text-xl border border-error bg-error/5 dark:bg-black/50 outline-none"} value={moment(dob).format("yyyy-MM-dd")} placeholder="Enter your Date of Birth" onChange={(e) => setDob(e.target.value)}/>
               </label>
 
               {fullNameVal !== '' && dob !== '' && <button className="w-full btn btn-primary text-white rounded-full" onClick={handleEdit} disabled={isUpdatingProfile && "disabled"}>{isUpdatingProfile ?  <span className="loading loading-spinner loading-sm text-white"></span> : 'Update'}</button>}

@@ -106,14 +106,6 @@ const Post = () => {
     dispatch(unlike(id))
   }
 
-  // const removeLikeComment =(id) => {
-  //   dispatch(unlikeComment(id))
-  // }
-
-  // const removeBookmarkComment =(id) => {
-  //   dispatch(unBookmarkComment(id))
-  // }
-
   const removeBookmark = (id) => {
       dispatch(unBookmark(id))
   }
@@ -131,16 +123,6 @@ const Post = () => {
     }
   }
 
-  // const countLikesComment = (id) => {
-  //   if(commentLikes !== null) {
-  //     const filterLikes = commentLikes?.filter(like => like.comment_id === id)
-  //     if(filterLikes) {
-  //     // console.log(filterLikes)
-  //       return filterLikes.length
-  //     }
-  //   }
-  // }
-
   const likedPost = (id) => {
     if(likes !== null) {
       const findLiked = likes.find(like => (like?.post_id == id) && (like?.u_id == loggedUser?.u_id))
@@ -152,17 +134,6 @@ const Post = () => {
     }
   }
 
-  // const likedComment = (id) => {
-  //   if(likes !== null) {
-  //     const findLiked = commentLikes?.find(like => (like.comment_id == id) && (like.u_id == loggedUser?.u_id))
-  //     if(findLiked) {
-  //       return true
-  //     } else {
-  //       return false
-  //     }
-  //   }
-  // }
-
   const countBookmarks = (id) => {
     if(bookmarks !== null) {
       const filterBookmarks = bookmarks?.filter(bookmark => bookmark.post_id === id)
@@ -171,15 +142,6 @@ const Post = () => {
       }
     }
   }
-
-  // const countBookmarksComment = (id) => {
-  //   if(bookmarks !== null) {
-  //     const filterBookmarks = commentBookmarks?.filter(bookmark => bookmark.comment_id === id)
-  //     if(filterBookmarks) {
-  //       return filterBookmarks.length
-  //     }
-  //   }
-  // }
 
   const bookmarkedPost = (id) => {
     if(bookmarks !== null) {
@@ -191,29 +153,6 @@ const Post = () => {
       }
     }
   }
-
-  // const bookmarkedComment = (id) => {
-  //   if(bookmarks !== null) {
-  //     const findBookmarked = commentBookmarks.find(bookmark => (bookmark.comment_id == id) && (bookmark.u_id == loggedUser?.u_id))
-  //     if(findBookmarked) {
-  //       return true
-  //     } else {
-  //       return false
-  //     }
-  //   }
-  // }
-
-// useEffect(() => {
-//   const countReplies = (id) => {
-//     if(postComments !== null) {
-//       const filterComments = postComments.filter(comment => comment?.post_id === id)
-//       if(filterComments) {
-//         return filterComments.length
-//       }
-//     }
-//   }
-//   countReplies()
-// }, [postComments])
 
   const countComments = (id) => {
     if(comments !== null) {
@@ -232,17 +171,6 @@ const Post = () => {
       }
     }
   }
-
-  // const countReplies = (id) => {
-  //   console.log(postComments)
-  //   console.log(id)
-  //   if(postComments !== null) {
-  //     const filterComments = comments.filter(comment => comment?.post_id === id)
-  //     if(filterComments) {
-  //       return filterComments.length
-  //     }
-  //   }
-  // }
 
   const followed = (id) => {
     if(follows !== null) {
@@ -575,7 +503,7 @@ const Post = () => {
     <div className="w-full h-screen flex flex-col items-center px-2 md:p-0 md:m-0 dark:text-inherit">
       {/* <Navbar /> */}
 
-        <div className="w-full lg:grid lg:grid-cols-8 px-2 md:px-20 mt-2 md:mt-4 lg:mt-0 pb-28 lg:pb-0 md:gap-5 mb-14 lg:mb-0">
+        <div className="w-full lg:grid lg:grid-cols-8 px-2 md:px-20 mt-2 md:mt-4 lg:mt-0 pb-28 lg:pb-0 md:gap-2 mb-14 lg:mb-0">
           <SideBar
           uid={loggedUser !== null ? loggedUser.u_id : null} 
           toggleSearchBar={handleShowSearch}/>
