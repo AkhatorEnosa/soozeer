@@ -1,7 +1,7 @@
 // /* eslint-disable react-hooks/exhaustive-deps */
 
 // import Navbar from "../components/Navbar"
-import { useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import PostCard from "../components/PostCard"
 import Footer from "../sections/Footer"
 import { Link, useNavigate, useParams } from "react-router-dom"
@@ -21,6 +21,7 @@ import SearchModal from "../components/SearchModal"
 import NotLoggedInModal from "../components/NotLoggedInModal"
 import supabase from "../config/supabaseClient.config"
 import JournalCard from "../components/JournalCard"
+import { AppContext } from "../context/AppContext"
 
 const Home = () => {
 
@@ -32,6 +33,11 @@ const Home = () => {
   const [privacy, setPrivacy] = useState(null)
   const textAreaRef = useRef(null);
   const [showPostInModal, setShowPostInModal] = useState(false)
+  
+  const { 
+    renderLoadingState,
+    userListEmptyState
+    } = useContext(AppContext)
 
   const {id: paramsId} = useParams()
   const navigate = useNavigate()
@@ -48,29 +54,6 @@ const Home = () => {
   useBookmarks()
   useFollows()
   const {mutate:others} = useOtherUsers()
-
-  // useEffect(() => {
-  //   dispatch(getPosts({ limit: 10, offset }));
-  // }, [offset, dispatch]);
-
-  // const handleScroll = () => {
-  //   const scrollPosition = window.scrollY;
-  //   const scrollHeight = document.body.offsetHeight;
-
-  //   if (scrollPosition == scrollHeight && hasNextPage && !isLoadingPosts) {
-  //     setOffset((prevOffset) => prevOffset + 10);
-  //   }
-
-  //   console.log("innerHeight",window.innerHeight)
-  //   console.log("scrollY",window.scrollY)
-  //   console.log("scrollPos",scrollPosition)
-  //   console.log("scrollHeight",scrollHeight)
-  // };
-
-  //  useEffect(() => {
-  //   window.addEventListener('scroll', handleScroll);
-  //   return () => window.removeEventListener('scroll', handleScroll);
-  // }, [hasNextPage, isLoading]);
   
   const body = document.body
   useEffect(() => {
@@ -271,7 +254,7 @@ const Home = () => {
           />
         ))
       } else {
-        userList = <h1 className="w-full h-56 flex flex-col justify-center items-center z-50 text-9xl"><i className="bi bi-people"></i><p className="text-base">No body to see, yet!</p></h1>
+        userList = userListEmptyState()
       }
     }
 
@@ -633,16 +616,7 @@ const Home = () => {
 
             
             <div className="relative flex flex-col">
-              {isLoading ? <div className="flex flex-col gap-4 p-4">
-                  <div className="skeleton dark:bg-slate-600 h-24 w-full opacity-15"></div>
-                  <div className="skeleton dark:bg-slate-600 h-24 w-full opacity-15"></div>
-                  <div className="skeleton dark:bg-slate-600 h-24 w-full opacity-15"></div>
-                  <div className="skeleton dark:bg-slate-600 h-24 w-full opacity-15"></div>
-                  <div className="skeleton dark:bg-slate-600 h-24 w-full opacity-15"></div>
-                  <div className="skeleton dark:bg-slate-600 h-24 w-full opacity-15"></div>
-                  <div className="skeleton dark:bg-slate-600 h-24 w-full opacity-15"></div>
-                  <div className="skeleton dark:bg-slate-600 h-24 w-full opacity-15"></div>
-                </div> : 
+              {isLoading ? renderLoadingState("h-40") : 
                 <div className="relative w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
                   {loggedUser && <div className="w-full flex justify-end lg:justify-start items-center px-4 my-5 text-sm dark:text-[#cbc9c9] fixed bottom-20 left-0 lg:sticky lg:top-12 py-2 lg:bg-base-100/90 dark:lg:dark:bg-black/90 lg:backdrop-blur-sm z-[110]"> 
                     <button className={`w-fit flex gap-2 justify-center items-center border-[1px] border-black bg-base-100 dark:bg-black dark:border-[#CBC9C9] font-semibold ${tab == 'journal' ? "hover:bg-accent/5 hover:border-accent hover:text-accent dark-hover:text-inherit" : "hover:bg-primary/5 hover:border-primary hover:text-primary "}  px-4 py-2 rounded-full shadow-md lg:shadow-none`} onClick={()=> setShowPostInModal(!showPostInModal)}><i className="bi bi-pencil"></i>{tab == 'journal' ? "Write Journal" : "Write Post"}</button>
@@ -661,19 +635,16 @@ const Home = () => {
                   <input type="text" name="search" id="search" value={search} placeholder="Search..." className="w-full px-4 py-2 border-[1px] dark:border-[#CBC9C9]/40 text-neutral-dark dark:text-dark-text text-sm placeholder:text-inherit outline-none dark:bg-black dark:focus-within::bg-black/50 rounded-full" onChange={(e)=> setSearch(e.target.value).trim()}/>
               </form>
               <div className="py-3 border-t-[1px] border-[1px] border-black/5  dark:border-[#CBC9C9]/20 rounded-md">
-                <h2 className="font-bold text-xl px-5 pb-4 dark:text-[#CBC9C9]">Suggested</h2>
-                {isLoadingOtherUsers ? <div className="hidden sticky col-span-2 lg:flex flex-col gap-4">
-                    <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-                    <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-                    <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-                    <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-                  </div> : <div className="w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
+                <h2 className="font-bold text-xl px-5 pb-4 dark:text-[#CBC9C9]">Suggested For You</h2>
+                {isLoadingOtherUsers ? 
+                  renderLoadingState("h-10") :
+                  <div className="w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
                   {userList}
                 </div>}
               </div>
             </> 
             : 
-            <div className="w-full h-fit flex flex-col py-32 justify-center items-center">
+            <div className="w-full h-fit flex flex-col py-32 justify-center items-center text-neutral-dark dark:text-dark-text">
                 <p>Join Us to</p>
                 <h1 className="font-bold text-4xl">Explore</h1>
                 <ul className="flex mt-10 gap-4">

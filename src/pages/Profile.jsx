@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import PostCard from "../components/PostCard";
 import OtherUsersCard from "../components/OtherUsersCard";
@@ -28,6 +28,7 @@ import useReplies from "../hooks/useReplies";
 import JournalCard from "../components/JournalCard";
 import moment from "moment";
 import { profileEdit } from "../features/appSlice";
+import { AppContext } from "../context/AppContext";
 // import Navbar from "../components/Navbar";
 
 const Profile = () => {
@@ -54,6 +55,12 @@ const Profile = () => {
   // react router dom navigation and params 
   const navigate = useNavigate();
   const {id : profileId} = useParams()
+
+  const { 
+    renderLoadingState,
+    renderEmptyState,
+    userListEmptyState
+   } = useContext(AppContext)
 
 
   const { profileUser, loggedUser, otherUsers, isLoading, isLoadingProfile, isLoadingOtherUsers, isUpdatingProfile, updated } = useSelector((state) => state.app)
@@ -203,33 +210,6 @@ const Profile = () => {
       }
     }
   }
-  // Loading? 
-  // Loading state skeleton
-  const renderLoadingState = (height) => (
-    <div className="w-full flex flex-col gap-4">
-      {[...Array(4)].map((_, i) => (
-        <div key={i} className={`skeleton dark:bg-slate-600 ${height} w-full opacity-15`}></div>
-      ))}
-    </div>
-  );
-
-  // Empty state component
-  const renderEmptyState = (icon, message) => (
-    <div className="w-full py-10 flex flex-col gap-4">
-      <h1 className="w-full h-56 flex flex-col justify-center items-center z-50 text-9xl">
-        <i className={`bi ${icon}`}></i>
-        <p className="text-base">{message}</p>
-      </h1>
-    </div>
-  );
-
-  // Common user list empty state
-  const userListEmptyState = (
-    <h1 className="w-full h-56 flex flex-col gap-4 justify-center items-center z-50 text-5xl text-neutral-dark dark:text-dark-text py-5">
-      <i className="bi bi-people"></i>
-      <p className="text-base">No body to see, yet!</p>
-    </h1>
-  );
 
   // Render user list
   const renderUserList = () => {
@@ -325,7 +305,7 @@ const Profile = () => {
 
   // Render content based on tab
   const renderContent = () => {
-    if (isLoading) return renderLoadingState("h-20");
+    if (isLoading) return renderLoadingState("h-52");
 
     switch (tab) {
       case 'posts':
@@ -718,7 +698,7 @@ const Profile = () => {
                   <div className="relative info w-full flex gap-2 md:gap-5 justify-between items-center py-5 md:py-8 overflow-hidden">
 
                     {isLoadingProfile ? 
-                      <div className="skeleton dark:bg-slate-600 h-48 w-full opacity-15 z-40"></div> : 
+                      <div className="skeleton dark:bg-slate-600 h-48 w-full opacity-40 z-40"></div> : 
                       <div className="relative w-full flex gap-2 px-2 md:px-8 md:gap-4 text-neutral-dark dark:text-dark-text items-start z-40">
                           <img src={currentProfile?.u_img} alt="" className="w-20 h-20 object-cover object-center rounded-md z-50" width={80} height={80} onClick={() => window.open(currentProfile.u_img, '_blank').focus()} loading="lazy"/>
                           <div className="w-full flex flex-col md:flex-row md:justify-between gap-3">
@@ -781,8 +761,8 @@ const Profile = () => {
                       {loggedUser?.u_id === profileId && <li className={tab === 'bookmarks' ? "w-full text-center border-b-2 border-primary dark:text-neutral-lightest py-3 px-0 cursor-pointer" : "w-full text-center hover:border-b-2 border-primary/30 hover:bg-primary/5 py-3 px-0 cursor-pointer"} onClick={() => setTab('bookmarks')}>Bookmarks</li>}
                     </ul>
                     {<div className="w-full content">
-                      {isLoadingPosts || isLoadingProfile ? 
-                      renderLoadingState("h-20")  : content}
+                      {isLoadingPosts || isLoadingProfile || isLoading ? 
+                      renderLoadingState("h-40")  : content}
                       <p className="py-8 flex justify-center text-primary">.</p>
                     </div>}
                   </div>
@@ -801,7 +781,7 @@ const Profile = () => {
                       {userList}
                     </div>}
                   </div></> : 
-                  <div className="w-full flex flex-col py-32 justify-center items-center">
+                  <div className="w-full flex flex-col py-32 justify-center text-neutral-dark dark:text-dark-text items-center">
                       <p>Join Us to</p>
                       <h1 className="font-bold text-4xl">Explore</h1>
                       <ul className="flex mt-10 gap-4">

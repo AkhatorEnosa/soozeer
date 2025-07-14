@@ -48,11 +48,11 @@ const PostCard = ({userId, postId, liking, bookmarking, deleting, postUserId, po
   }
 
   return ( 
-    <div className={"relative w-full flex flex-col items-start  text-sm border-y-[1px] border-black/5  dark:border-neutral-300/10 duration-200 transition-all dark:text-[#CBC9C9]"}>
+    <div className={"relative w-full flex flex-col items-start text-sm border-y-[1px] border-black/5  dark:border-neutral-300/10 duration-200 transition-all dark:text-[#CBC9C9]"}>
         <Link to={`/post/${postId}`} className="absolute top-0 w-full h-full z-0"></Link>
       <div className="w-full h-full">
-        <div className="flex w-full gap-3  px-3 ">
-          <div className="py-4 w-full col-span-6">
+        <div className="flex w-full gap-3 px-3 ">
+          <div className="pt-4 w-full col-span-6">
               <div className="w-full flex">
                 <div className="w-14 h-14">
                   <Link to={userId && `/${postUserIdVal}`}><img src={uImg} alt="" className="relative z-20 w-10 h-10 object-cover object-center rounded-full  shadow-sm cursor-default" width={80} height={80} loading="lazy"/></Link>

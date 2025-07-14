@@ -5,15 +5,18 @@ import { Provider } from 'react-redux'
 import { store } from './app/store.js'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ThemeProvider } from './context/ThemeContext.jsx'
+import { AppProvider } from './context/AppContext.jsx'
 
 const queryClient =  new QueryClient()
 
 createRoot(document.getElementById('root')).render(
-  <ThemeProvider>
-    <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
-        <App/>
-      </QueryClientProvider>
-    </Provider>
-  </ThemeProvider>
+  <Provider store={store}>
+    <AppProvider>
+      <ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <App/>
+        </QueryClientProvider>
+      </ThemeProvider>
+    </AppProvider>
+  </Provider>
 )
