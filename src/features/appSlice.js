@@ -168,7 +168,8 @@ export const getOtherUsers = createAsyncThunk('app/getOtherUsers', async (uid) =
             .from('profiles')
             .select()
             .neq('u_name', 'Pussey')
-            .or(`u_id.neq.${uid.currentId},u_id.neq.${uid.loggedId}`)
+            .neq('u_id', uid.currentId)
+            .neq('u_id', uid.loggedId)
             .order(randomizeSortFilter(), { ascending: false });
 
         if (error) {

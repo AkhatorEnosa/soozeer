@@ -205,10 +205,10 @@ const Profile = () => {
   }
   // Loading? 
   // Loading state skeleton
-  const renderLoadingState = () => (
+  const renderLoadingState = (height) => (
     <div className="w-full flex flex-col gap-4">
       {[...Array(4)].map((_, i) => (
-        <div key={i} className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
+        <div key={i} className={`skeleton dark:bg-slate-600 ${height} w-full opacity-15`}></div>
       ))}
     </div>
   );
@@ -325,7 +325,7 @@ const Profile = () => {
 
   // Render content based on tab
   const renderContent = () => {
-    if (isLoading) return renderLoadingState();
+    if (isLoading) return renderLoadingState("h-20");
 
     switch (tab) {
       case 'posts':
@@ -518,7 +518,7 @@ const Profile = () => {
   };
 
   // Main render
-  const content = isLoading ? renderLoadingState() : renderContent();
+  const content = isLoading ? renderLoadingState("h-20") : renderContent();
   const userList = renderUserList();
 
   // Toggle Search Bar 
@@ -751,14 +751,6 @@ const Profile = () => {
                                 <button className={!followed(profileId) ? "flex w-fit h-fit gap-1 justify-center items-center  text-[10px] md:text-sm px-2 py-2 text-primary border-[1px] border-primary rounded-full hover:bg-primary hover:text-white" : "group w-fit flex gap-1 justify-center items-center  text-[10px] md:text-sm px-2 py-2 text-white bg-primary rounded-full hover:bg-neutral hover:text-white hover:border-neutral transition-all duration-300"} onClick={() => {
                                 const verifyFollow = follows.find(follow => ((follow.followed_id == profileId) && (follow.follower_id == loggedUser?.u_id)))
                                   if(verifyFollow == undefined) {
-                                    // console.log({
-                                    //   "Follower UserId": loggedUser.u_id,
-                                    //   "Follower Username": loggedUser.name, 
-                                    //   "Follower User Image": loggedUser.u_img, 
-                                    //   "Followed UserId": currentProfile.u_id,
-                                    //   "Followed Username": currentProfile.name,
-                                    //   "Followed User Image": currentProfile.u_img
-                                    //   })
                                       dispatch(followUser({
                                         uid: loggedUser.u_id,
                                         creatorName: loggedUser.name,
@@ -781,7 +773,7 @@ const Profile = () => {
                   </div>
 
                   <div className="tabs divide-y-[1px] divide-black/5 dark:divide-slate-500/20 flex flex-col items-center">
-                    <ul className={`grid ${loggedUser?.u_id === profileId ? "w-full grid-cols-5" : "w-full md:w-[60%] grid-cols-3"} justify-between overflow-scroll no-scrollbar text-sm md:text-base font-medium text-neutral-dark dark:text-dark-text bg-base-100/50 dark:bg-black/50 backdrop-blur-sm sticky top-10 z-[100]`} ref={tabsRef}>
+                    <ul className={`grid ${loggedUser?.u_id === profileId ? "w-full grid-cols-5" : "w-full grid-cols-3"} justify-between overflow-scroll no-scrollbar text-sm md:text-base font-medium text-neutral-dark dark:text-dark-text bg-base-100/50 dark:bg-black/50 backdrop-blur-sm sticky top-10 z-[100]`} ref={tabsRef}>
                       <li className={tab === 'posts' ? "w-full text-center border-b-2 border-primary dark:text-neutral-lightest py-3 px-0 cursor-pointer" : "w-full text-center hover:border-b-2 border-primary/30 hover:bg-primary/5 py-3 px-0 cursor-pointer"} onClick={() => setTab('posts')}>Posts</li>
                       <li className={tab === 'replies' ? "w-full text-center border-b-2 border-primary dark:text-neutral-lightest py-3 px-0 cursor-pointer" : "w-full text-center hover:border-b-2 border-primary/30 hover:bg-primary/5 py-3 px-0 cursor-pointer"} onClick={() => setTab('replies')}>Replies</li>
                       <li className={tab === 'journals' ? "w-full text-center border-b-2 border-primary dark:text-neutral-lightest py-3 px-0 cursor-pointer" : "w-full text-center hover:border-b-2 border-primary/30 hover:bg-primary/5 py-3 px-0 cursor-pointer"} onClick={() => setTab('journals')}>Journals</li>
@@ -789,15 +781,8 @@ const Profile = () => {
                       {loggedUser?.u_id === profileId && <li className={tab === 'bookmarks' ? "w-full text-center border-b-2 border-primary dark:text-neutral-lightest py-3 px-0 cursor-pointer" : "w-full text-center hover:border-b-2 border-primary/30 hover:bg-primary/5 py-3 px-0 cursor-pointer"} onClick={() => setTab('bookmarks')}>Bookmarks</li>}
                     </ul>
                     {<div className="w-full content">
-                      {isLoadingPosts || isLoadingProfile ? <div className="w-full flex flex-col gap-4">
-                        <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                        <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                        <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                        <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                        <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                        <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                        <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                      </div>  : content}
+                      {isLoadingPosts || isLoadingProfile ? 
+                      renderLoadingState("h-20")  : content}
                       <p className="py-8 flex justify-center text-primary">.</p>
                     </div>}
                   </div>
@@ -812,12 +797,7 @@ const Profile = () => {
                   </form>
                   <div className="py-3 border-t-[1px] border-[1px] border-black/5  dark:border-slate-500/20 rounded-md">
                     <h2 className="capitalize font-bold text-xl px-5 mb-3 text-neutral-dark dark:text-neutral-lighter">Other Interests</h2>
-                    {isLoadingOtherUsers ? <div className="w-full flex flex-col gap-4">
-                      <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-                      <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-                      <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-                      <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-                    </div> : <div className="w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
+                    {isLoadingOtherUsers ? renderLoadingState("h-10") : <div className="w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
                       {userList}
                     </div>}
                   </div></> : 

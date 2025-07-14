@@ -6,12 +6,12 @@ const OtherUsersCard = ({uid, userIdVal, userImg, name, uName, followed, followi
     <div className="w-full py-3 px-3 flex flex-col items-start border-y-[1px] border-black/5  dark:border-neutral-300/10 hover:bg-primary/5 duration-200 transition-all">
         <div className="w-full flex justify-between items-center gap-2">
 
-          <div className="w-fit flex gap-2 text-xs">
+          <div className="w-full flex gap-2 text-xs">
             <div className="w-10 h-10 flex justify-center items-center rounded-full cursor-default overflow-hidden">
-              <img src={userImg} alt="" className="w-full h-full object-fill" loading="lazy"/>
+              <img src={userImg} alt="" className="w-full h-full object-cover" loading="lazy"/>
             </div>
             <Link to={`../${userIdVal}`}>
-              <p className="w-fit text-neutral dark:text-[#CBC9C9] hover:underline font-semibold">{name}</p>
+              <p className="w-fit text-neutral dark:text-[#CBC9C9] hover:underline font-semibold line-clamp-1">{name}</p>
               <span className="text-neutral-400 text-xs cursor-default">@{uName}</span>
             </Link>
           </div>
