@@ -34,7 +34,7 @@ const Message = ({messageId, viewStatus, img, uid, u_name, messages, message, da
 
   return (
     <div className={viewStatus === false ? "w-full flex bg-[#2eff6917]" : "group  hover:bg-primary/5 w-full flex pr-2 pt-2 cursor-pointer transition-all duration-200"}>
-      <Link to={`/messages/${messageId}`} className="px-3 md:px-5 py-4 lg:py-5 flex items-center justify-between gap-3 w-full text-neutral-dark dark:text-dark-text">
+      <Link to={`/messages/${messageId}`} className="px-3 md:px-5 py-4 lg:py-5 flex items-center justify-between gap-3 w-full text-neutral-dark dark:text-dark-accent">
         <div className="w-full flex gap-2 items-start">
           <img src={img} className="size-8 lg:size-10 object-cover rounded-full cursor-default" loading="lazy"/>
           <div className="flex flex-col">

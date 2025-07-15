@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Message from "../components/Message"
 import SideBar from "../components/SideBar"
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { getMessages } from "../features/messageSlice";
 import Footer from "../sections/Footer";
 // import BackBtn from "../components/BackBtn";
@@ -10,6 +10,7 @@ import Conversation from "../components/Conversation";
 import supabase from "../config/supabaseClient.config";
 import SearchModal from "../components/SearchModal";
 import useOtherUsers from "../hooks/useOtherUsers";
+import { AppContext } from "../context/AppContext";
 
 const Messages = () => {
   const [search, setSearch] = useState('')
@@ -19,6 +20,7 @@ const Messages = () => {
   const {id: paramsId} = useParams()
   const { loggedUser, otherUsers, isLoading } = useSelector((state) => state.app)
   const { messages, isLoadingMessages, isDeleting, errorMessages } = useSelector((state) => state.message)
+  const { renderLoadingState } = useContext(AppContext)
   const dispatch = useDispatch()
   const {mutate:others} = useOtherUsers()
 
@@ -98,15 +100,7 @@ const Messages = () => {
     }
 
     if(isLoading && isLoadingMessages || !loggedUser?.u_id) {
-      content = <div className="flex flex-col gap-2">
-                  <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                  <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                  <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                  <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                  <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                  <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                  <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                </div>
+      content = renderLoadingState('h-20')
     } else {
       if(messages !== null  && !isLoadingMessages ) {
         if(messages?.length > 0) {
@@ -127,18 +121,10 @@ const Messages = () => {
             />
           ))
         } else {
-          content = <h1 className="w-full h-56 flex flex-col justify-center items-center z-50 text-4xl"><i className="bi bi-envelope"></i><p className="text-base">No Messages!</p></h1>
+          content = <h1 className="w-full h-56 flex flex-col justify-center items-center z-50 text-4xl"><i className="bi bi-envelope"></i><p className="text-neutral-dark">No Messages!</p></h1>
         }
       } else {
-      content = <div className="flex flex-col gap-2">
-                  <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                  <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                  <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                  <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                  <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                  <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                  <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                </div>
+      content = renderLoadingState('h-20')
       }
     }
 
@@ -147,7 +133,7 @@ const Messages = () => {
   return (
     <div className="w-full flex flex-col items-center px-2 md:p-0 md:m-0">
 
-        <div className="sticky w-full lg:grid lg:grid-cols-8 px-2 md:px-20 pb-10 md:pb-28 md:gap-2 lg:mb-0 lg:pb-0">
+        <div className="sticky w-full lg:grid text-neutral-dark dark:text-dark-accent lg:grid-cols-8 px-2 md:px-20 pb-10 md:pb-28 md:gap-2 lg:mb-0 lg:pb-0">
           <SideBar
           uid={loggedUser !== null ? loggedUser.u_id : null} 
           page={'messages'} 
@@ -158,10 +144,10 @@ const Messages = () => {
           {messages == 'error' ? <div className="main w-full flex flex-col justify-center items-center col-span-6 border-[1px] border-black/5 "><p>This page does not exist.</p></div> :
             <div className="top-0 grid grid-cols-6 col-span-6 gap-2 mt-5">
               <div className="col-span-6 md:col-span-3 border-[1px] border-black/5 dark:border-slate-500/20 h-fit rounded-md">
-              {/* <div className="hidden w-full lg:flex px-3 bg-base-100/50 backdrop-blur-sm sticky top-0 z-[100]">
+              {/* <div className="hidden w-full lg:flex px-3 bg-bg/50 backdrop-blur-sm sticky top-0 z-[100]">
                 <BackBtn link={() => navigate(-1)} title={'Back'}/>
               </div> */}
-                <h1 className="text-xl font-bold px-3 py-5 border-b-[1px] border-black/5 dark:border-slate-500/20 dark:text-[#CBC9C9] bg-base-100/50 dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[30px]">Messages</h1>
+                <h1 className="text-xl font-bold px-3 py-5 border-b-[1px] border-black/5 dark:border-slate-500/20 dark:text-dark-accent bg-bg/50 dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[30px]">Messages</h1>
                 <div className="divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
                   {content}
                 </div>
