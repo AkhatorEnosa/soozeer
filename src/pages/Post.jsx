@@ -280,23 +280,23 @@ const Post = () => {
           <div className="flex w-8 h-8 overflow-clip z-20 rounded-full  shadow-sm cursor-default">
             <img src={loggedUser?.u_img} alt="" className="relative object-cover object-center" width={80} height={80} loading="lazy"/>
           </div>
-          <textarea name="body" id="body" ref={textareaRef} className={`w-full text-md z-20 flex flex-col h-auto min-h-8 box-border dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 outline-none resize-none`} value={newComment} placeholder={currentPost?.type == 'post' ? 'Comment...' : 'Reply...'} onChange={(e) => setNewComment(e.target.value)} readOnly={isPosting && true}></textarea>
+          <textarea name="body" id="body" ref={textareaRef} className={`w-full text-md z-20 flex flex-col h-auto min-h-8 box-border dark:text-dark-accent bg-bg dark:bg-dark-bg dark:placeholder:text-dark-accent/60 outline-none resize-none`} value={newComment} placeholder={currentPost?.type == 'post' ? 'Comment...' : 'Reply...'} onChange={(e) => setNewComment(e.target.value)} readOnly={isPosting && true}></textarea>
         </div>
 
         <div className={`flex justify-end ${newComment.trim() !== '' || isPosting ? "h-fit" : "h-0"}`}>
           <button className={`px-6 py-2 bg-primary font-semibold text-white rounded-full ${newComment.trim() !== '' ? "scale-100" : "scale-0"} ${isPosting && "opacity-50"} transition-all duration-150`} onClick={handleSubmit} disabled={isPosting && "disabled"}>{isPosting ?  <span className="loading loading-spinner loading-sm text-white"></span> : currentPost?.type == 'post' ? 'Comment' : 'Reply'}</button>
         </div>
       </div>
-      // <div className={`w-full flex flex-col gap-2 justify-center items-center ${newComment !== '' ? "bg-base-100" : "bg-primary-content/5"} border-t-[1px] border-b-[1px] dark:border-[#CBC9C9]/40 mb-4 z-40`}>
+      // <div className={`w-full flex flex-col gap-2 justify-center items-center ${newComment !== '' ? "bg-bg" : "bg-primary-content/5"} border-t-[1px] border-b-[1px] dark:border-dark-accent/40 mb-4 z-40`}>
       //   <>
-      //     <div ref={divRef} className={`relative text-md z-20 w-full flex flex-col gap-5 dark:text-slate-200 rounded-t-lg p-4 h-auto dark:bg-base-100 outline-none ${newComment.length > 0 ? "before:content-[''] before:absolute" : "before:absolute before:content-['Add_opinion...'] before:text-neutral-400"}`} contentEditable="true"></div>
+      //     <div ref={divRef} className={`relative text-md z-20 w-full flex flex-col gap-5 dark:text-slate-200 rounded-t-lg p-4 h-auto dark:bg-bg outline-none ${newComment.length > 0 ? "before:content-[''] before:absolute" : "before:absolute before:content-['Add_opinion...'] before:text-neutral-400"}`} contentEditable="true"></div>
       //     <div className={`w-full flex justify-end ${newComment !== '' && "px-5 pb-2"} transition-all duration-150`}
       //     onClick={() => divRef.current.focus()}>
       //       <button className={newComment !== '' ? "px-6 py-2 bg-primary font-semibold text-white rounded-full scale-100" : isPending ? "px-6 py-2 bg-primary font-semibold text-white rounded-full scale-100" : "px-6 py-2 bg-primary font-semibold text-white rounded-full scale-0 transition-all duration-150"} onClick={handleSubmit} disabled={isPending && "disabled"}>{isPending ?  <span className="loading loading-dots loading-sm text-white"></span> : currentPost?.type == 'post' ? 'Comment' : 'Reply'}</button>
       //     </div>
       //   </>
 
-        {/* <div className={divRef.current !== null && newComment.length > 0 ? "hidden" : "absolute top-0 z-0 w-full flex flex-col gap-5 rounded-t-lg p-4 h-auto dark:bg-base-100"}>
+        {/* <div className={divRef.current !== null && newComment.length > 0 ? "hidden" : "absolute top-0 z-0 w-full flex flex-col gap-5 rounded-t-lg p-4 h-auto dark:bg-bg"}>
           <span className="text-neutral-400">Say something...</span>
         </div> */}
       // </div> 
@@ -526,7 +526,7 @@ const Post = () => {
               // main section 
               <div className={loggedUser?.u_id !== null && "main w-full lg:h-screen flex flex-col col-span-4 border-r-[1px] border-l-[1px] border-black/5  dark:border-slate-500/20 overflow-scroll no-scrollbar"}>
 
-              <div className="w-full flex justify-between px-3 bg-base-100/50 dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">
+              <div className="w-full flex justify-between px-3 bg-bg/50 dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">
                 <BackBtn link={() => navigate(-1)} title={'Back'}/>
 
                 {currentPost?.post_id ? <BackBtn link={() => navigate(`/post/${currentPost?.post_id}`)} title={'Jump to origin'}/> : ''}
@@ -548,10 +548,10 @@ const Post = () => {
           {loggedUser?.u_id ? <>
             {/* search  */}
              <form onSubmit={handleSearch} className="flex flex-col gap-5 py-2 dark:bg-black z-50">
-                <input type="text" name="search" id="search" value={search} placeholder="Search..." className="w-full px-4 py-2  border-[1px] dark:border-[#CBC9C9]/40 placeholder:text-[#cbc9c9] text-neutral-dark dark:text-dark-accent text-sm outline-none dark:bg-black dark:focus-within::bg-black/50 rounded-full" onChange={(e)=>setSearch(e.target.value)}/>
+                <input type="text" name="search" id="search" value={search} placeholder="Search..." className="w-full px-4 py-2 border-[1px] bg-bg dark:border-dark-accent/40 text-neutral-dark dark:text-dark-accent text-sm placeholder:text-inherit outline-none dark:bg-black dark:focus-within:bg-black/50 rounded-full" onChange={(e)=>setSearch(e.target.value)}/>
             </form>
             <div className="py-3 border-t-[1px] border-[1px] border-black/5  dark:border-slate-500/20 rounded-md">
-                  <h2 className="font-bold text-xl px-5 pb-4 text-neutral-dark dark:text-neutral-lighter">You might interested in</h2>
+                  <h2 className="font-bold text-xl px-5 pb-4 text-neutral-dark dark:text-neutral-lighter">You might be interested in</h2>
                   {isLoading || isLoadingOtherUsers ? <div className="flex flex-col gap-4">
                       <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
                       <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
@@ -562,13 +562,17 @@ const Post = () => {
                   </div>}
                 </div>
               </> : 
-              <div className="w-full h-fit flex flex-col py-32 justify-center items-center">
-                  <p>Join Us to</p>
-                  <h1 className="font-bold text-4xl">Explore</h1>
-                  <ul className="flex mt-10 gap-4">
-                    <Link to={'/login'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral dark:border-slate-200 dark:text-[#CBC9C9]   hover:bg-black hover:text-base-100 dark:hover:bg-slate-200">Login</li></Link>
-                    <Link to={'/register'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral dark:border-slate-200 dark:text-[#CBC9C9]   hover:bg-black hover:text-base-100 dark:hover:bg-slate-200">Register</li></Link>
-                  </ul>
+              <div className="w-full h-fit flex flex-col py-32 justify-center items-center text-neutral-dark dark:text-dark-accent">
+                <p>Join Us To</p>
+                <h1 className="font-bold text-4xl">Explore</h1>
+                <ul className="flex mt-10 gap-4">
+                  <Link to="/login">
+                    <li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:bg-bg">Login</li>
+                  </Link>
+                  <Link to="/register">
+                    <li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:bg-bg">Register</li>
+                  </Link>
+                </ul>
               </div>
               }
             </div>

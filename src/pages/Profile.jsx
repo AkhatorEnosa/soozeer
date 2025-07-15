@@ -691,14 +691,14 @@ const Profile = () => {
               <>
                 <div className="main w-full flex flex-col col-span-4 border-r-[1px] border-l-[1px] border-black/5 dark:border-slate-500/20">
 
-                  <div className="w-full flex px-3 bg-base-100/50 dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">
+                  <div className="w-full flex px-3 bg-bg/50 dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">
                     <BackBtn link={() => navigate(-1)} title={'Back'}/>
                   </div>
 
                   <div className="relative info w-full flex gap-2 md:gap-5 justify-between items-center py-5 md:py-8 overflow-hidden">
 
                     {isLoadingProfile ? 
-                      <div className="skeleton dark:bg-slate-600 h-48 w-full opacity-40 z-40"></div> : 
+                      <div className="skeleton bg-neutral-dark/20 dark:bg-slate-600 h-48 w-full opacity-40 z-40"></div> : 
                       <div className="relative w-full flex gap-2 px-2 md:px-8 md:gap-4 text-neutral-dark dark:text-dark-accent items-start z-40">
                           <img src={currentProfile?.u_img} alt="" className="w-20 h-20 object-cover object-center rounded-md z-50" width={80} height={80} onClick={() => window.open(currentProfile.u_img, '_blank').focus()} loading="lazy"/>
                           <div className="w-full flex flex-col md:flex-row md:justify-between gap-3">
@@ -753,7 +753,7 @@ const Profile = () => {
                   </div>
 
                   <div className="tabs divide-y-[1px] divide-black/5 dark:divide-slate-500/20 flex flex-col items-center">
-                    <ul className={`grid ${loggedUser?.u_id === profileId ? "w-full grid-cols-5" : "w-full grid-cols-3"} justify-between overflow-scroll no-scrollbar text-sm md:text-base font-medium text-neutral-dark dark:text-dark-accent bg-base-100/50 dark:bg-black/50 backdrop-blur-sm sticky top-10 z-[100]`} ref={tabsRef}>
+                    <ul className={`grid ${loggedUser?.u_id === profileId ? "w-full grid-cols-5" : "w-full grid-cols-3"} justify-between overflow-scroll no-scrollbar text-sm md:text-neutral-dark font-medium text-neutral-dark dark:text-dark-accent bg-bg/50 dark:bg-black/50 backdrop-blur-sm sticky top-10 z-[100]`} ref={tabsRef}>
                       <li className={tab === 'posts' ? "w-full text-center border-b-2 border-primary dark:text-neutral-lightest py-3 px-0 cursor-pointer" : "w-full text-center hover:border-b-2 border-primary/30 hover:bg-primary/5 py-3 px-0 cursor-pointer"} onClick={() => setTab('posts')}>Posts</li>
                       <li className={tab === 'replies' ? "w-full text-center border-b-2 border-primary dark:text-neutral-lightest py-3 px-0 cursor-pointer" : "w-full text-center hover:border-b-2 border-primary/30 hover:bg-primary/5 py-3 px-0 cursor-pointer"} onClick={() => setTab('replies')}>Replies</li>
                       <li className={tab === 'journals' ? "w-full text-center border-b-2 border-primary dark:text-neutral-lightest py-3 px-0 cursor-pointer" : "w-full text-center hover:border-b-2 border-primary/30 hover:bg-primary/5 py-3 px-0 cursor-pointer"} onClick={() => setTab('journals')}>Journals</li>
@@ -772,8 +772,8 @@ const Profile = () => {
                 <div className="hidden sticky right-0 top-0 lg:flex flex-col gap-5 h-fit col-span-2 py-3">
                 {loggedUser?.u_id ? <>
                   {/* search  */}
-                  <form onSubmit={handleSearch} className="flex flex-col gap-5 py-2 bg-base-100 dark:bg-black z-50">
-                      <input type="text" name="search" id="search" value={search} placeholder="Search..." className="w-full px-4 py-2 border-[1px] dark:border-[#CBC9C9]/40 text-neutral-dark dark:text-dark-accent text-sm placeholder:text-inherit outline-none dark:bg-black dark:focus-within::bg-black/50 rounded-full" onChange={(e)=>setSearch(e.target.value)}/>
+                  <form onSubmit={handleSearch} className="flex flex-col gap-5 py-2 bg-bg dark:bg-black z-50">
+                      <input type="text" name="search" id="search" value={search} placeholder="Search..." className="w-full px-4 py-2 border-[1px] bg-bg dark:border-dark-accent/40 text-neutral-dark dark:text-dark-accent text-sm placeholder:text-inherit outline-none dark:bg-black dark:focus-within:bg-black/50 rounded-full" onChange={(e)=>setSearch(e.target.value)}/>
                   </form>
                   <div className="py-3 border-t-[1px] border-[1px] border-black/5  dark:border-slate-500/20 rounded-md">
                     <h2 className="capitalize font-bold text-xl px-5 mb-3 text-neutral-dark dark:text-neutral-lighter">Other Interests</h2>
@@ -781,22 +781,27 @@ const Profile = () => {
                       {userList}
                     </div>}
                   </div></> : 
-                  <div className="w-full flex flex-col py-32 justify-center text-neutral-dark dark:text-dark-accent items-center">
-                      <p>Join Us to</p>
-                      <h1 className="font-bold text-4xl">Explore</h1>
-                      <ul className="flex mt-10 gap-4">
-                        <Link to={'/login'}><li className="py-2 px-4 border-[1px] rounded-full border-black dark:border-slate-200 text-neutral-dark dark:text-dark-accent   hover:bg-black hover:text-base-100 dark:hover:bg-slate-200">Login</li></Link>
-                        <Link to={'/register'}><li className="py-2 px-4 border-[1px] rounded-full border-black dark:border-slate-200 text-neutral-dark dark:text-dark-accent   hover:bg-black hover:text-base-100 dark:hover:bg-slate-200">Register</li></Link>
-                      </ul>
-                  </div>}
+                  <div className="w-full h-fit flex flex-col py-32 justify-center items-center text-neutral-dark dark:text-dark-accent">
+                    <p>Join Us To</p>
+                    <h1 className="font-bold text-4xl">Explore</h1>
+                    <ul className="flex mt-10 gap-4">
+                      <Link to="/login">
+                        <li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:bg-bg">Login</li>
+                      </Link>
+                      <Link to="/register">
+                        <li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:bg-bg">Register</li>
+                      </Link>
+                    </ul>
+                  </div>
+                }
                 </div>
               </>
             }
           </div>
 
         {/* bio edit modal  */}
-        <div className={showEdit == false ? 'hidden' : "fixed w-screen h-screen flex justify-center px-10 bg-base-100/90 dark:bg-black/90 text-neutral-dark dark:text-neutral-lighter items-center top-0 left-0 cursor-default z-[1000]"} >
-          <div className="w-full flex flex-col md:w-[80%] lg:w-[50%] max-h-[90%] bg-base-100 dark:bg-black px-2 md:px-4 py-2 md:py-5 rounded-md gap-6 border-[1px] border-black/10 dark:border-[#CBC9C9]/20 shadow-md dark:shadow-[#cbc9c9]/20 overflow-scroll">
+        <div className={showEdit == false ? 'hidden' : "fixed w-screen h-screen flex justify-center px-10 bg-bg/90 dark:bg-black/90 text-neutral-dark dark:text-neutral-lighter items-center top-0 left-0 cursor-default z-[1000]"} >
+          <div className="w-full flex flex-col md:w-[80%] lg:w-[50%] max-h-[90%] bg-bg dark:bg-black px-2 md:px-4 py-2 md:py-5 rounded-md gap-6 border-[1px] border-black/10 dark:border-dark-accent/20 shadow-md dark:shadow-dark-accent/20 overflow-scroll">
             <div className="w-full flex justify-between items-center">
               <h1 className="font-bold w-fit flex gap-2 justify-center items-center text-lg md:text-xl">Edit <i className="bi bi-pencil-square"></i></h1>
               <span className="size-10 flex justify-center items-center p-2 hover:bg-black/5 rounded-full" onClick={handleCloseEdit}><i className="bi bi-x-lg cursor-pointer"></i></span>
@@ -811,13 +816,13 @@ const Profile = () => {
                   <p className="font-bold text-xs md:text-sm text-primary dark:text-white">{`${fullNameValCount}/50`}</p>
                 </div>
                 <input name="fullname" id="fullname" maxLength={50}
-                  className={fullNameVal !== '' ? "w-full rounded-lg p-2 dark:text-dark-accent dark:bg-black placeholder:text-sm text-sm md:text-xl border-[1px] dark:border-[#CBC9C9]/40 outline-none" : "w-full rounded-lg p-2 dark:bg-black dark:text-dark-accent placeholder:text-sm text-sm md:text-xl border border-error bg-error/5 dark:bg-black/50 outline-none"} value={fullNameVal} placeholder="Fullname" onChange={handleFullNameChange}/>
+                  className={fullNameVal !== '' ? "w-full flex gap-2 justify-between items-center input input-bordered input-md bg-bg focus-within:border-dark-accent/50 dark:focus-within:outline-dark-accent rounded-lg p-2 dark:text-dark-accent dark:bg-black placeholder:text-sm text-sm md:text-xl border-[1px] dark:border-dark-accent/40 outline-none" : "w-full rounded-lg p-2 dark:bg-black dark:text-dark-accent placeholder:text-sm text-sm md:text-xl border border-error bg-error/5 dark:bg-black/50 outline-none"} value={fullNameVal} placeholder="Fullname" onChange={handleFullNameChange}/>
               </label>
 
 
               <label className="w-full flex flex-col gap-2">
                 <p className="font-semibold text-xs md:text-sm">Display Picture</p>
-                <div className="w-full flex gap-5 items-center border-[1px] px-2 py-4 rounded-lg md:p-3 group dark:bg-black/50 hover:bg-primary-content/5  dark:border-[#CBC9C9]/40 dark:text-dark-accent cursor-pointer">
+                <div className="w-full flex gap-5 items-center border-[1px] px-2 py-4 rounded-lg md:p-3 group dark:bg-black/50 hover:bg-primary-content/5  dark:border-dark-accent/40 dark:text-dark-accent cursor-pointer">
                   <div className="relative w-fit flex justify-center items-center">
                     <img src={profilePic} alt="profilepic" className="w-10 h-10 md:w-48 md:h-48 z-30 object-cover object-center rounded-full" width={80} height={80} loading="lazy"/>
                       <div className="absolute w-full h-full flex flex-col justify-center gap-1 z-50 text-white/70 transition-all duration-200 bg-black/50 rounded-full">
@@ -839,31 +844,31 @@ const Profile = () => {
                   <p className="font-bold text-sm text-primary dark:text-white">{`${bioValCount}/150`}</p>
                 </div>
                 <textarea rows={5} maxLength={150} name="post" id="edit" 
-                  className="w-full rounded-lg p-2 placeholder:text-sm text-sm md:text-base dark:text-dark-accent border dark:bg-black/50 dark:border-[#CBC9C9]/40 outline-none" value={bioVal} placeholder="Bio..." onChange={handleBioChange}/>
+                  className="w-full rounded-lg p-2 placeholder:text-sm text-sm text-neutral-dark dark:text-dark-accent border bg-bg dark:bg-black dark:border-dark-accent/40 outline-none" value={bioVal} placeholder="Bio..." onChange={handleBioChange}/>
               </label>
 
               <label className="w-full flex flex-col gap-2">
                 <div className="w-full flex justify-between items-center gap-2">
                   <p className="font-semibold text-xs md:text-sm">Date Of Birth</p>
-                  <select className="bg-primary/5 border-[1px] border-black/20 dark:border-[#CBC9C9]/40 dark:bg-primary/20 w-full max-w-fit rounded-full text-xs font-semibold px-2 py-0 outline-none" onChange={(e) => setBobPrivacy(e.target.value)} defaultValue={"Change Privacy?"}>
+                  <select className="bg-primary/5 border-[1px] border-black/20 dark:border-dark-accent/40 dark:bg-primary/20 w-full max-w-fit rounded-full text-xs font-semibold px-2 py-0 outline-none" onChange={(e) => setBobPrivacy(e.target.value)} defaultValue={"Change Privacy?"}>
                     <option disabled>Change Privacy?</option>
                     <option>For me</option>
                     <option>Everyone</option>
                   </select>
                 </div>
                 <input name="dob" id="dob" type="date" max={getTodayDate()}
-                  className={dob !== '' ? "w-full rounded-lg p-2 text-neutral-dark dark:text-dark-accent dark:bg-black placeholder:text-sm text-sm md:text-xl border-[1px] dark:border-[#CBC9C9]/40 outline-none" : "w-full rounded-lg p-2 text-neutral-dark dark:text-dark-accent dark:bg-black placeholder:text-sm text-sm md:text-xl border border-error bg-error/5 dark:bg-black/50 outline-none"} value={moment(dob).format("yyyy-MM-dd")} placeholder="Enter your Date of Birth" onChange={(e) => setDob(e.target.value)}/>
+                  className={dob !== '' ? "w-full rounded-lg p-2 text-neutral-dark dark:text-dark-accent bg-bg dark:bg-black placeholder:text-sm text-sm md:text-xl border-[1px] dark:border-dark-accent/40 outline-none" : "w-full rounded-lg p-2 text-neutral-dark dark:text-dark-accent dark:bg-black placeholder:text-sm text-sm md:text-xl border border-error bg-error/5 dark:bg-black/50 outline-none"} value={moment(dob).format("yyyy-MM-dd")} placeholder="Enter your Date of Birth" onChange={(e) => setDob(e.target.value)}/>
               </label>
 
-              {fullNameVal !== '' && dob !== '' && <button className="w-full btn btn-primary text-white rounded-full" onClick={handleEdit} disabled={isUpdatingProfile && "disabled"}>{isUpdatingProfile ?  <span className="loading loading-spinner loading-sm text-white"></span> : 'Update'}</button>}
+              {fullNameVal !== '' && dob !== '' && <button className="w-full btn norder-none bg-primary text-white hover:bg-primary/80" onClick={handleEdit} disabled={isUpdatingProfile && "disabled"}>{isUpdatingProfile ?  <span className="loading loading-spinner loading-sm text-white"></span> : 'Update'}</button>}
 
             </form>
           </div>
         </div>
 
         {/* followings/followers modal  */}
-        <div className={`w-screen h-screen ${showFollowsModal ? "flex" : "hidden"} flex-col justify-center items-center fixed top-0 left-0 bg-base-100/90 dark:bg-black/90 shadow-lg mb-4 z-[201]`}>
-          <div className="flex flex-col justify-center items-center bg-base-100 dark:bg-black p-5 rounded-lg w-[80%] md:w-[60%] lg:w-[40%] border-[1px] border-black/10 dark:border-[#CBC9C9]/20 shadow-md dark:shadow-[#cbc9c9]/20">
+        <div className={`w-screen h-screen ${showFollowsModal ? "flex" : "hidden"} flex-col justify-center items-center fixed top-0 left-0 bg-bg/90 dark:bg-black/90 shadow-lg mb-4 z-[201]`}>
+          <div className="flex flex-col justify-center items-center bg-bg dark:bg-black p-5 rounded-lg w-[80%] md:w-[60%] lg:w-[40%] border-[1px] border-black/10 dark:border-dark-accent/20 shadow-md dark:shadow-dark-accent/20">
             <div className="w-full flex justify-between items-center mb-5">
               <div className="flex gap-2 items-center">
                 <h1 className="font-semibold text-lg lg:text-2xl text-neutral-dark dark:text-neutral-lighter">{followType == 'followers' ? "Followers" : "Followings"}</h1>

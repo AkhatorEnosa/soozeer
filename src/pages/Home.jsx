@@ -576,7 +576,7 @@ const Home = () => {
             </>
           ) : (
             <div className="w-full h-fit flex flex-col py-32 justify-center items-center text-neutral-dark dark:text-dark-accent">
-              <p>Join Us to</p>
+              <p>Join Us To</p>
               <h1 className="font-bold text-4xl">Explore</h1>
               <ul className="flex mt-10 gap-4">
                 <Link to="/login">

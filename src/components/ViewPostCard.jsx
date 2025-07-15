@@ -25,7 +25,7 @@ const ViewPostCard = ({userId, deleting, liking, bookmarking, following, postUse
   };
 
   return ( 
-    <div className={`w-full py-2 px-2 md:py-5 md:px-5 flex gap-3 flex-col items-start text-sm rounded-t-md border-b-[1px] border-black/5 dark:border-neutral-300/10 ${deleting && "opacity-30"} dark:text-[#CBC9C9]`}>
+    <div className={`w-full py-2 px-2 md:py-5 md:px-5 flex gap-3 flex-col items-start text-sm rounded-t-md border-b-[1px] border-black/5 dark:border-neutral-300/10 ${deleting && "opacity-30"} text-neutral-dark dark:text-dark-accent`}>
         <div className="w-full flex flex-col gap-3">
 
 
@@ -69,8 +69,8 @@ const ViewPostCard = ({userId, deleting, liking, bookmarking, following, postUse
         </div>
         }
 
-        {showDelete && <div className="fixed w-screen h-screen flex justify-center px-10 bg-base-100/80 dark:bg-black/80 items-center top-0 left-0 cursor-default z-[1000]">
-                <div className="w-[85%] md:w-[50%] bg-base-100 dark:bg-black p-5 rounded-[1rem] flex flex-col gap-2 border-[1px] border-black/10 dark:border-[#CBC9C9]/20 shadow-md dark:shadow-[#cbc9c9]/20">
+        {showDelete && <div className="fixed w-screen h-screen flex justify-center px-10 bg-bg/80 dark:bg-black/80 items-center top-0 left-0 cursor-default z-[1000]">
+                <div className="w-[85%] md:w-[50%] bg-bg dark:bg-black p-5 rounded-[1rem] flex flex-col gap-2 border-[1px] border-black/10 dark:border-dark-accent/20 shadow-md dark:shadow-dark-accent/20">
                 {!deleting ?
                   <>
                     <h1 className="text-2xl lg:text-3xl font-semibold">Delete Post?</h1>

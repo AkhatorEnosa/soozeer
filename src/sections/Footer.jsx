@@ -86,23 +86,23 @@ const Footer = ({uid, page, paramsId, toggleSearchBar}) => {
   // }
 
   return (
-    <>{uid && <div className='lg:hidden w-full h-20 flex fixed justify-center bottom-0 bg-bg/90 backdrop-blur-sm dark:bg-dark-bg/90 px-4 md:px-20 z-40 border-t-[1px] border-primary/20 text-lg md:text-2xl dark:text-[#CBC9C9]'>
+    <>{uid && <div className='lg:hidden w-full h-20 flex fixed justify-center bottom-0 bg-bg/90 backdrop-blur-sm dark:bg-dark-bg/90 px-4 md:px-20 z-40 border-t-[1px] border-primary/20 text-lg md:text-2xl dark:text-dark-accent'>
         <ul className='w-full h-full lg:max-w-[90%] grid grid-cols-5'>
-            <Link to={'/'} className=" text-neutral dark:text-[#CBC9C9]">
+            <Link to={'/'} className=" text-neutral dark:text-dark-accent">
                 <li className={page === 'home' ? "text-primary backdrop-blur-none border-b-2 border-primary h-full flex flex-col justify-center items-center cursor-pointer" : "hover:text-primary hover hover:border-b-2 hover:border-primary h-full flex flex-col justify-center items-center cursor-pointer"}><i className={page === 'home' ? "bi-house-door-fill" : "bi-house-door"}></i></li>
             </Link>
-            <Link to={`/${uid}`} className=" text-neutral dark:text-[#CBC9C9]">
+            <Link to={`/${uid}`} className=" text-neutral dark:text-dark-accent">
                 <li className={page === 'profile' && paramsId === uid ?  "text-primary border-b-2 border-primary h-full flex flex-col justify-center items-center cursor-pointer" : "hover:text-primary hover hover:border-b-2 hover:border-primary h-full flex flex-col justify-center items-center cursor-pointer"}><i className={page === 'profile' && paramsId === uid ? "bi bi-person-fill" : "bi bi-person"}></i></li>
             </Link>
-            <Link to={`/messages/conversations`} className=" text-neutral dark:text-[#CBC9C9]">
+            <Link to={`/messages/conversations`} className=" text-neutral dark:text-dark-accent">
                 {page === 'messages' ? <li className="relative text-primary border-b-2 border-primary h-full flex flex-col justify-center items-center cursor-pointer"><i className="bi bi-envelope-fill"></i></li> : 
                 <li className="relative hover:text-primary hover:border-b-2 hover:border-primary h-full flex justify-center items-center cursor-pointer"><i className="bi bi-envelope relative not-italic">{messageCount}</i> </li>}
             </Link>
-            <Link to={`/notifications`} className=" text-neutral dark:text-[#CBC9C9]">
+            <Link to={`/notifications`} className=" text-neutral dark:text-dark-accent">
                 {page === 'notification' ? <li className="text-primary border-b-2 border-primary h-full flex flex-col justify-center items-center cursor-pointer"><i className="bi bi-bell-fill"></i></li> : 
                 <li className="relative hover:text-primary hover:border-b-2 hover:border-primary h-full flex justify-center items-center cursor-pointer"><i className="bi bi-bell relative not-italic">{notificationCount}</i></li>}
             </Link>
-            <li className={page === 'search' ?  "text-primary border-b-2 border-primary h-full flex flex-col justify-center items-center cursor-pointer" : "hover:text-primary hover hover:border-b-2 hover:border-primary h-full flex flex-col justify-center items-center cursor-pointer"} onClick={toggleSearchBar}><i className={page === 'search' ? "bi bi-binoculars-fill" : "bi bi-binoculars"}></i></li>
+            <li className={page === 'search' ?  "text-primary border-b-2 border-primary h-full flex flex-col justify-center items-center cursor-pointer" : "text-neutral dark:text-dark-accent hover:text-primary hover hover:border-b-2 hover:border-primary h-full flex flex-col justify-center items-center cursor-pointer"} onClick={toggleSearchBar}><i className={page === 'search' ? "bi bi-binoculars-fill" : "bi bi-binoculars"}></i></li>
         </ul>
     </div>}
     </>

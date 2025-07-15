@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 const FooterTab = ({location, page, pageValue, fillIcon, strokeIcon}) => {
   return (
     <Link to={location} className="dark:text-dark-text">
-        <li className={page === pageValue ? "text-primary backdrop-blur-none border-b-2 border-primary h-full flex flex-col justify-center items-center cursor-pointer" : "hover:text-primary hover hover:border-b-2 hover:border-primary h-full flex flex-col justify-center items-center cursor-pointer"}><i className={`bi-${page === pageValue ? fillIcon : strokeIcon}`}></i></li>
+        <li className={page === pageValue ? "text-primary backdrop-blur-none border-b-2 border-primary h-full flex flex-col justify-center items-center cursor-pointer" : "text-neutral-dark hover:text-primary hover hover:border-b-2 hover:border-primary h-full flex flex-col justify-center items-center cursor-pointer"}><i className={`bi-${page === pageValue ? fillIcon : strokeIcon}`}></i></li>
     </Link>
   )
 }
