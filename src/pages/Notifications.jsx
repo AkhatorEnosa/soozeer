@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useNavigate} from "react-router-dom"
 import Footer from "../sections/Footer"
 import OtherUsersCard from "../components/OtherUsersCard"
@@ -12,12 +12,14 @@ import supabase from "../config/supabaseClient.config"
 import SideBar from "../components/SideBar"
 // import BackBtn from "../components/BackBtn"
 import SearchModal from "../components/SearchModal"
+import { AppContext } from "../context/AppContext"
 // import Navbar from "../components/Navbar"
 
 const Notifications = () => {
   const [search, setSearch] = useState('')
 
   const {notifications, loggedUser, otherUsers, isLoading, isLoadingOtherUsers} = useSelector((state) => state.app)
+  const { renderLoadingState } = useContext(AppContext)
   const {mutate} = useNotifications()
   const dispatch = useDispatch()
 
@@ -80,12 +82,7 @@ let content;
     
       // verify id and other users availability 
       if(isLoading || isLoadingOtherUsers) {
-          userList = <div className="flex flex-col gap-4">
-          <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-          <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-          <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-          <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-        </div>
+          userList = renderLoadingState("h-10")
         }else if((loggedUser?.u_id && otherUsers?.length > 0)) {
           userList = otherUsers?.slice(0,4).map(x => (
           <OtherUsersCard 
@@ -156,15 +153,7 @@ let content;
       }
 
     if(isLoading) {
-        content = <div className="flex flex-col gap-4">
-          <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-          <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-          <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-          <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-          <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-          <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-          <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-        </div>
+        content = renderLoadingState("h-20")
     }else {
         if(loggedUser !== null && notifications !== null && notifications.length > 0){
           const sortNotifications = JSON.parse(JSON.stringify(notifications)).sort((a,b) => b.id - a.id)
@@ -223,15 +212,7 @@ let content;
           <div className="side-nav hidden sticky right-0 top-5 md:flex flex-col gap-5 h-fit md:col-span-3 lg:col-span-2 py-3 border-[1px] border-black/5 dark:border-neutral-300/10 rounded-md">
 
               <h2 className="font-bold text-xl px-3 text-neutral-dark dark:text-dark-accent">Suggested for you</h2>
-              {!loggedUser ? <div className="flex flex-col gap-4 mt-4">
-                <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-              </div> : <div className="w-full divide-y-[1px] divide-black/5 dark:divide-neutral-300/10">
+              {!loggedUser && isLoadingOtherUsers ? renderLoadingState("h-10") : <div className="w-full divide-y-[1px] divide-black/5 dark:divide-neutral-300/10">
                 {userList}
               </div>}
           </div>

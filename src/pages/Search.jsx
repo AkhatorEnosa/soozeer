@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 // import Navbar from "../components/Navbar"
 import Footer from "../sections/Footer"
@@ -19,6 +19,7 @@ import { followUser, unfollow } from "../features/followSlice"
 import useSearchQuery from "../hooks/useSearchQuery"
 import SideBar from "../components/SideBar"
 import JournalCard from "../components/JournalCard"
+import { AppContext } from "../context/AppContext"
 // import Navbar from "../components/Navbar"
 
 const Search = () => {
@@ -32,6 +33,7 @@ const Search = () => {
 
   const { loggedUser, otherUsers, searchedUsers, isLoading, isLoadingOtherUsers } = useSelector((state) => state.app)
   const { searchedPosts, likes, bookmarks, comments, isDeletingPost, isBookmarking, isLiking } = useSelector((state) => state.posts)
+  const { renderLoadingState } = useContext(AppContext)
   const { follows, isLoadingFollows } = useSelector((state) => state.follows)
   const dispatch = useDispatch()
 
@@ -163,12 +165,7 @@ const Search = () => {
   let people;
 
   if(isLoading || isLoadingOtherUsers) {
-    <div className="w-full flex flex-col gap-4">
-      <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-      <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-      <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-      <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-    </div>
+    renderLoadingState("h-10")
   } else {
     if(otherUsers?.length > 0) {
       userList = otherUsers.slice(0,4).map(x => (
@@ -357,15 +354,7 @@ const Search = () => {
           content = <h1 className="w-full h-56 flex flex-col justify-center items-center z-50 text-5xl gap-4"><i className="bi bi-search"></i> <p className="text-base">No search result found!</p></h1>
     }
   } else {
-    content = <div className="w-full flex flex-col gap-4">
-                  <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                  <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                  <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                  <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                  <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                  <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                  <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
-                </div>
+    content = renderLoadingState("h-20")
   }
   
 
@@ -382,7 +371,7 @@ const Search = () => {
 
             <div className="main w-full flex flex-col col-span-4 border-[1px] border-black/5  dark:border-neutral-300/10 py-4 lg:px-5 lg:py-7 gap-2 lg:gap-5 text-neutral-dark dark:text-dark-text rounded-md">
 
-              <div className="w-full flex px-3 bg-base-100/50 dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">
+              <div className="w-full flex px-3 bg-bg/50 dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">
                 <BackBtn link={() => navigate(-1)} title={'Back'}/>
               </div>
               
@@ -392,9 +381,9 @@ const Search = () => {
                   <form 
                   onSubmit={handlePostSearch} 
                   className="flex flex-col gap-7 mt-2 px-2">
-                    <label className="input input-bordered bg-primary/5 rounded-full flex items-center text-sm gap-3 dark:bg-black/50 border-[1px] dark:border-[#CBC9C9]/40 outline-none dark:focus:bg-black/50"><i className="bi bi-binoculars-fill"></i>
+                    <div className="input input-bordered bg-primary/5 text-neutral-dark dark:text-dark-accent rounded-full flex items-center text-sm gap-3 dark:bg-black border-[1px] dark:border-dark-accent/40 outline-none dark:focus:bg-black/50"><i className="bi bi-binoculars-fill"></i>
                       <input type="text" name="search" id="search" value={search} placeholder={params.id} className="w-full placeholder:text-inherit" onChange={(e)=>setSearch(e.target.value)}/>
-                    </label>
+                    </div>
                   </form>
               </div>
 
@@ -421,12 +410,7 @@ const Search = () => {
 
             <div>
               <h2 className="capitalize font-bold text-xl px-3 mb-4 text-neutral-dark dark:text-neutral-lighter">Other Interests</h2>
-              {isLoadingOtherUsers ? <div className="w-full flex flex-col gap-4">
-                <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-                <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-                <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-                <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-              </div> : <div className="w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
+              {isLoadingOtherUsers ? renderLoadingState("h-10") : <div className="w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
                 {userList}
               </div>}
             </div>
