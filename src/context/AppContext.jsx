@@ -24,7 +24,7 @@ export function AppProvider({ children }) {
     );
   
     // Common user list empty state
-    const userListEmptyState = (
+    const userListEmptyState = () => (
       <h1 className="w-full h-56 flex flex-col gap-4 justify-center items-center z-50 text-5xl text-neutral-dark dark:text-dark-text py-5">
         <i className="bi bi-people"></i>
         <p className="text-base">No body to see, yet!</p>
