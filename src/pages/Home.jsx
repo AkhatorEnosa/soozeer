@@ -26,9 +26,9 @@ import { AppContext } from "../context/AppContext"
 const PostFormModal = ({ isOpen, onClose, isJournal, loggedUser, textAreaRef, postValue, setPostValue, title, setTitle, journalText, setJournalText, privacy, setPrivacy, handleSubmit, isAddingPost }) => (
   <dialog
     open={isOpen}
-    className={`w-screen h-screen ${isOpen ? 'flex' : 'hidden'} flex-col justify-center items-center fixed top-0 left-0 bg-base-100/90 dark:bg-black/90 dark:text-[#cbc9c9] shadow-lg mb-4 z-[220]`}
+    className={`w-screen h-screen ${isOpen ? 'flex' : 'hidden'} flex-col justify-center items-center fixed top-0 left-0 bg-bg/90 dark:bg-black/90 dark:text-dark-accent shadow-lg mb-4 z-[220]`}
   >
-    <div className="flex flex-col justify-center items-center bg-base-100 dark:bg-black p-5 gap-5 rounded-lg w-[80%] md:w-[60%] lg:w-[40%] border-[1px] border-black/10 dark:border-[#CBC9C9]/20 shadow-md dark:shadow-[#cbc9c9]/20">
+    <div className="flex flex-col justify-center items-center bg-bg dark:bg-black p-5 gap-5 rounded-lg w-[80%] md:w-[60%] lg:w-[40%] border-[1px] border-black/10 dark:border-dark-accent/20 shadow-md dark:shadow-dark-accent/20">
       <div className="w-full flex justify-between items-center">
         <div className="flex gap-2 items-center">
           <img
@@ -53,7 +53,7 @@ const PostFormModal = ({ isOpen, onClose, isJournal, loggedUser, textAreaRef, po
         {isJournal && (
           <input
             type="text"
-            className="text-md w-full dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 outline-none"
+            className="text-md w-full dark:text-dark-accent dark:bg-black dark:placeholder:text-dark-accent/60 outline-none"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Title"
@@ -64,7 +64,7 @@ const PostFormModal = ({ isOpen, onClose, isJournal, loggedUser, textAreaRef, po
           name="body"
           id="body"
           ref={textAreaRef}
-          className="text-md w-full min-h-8 dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 outline-none resize-none"
+          className="text-md w-full min-h-8 dark:text-dark-accent dark:bg-black dark:placeholder:text-dark-accent/60 outline-none resize-none"
           value={isJournal ? journalText : postValue}
           onChange={(e) => (isJournal ? setJournalText(e.target.value) : setPostValue(e.target.value))}
           placeholder={isJournal ? 'Body' : 'What are you thinking?'}
@@ -74,7 +74,7 @@ const PostFormModal = ({ isOpen, onClose, isJournal, loggedUser, textAreaRef, po
         {isJournal && (
           <div className="w-full flex justify-between mt-4">
             <select
-              className="bg-accent/5 border-[1px] border-black/20 dark:border-[#CBC9C9]/20 w-full max-w-fit rounded-full text-xs font-semibold px-2 py-0 outline-none"
+              className="bg-accent/5 border-[1px] border-black/20 dark:border-dark-accent/20 w-full max-w-fit rounded-full text-xs font-semibold px-2 py-0 outline-none"
               onChange={(e) => setPrivacy(e.target.value)}
               value={privacy || 'Change Privacy?'}
               aria-label="Privacy setting"
@@ -520,9 +520,9 @@ const Home = () => {
         {/* side bar */}
         <SideBar uid={loggedUser?.u_id || null} page="home" toggleSearchBar={handleShowSearch} />
 
-        <div className={loggedUser?.u_id ? 'w-full flex flex-col col-span-4 border-r-[1px] border-l-[1px] mt-5 border-black/5 dark:border-[#CBC9C9]/20' : 'w-full flex flex-col col-span-4 border-r-[1px] border-l-[1px] border-black/5 dark:border-[#CBC9C9]/20 justify-center items-center'}>
+        <div className={loggedUser?.u_id ? 'w-full flex flex-col col-span-4 border-r-[1px] border-l-[1px] mt-5 border-black/5 dark:border-dark-accent/20' : 'w-full flex flex-col col-span-4 border-r-[1px] border-l-[1px] border-black/5 dark:border-dark-accent/20 justify-center items-center'}>
           {loggedUser?.u_id && (
-            <div className="sticky top-0 flex justify-evenly text-center dark:text-[#CBC9C9] w-full bg-base-100/90 dark:bg-black/90 backdrop-blur-md overflow-scroll no-scrollbar text-sm md:text-base font-medium z-40">
+            <div className="sticky top-0 flex justify-evenly text-center  text-neutral-dark dark:text-dark-accent w-full bg-bg/90 dark:bg-black/90 backdrop-blur-md overflow-scroll no-scrollbar text-sm md:text-base font-medium z-40">
               <button className={`w-full ${tab === 'forYou' ? 'bg-primary/5 font-bold border-b-2 border-primary' : ''} py-3 px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('forYou')}>
                 For you
               </button>
@@ -538,11 +538,11 @@ const Home = () => {
             {isLoading ? (
               renderLoadingState('h-40')
             ) : (
-              <div className="relative w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
+              <div className="relative w-full text-neutral-dark dark:text-dark-accent divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
                 {loggedUser && (
-                  <div className="w-full flex justify-end lg:justify-start items-center px-4 my-5 text-sm dark:text-[#cbc9c9] fixed bottom-20 left-0 lg:sticky lg:top-12 py-2 lg:bg-base-100/90 dark:lg:dark:bg-black/90 lg:backdrop-blur-sm z-[110]">
+                  <div className="w-full flex justify-end lg:justify-start items-center px-4 my-5 text-sm dark:text-dark-accent fixed bottom-20 left-0 lg:sticky lg:top-12 py-2 lg:bg-bg/90 dark:lg:dark:bg-black/90 lg:backdrop-blur-sm z-[110]">
                     <button
-                      className={`w-fit flex gap-2 justify-center items-center border-[1px] border-black bg-base-100 dark:bg-black dark:border-[#CBC9C9] font-semibold ${tab === 'journal' ? 'hover:bg-accent/5 hover:border-accent hover:text-accent dark-hover:text-inherit' : 'hover:bg-primary/5 hover:border-primary hover:text-primary'} px-4 py-2 rounded-full shadow-md lg:shadow-none`}
+                      className={`w-fit flex gap-2 justify-center items-center border-[1px] border-black bg-bg dark:bg-black dark:border-dark-accent font-semibold ${tab === 'journal' ? 'hover:bg-accent/5 hover:border-accent hover:text-accent dark-hover:text-inherit' : 'hover:bg-primary/5 hover:border-primary hover:text-primary'} px-4 py-2 rounded-full shadow-md lg:shadow-none`}
                       onClick={() => setShowPostInModal(!showPostInModal)}
                     >
                       <i className="bi bi-pencil"></i>{tab === 'journal' ? 'Write Journal' : 'Write Post'}
@@ -558,32 +558,32 @@ const Home = () => {
         <div className="hidden sticky top-0 lg:flex flex-col gap-5 h-fit col-span-2 py-3 z-0">
           {loggedUser?.u_id || isLoadingOtherUsers ? (
             <>
-              <form onSubmit={handleSearch} className="flex flex-col gap-5 py-2 bg-base-100 dark:bg-black dark:text-[#cbc9c9] z-50">
+              <form onSubmit={handleSearch} className="flex flex-col gap-5 py-2 bg-bg dark:bg-black dark:text-dark-accent z-50">
                 <input
                   type="text"
                   name="search"
                   id="search"
                   value={search}
                   placeholder="Search..."
-                  className="w-full px-4 py-2 border-[1px] dark:border-[#CBC9C9]/40 text-neutral-dark dark:text-dark-text text-sm placeholder:text-inherit outline-none dark:bg-black dark:focus-within:bg-black/50 rounded-full"
+                  className="w-full px-4 py-2 border-[1px] bg-bg dark:border-dark-accent/40 text-neutral-dark dark:text-dark-accent text-sm placeholder:text-inherit outline-none dark:bg-black dark:focus-within:bg-black/50 rounded-full"
                   onChange={(e) => setSearch(e.target.value)}
                 />
               </form>
-              <div className="py-3 border-t-[1px] border-[1px] border-black/5 dark:border-[#CBC9C9]/20 rounded-md">
-                <h2 className="font-bold text-xl px-5 pb-4 dark:text-[#CBC9C9]">Suggested For You</h2>
+              <div className="py-3 border-t-[1px] border-[1px] text-neutral-dark border-black/5 dark:border-dark-accent/20 rounded-md">
+                <h2 className="font-bold text-xl px-5 pb-4 dark:text-dark-accent">Suggested For You</h2>
                 {isLoadingOtherUsers ? renderLoadingState('h-10') : <div className="w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">{userList}</div>}
               </div>
             </>
           ) : (
-            <div className="w-full h-fit flex flex-col py-32 justify-center items-center text-neutral-dark dark:text-dark-text">
+            <div className="w-full h-fit flex flex-col py-32 justify-center items-center text-neutral-dark dark:text-dark-accent">
               <p>Join Us to</p>
               <h1 className="font-bold text-4xl">Explore</h1>
               <ul className="flex mt-10 gap-4">
                 <Link to="/login">
-                  <li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral dark:border-slate-200 dark:text-[#CBC9C9] hover:bg-black hover:text-base-100 dark:hover:bg-slate-200">Login</li>
+                  <li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral dark:border-slate-200 dark:text-dark-accent hover:bg-black hover:text-base-100 dark:hover:bg-slate-200">Login</li>
                 </Link>
                 <Link to="/register">
-                  <li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral dark:border-slate-200 dark:text-[#CBC9C9] hover:bg-black hover:text-base-100 dark:hover:bg-slate-200">Register</li>
+                  <li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral dark:border-slate-200 dark:text-dark-accent hover:bg-black hover:text-base-100 dark:hover:bg-slate-200">Register</li>
                 </Link>
               </ul>
             </div>

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 /* eslint-disable react/prop-types */
 const OtherUsersCard = ({uid, userIdVal, userImg, name, uName, followed, following, toggleFollow}) => {
   return (
-    <div className="w-full py-3 px-3 flex flex-col items-start border-y-[1px] border-black/5  dark:border-neutral-300/10 hover:bg-primary/5 duration-200 transition-all">
+    <div className="w-full py-3 px-3 flex flex-col items-start border-y-[1px] border-black/5 dark:border-neutral-300/10 hover:bg-primary/5 duration-200 transition-all">
         <div className="w-full flex justify-between items-center gap-2">
 
           <div className="w-full flex gap-2 text-xs">
@@ -11,7 +11,7 @@ const OtherUsersCard = ({uid, userIdVal, userImg, name, uName, followed, followi
               <img src={userImg} alt="" className="w-full h-full object-cover" loading="lazy"/>
             </div>
             <Link to={`../${userIdVal}`}>
-              <p className="w-fit text-neutral dark:text-[#CBC9C9] hover:underline font-semibold line-clamp-1">{name}</p>
+              <p className="w-fit text-neutral-dark dark:text-dark-accent hover:underline font-semibold line-clamp-1">{name}</p>
               <span className="text-neutral-400 text-xs cursor-default">@{uName}</span>
             </Link>
           </div>

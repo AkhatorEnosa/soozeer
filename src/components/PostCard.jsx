@@ -48,7 +48,7 @@ const PostCard = ({userId, postId, liking, bookmarking, deleting, postUserId, po
   }
 
   return ( 
-    <div className={"relative w-full flex flex-col items-start text-sm border-y-[1px] border-black/5  dark:border-neutral-300/10 duration-200 transition-all dark:text-[#CBC9C9]"}>
+    <div className={"relative w-full flex flex-col items-start text-sm border-y-[1px] text-neutral-dark border-black/5  dark:border-neutral-300/10 duration-200 transition-all dark:text-dark-accent"}>
         <Link to={`/post/${postId}`} className="absolute top-0 w-full h-full z-0"></Link>
       <div className="w-full h-full">
         <div className="flex w-full gap-3 px-3 ">
@@ -104,7 +104,7 @@ const PostCard = ({userId, postId, liking, bookmarking, deleting, postUserId, po
 
         {/* Delete modal  */}
         {showDelete && <div className="fixed w-screen h-screen flex justify-center px-10 bg-base-100/80 dark:bg-black/80 items-center top-0 left-0 cursor-default z-[1000]">
-              <div className="w-[85%] md:w-[50%] bg-base-100 dark:bg-black dark:text-[#cbc9c9] p-5 rounded-[1rem] flex flex-col gap-2 border-[1px] border-black/10 dark:border-[#CBC9C9]/20 shadow-md dark:shadow-[#cbc9c9]/20">
+              <div className="w-[85%] md:w-[50%] bg-base-100 dark:bg-black dark:text-dark-accent p-5 rounded-[1rem] flex flex-col gap-2 border-[1px] border-black/10 dark:border-dark-accent/20 shadow-md dark:shadow-dark-accent/20">
                 {!deleting ?
                   <>
                     <h1 className="text-2xl lg:text-3xl font-semibold">Delete Post?</h1>

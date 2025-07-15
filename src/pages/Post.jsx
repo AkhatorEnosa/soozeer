@@ -548,7 +548,7 @@ const Post = () => {
           {loggedUser?.u_id ? <>
             {/* search  */}
              <form onSubmit={handleSearch} className="flex flex-col gap-5 py-2 dark:bg-black z-50">
-                <input type="text" name="search" id="search" value={search} placeholder="Search..." className="w-full px-4 py-2  border-[1px] dark:border-[#CBC9C9]/40 placeholder:text-[#cbc9c9] text-neutral-dark dark:text-dark-text text-sm outline-none dark:bg-black dark:focus-within::bg-black/50 rounded-full" onChange={(e)=>setSearch(e.target.value)}/>
+                <input type="text" name="search" id="search" value={search} placeholder="Search..." className="w-full px-4 py-2  border-[1px] dark:border-[#CBC9C9]/40 placeholder:text-[#cbc9c9] text-neutral-dark dark:text-dark-accent text-sm outline-none dark:bg-black dark:focus-within::bg-black/50 rounded-full" onChange={(e)=>setSearch(e.target.value)}/>
             </form>
             <div className="py-3 border-t-[1px] border-[1px] border-black/5  dark:border-slate-500/20 rounded-md">
                   <h2 className="font-bold text-xl px-5 pb-4 text-neutral-dark dark:text-neutral-lighter">You might interested in</h2>

@@ -1,9 +1,23 @@
 /* eslint-disable react/prop-types */
-import { createContext } from "react";
+import { createContext, useState } from "react";
+import { useDispatch } from "react-redux";
+import { logOut } from "../features/appSlice";
 
 export const AppContext = createContext();
 
 export function AppProvider({ children }) {
+  const [triggerLogout, setTriggerLogout] = useState(false)
+  const [showSubMenu, setShowSubMenu] = useState(false)
+
+  const dispatch = useDispatch()
+
+
+  
+    const handleLogout = () => {
+      dispatch(logOut())
+      setTriggerLogout(false)
+      setShowSubMenu(false)
+    }
     // Loading state skeleton
     const renderLoadingState = (height) => (
       <div className="w-full flex flex-col gap-4">
@@ -34,6 +48,11 @@ export function AppProvider({ children }) {
 
   return (
    <AppContext.Provider value={{
+        triggerLogout,
+        setTriggerLogout,
+        showSubMenu,
+        setShowSubMenu,
+        handleLogout,
         renderLoadingState,
         renderEmptyState,
         userListEmptyState

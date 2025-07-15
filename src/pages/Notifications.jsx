@@ -213,7 +213,7 @@ let content;
 
           {/* main section  */}
           <div className="main w-full flex flex-col md:col-span-5 lg:col-span-4 border-r-[1px] border-l-[1px] border-black/5 dark:border-neutral-300/10">
-            <h1 className="p-5 text-xl font-bold text-neutral-dark dark:text-dark-text dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">Notifications</h1>
+            <h1 className="p-5 text-xl font-bold text-neutral-dark dark:text-dark-accent dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">Notifications</h1>
             <div className="divide-y-[1px] divide-black/5 dark:divide-neutral-300/10">{content}</div>
             <p className="py-8 flex justify-center text-primary">.</p>
           </div>
@@ -222,7 +222,7 @@ let content;
           {/* side bar */}
           <div className="side-nav hidden sticky right-0 top-5 md:flex flex-col gap-5 h-fit md:col-span-3 lg:col-span-2 py-3 border-[1px] border-black/5 dark:border-neutral-300/10 rounded-md">
 
-              <h2 className="font-bold text-xl px-3 text-neutral-dark dark:text-dark-text">Suggested for you</h2>
+              <h2 className="font-bold text-xl px-3 text-neutral-dark dark:text-dark-accent">Suggested for you</h2>
               {!loggedUser ? <div className="flex flex-col gap-4 mt-4">
                 <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>
                 <div className="skeleton dark:bg-slate-600 h-20 w-full opacity-15"></div>

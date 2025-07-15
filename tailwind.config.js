@@ -22,7 +22,7 @@ export default {
                     lighter: '#F0F2F5',
                     light: '#E4E6EB',
                     DEFAULT: '#606770',
-                    dark: '#1A1A1A',
+                    dark: '#0E1017',
                 },
                 bg: {
                     DEFAULT: '#FFFFFF',
@@ -30,11 +30,11 @@ export default {
                     card: '#E4E6EB',
                 },
                 'dark-bg': {
-                    DEFAULT: '#030303',
+                    DEFAULT: '#0E1017',
                     muted: '#1A1A1A',
                     card: '#1E1E1E',
                 },
-                'dark-text': {
+                'dark-accent': {
                     DEFAULT: '#CBC9C9',
                     muted: '#C0C0C0',
                 },

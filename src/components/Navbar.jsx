@@ -1,19 +1,17 @@
 import { Link} from "react-router-dom"
-import { useEffect, useState } from "react"
+import { useContext, useEffect } from "react"
 import logo1 from '../assets/logo-grayscale.png'
 import logo2 from '../assets/logo-grayscale-white.png'
-import { useDispatch, useSelector } from "react-redux"
-import { logOut} from "../features/appSlice"
+import {  useSelector } from "react-redux"
 import useGetUser from "../hooks/useGetUser"
 import ThemeToggleButton from "./ThemeToggleButton"
+import LogoutModal from "./LogoutModal"
+import { AppContext } from "../context/AppContext"
 
 const Navbar = () => {
-  const [showSubMenu, setShowSubMenu] = useState(false)
-  const [triggerLogout, setTriggerLogout] = useState(false)
   const {loggedUser, isLoading, exiting} = useSelector((state) => state.app)
+    const { triggerLogout, setTriggerLogout, showSubMenu, setShowSubMenu} = useContext(AppContext)
   const body = document.body
-
-  const dispatch = useDispatch()
   useGetUser();
 
   useEffect(() => {
@@ -29,17 +27,6 @@ const Navbar = () => {
     // useEffect(() => {
     //       dispatch(getUser())
     //  }, [])
-
-  const handleLogout = () => {
-    dispatch(logOut())
-    setTriggerLogout(false)
-    setShowSubMenu(false)
-  }
-
-  const cancel = () => {
-   setTriggerLogout(false)
-   setShowSubMenu(false)
-  }
 
   // if(loggedUser) {
     return (
@@ -66,7 +53,7 @@ const Navbar = () => {
                   <div className={showSubMenu ? "absolute opacity-100 w-fit flex flex-col gap-2 top-11 right-0 transition-all duration-200 cursor-pointer" : "absolute w-fit flex flex-col gap-2 items-center opacity-0 -top-64 right-0 transition-all duration-200"}>
 
 
-                    <div className="w-[150px] grid grid-cols-3 items-center justify-center bg-bg-muted dark:bg-dark-bg rounded-full border-[1px] border-neutral-100 shadow-sm dark:shadow-primary/40 text-xs font-semibold dark:border-primary/40 bg-primary/5 overflow-hidden"
+                    <div className="w-[150px] grid grid-cols-3 items-center justify-center bg-bg-muted dark:bg-black rounded-full border-[1px] border-neutral-100 shadow-sm dark:shadow-primary/40 text-xs font-semibold dark:border-primary/40 bg-primary/5 overflow-hidden"
                       role="menuitem"
                       tabIndex={showSubMenu ? 0 : -1}
                     >
@@ -86,7 +73,7 @@ const Navbar = () => {
                         variant={"text-blue-500 dark:text-blue-500"}
                       />
                     </div>
-                    <p className="w-full flex gap-2 items-center justify-center bg-bg-muted dark:bg-dark-bg rounded-full border-[1px] border-neutral-100 shadow-sm dark:shadow-primary/40 text-xs font-semibold dark:border-primary/40 bg-primary/5 px-4 py-2" onClick={() => setTriggerLogout(true)}>
+                    <p className="w-full flex gap-2 items-center justify-center bg-bg-muted dark:bg-black rounded-full border-[1px] border-neutral-100 shadow-sm dark:shadow-primary/40 text-xs font-semibold dark:border-primary/40 bg-primary/5 px-4 py-2 cursor-pointer" onClick={() => setTriggerLogout(true)}>
                       <i className="bi bi-box-arrow-right"></i>
                       Logout
                     </p>
@@ -96,22 +83,7 @@ const Navbar = () => {
           </div>
         {
             triggerLogout && loggedUser?.u_id && 
-            <div className="fixed w-screen h-screen flex justify-center px-10 bg-base-100/90 items-center top-0 left-0 cursor-default z-[1000]">
-              <div className="w-[85%] md:w-[50%] bg-base-100 p-5 rounded-[1rem] flex flex-col gap-2 border-[1px] border-black/10 dark:border-[#CBC9C9]/20 shadow-md dark:shadow-[#cbc9c9]/20">
-                  <h1 className="text-2xl lg:text-3xl font-semibold">Logout?</h1>
-                  <p>Accepting will log you out of your account. Do you want to proceed?</p>
-                  {
-                      !exiting ? 
-                          <div className="w-full flex gap-2 mt-10 font-bold justify-end">
-                              <button className="w-fit px-4 py-2 rounded-full bg-error text-white lg:hover:shadow-md" onClick={handleLogout}>Confirm</button>
-                              <button className="w-fit px-4 py-2 rounded-full bg-black text-white dark:bg-white dark:text-black lg:hover:shadow-md" onClick={cancel}>Cancel</button>
-                          </div> : 
-                        <div className="w-full flex gap-2 mt-10 font-bold justify-center items-center">
-                            <span className="loading loading-spinner"></span>
-                        </div> 
-                  }
-              </div>
-            </div>
+            <LogoutModal exiting={exiting} />
         }
       </header>
     )
