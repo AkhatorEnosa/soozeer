@@ -40,7 +40,7 @@ const ResetPassword = () => {
     }
 
   return (
-    <div className="w-full h-screen dark:text-[#CBC9C9] flex flex-col items-center overflow-clip">
+    <div className="w-full h-screen dark:text-dark-accent flex flex-col items-center overflow-clip">
         <div className="w-full h-full flex flex-col-reverse justify-center items-center lg:grid lg:grid-cols-3 gap-5 lg:gap-0">
             <div className="w-full col-span-2 flex flex-col justify-center items-center">
                 {isSendingEmail ? 
@@ -62,12 +62,12 @@ const ResetPassword = () => {
                     <div className="w-full md:w-[35rem] lg:w-96 flex flex-col justify-center items-center gap-10 border-[1px] border-black/5 dark:border-neutral-100/5 rounded-md p-4 md:shadow-md dark:shadow-neutral">
                         <h1 className="text-2xl font-medium hidden lg:flex">Reset Password</h1>
                         <form onSubmit={handleSubmit} className="w-full flex flex-col gap-5">
-                            <input type="email" name="email" id="email" value={email} placeholder="Email" className="w-full input input-bordered input-md rounded-full" onChange={(e)=>setEmail(e.target.value)}/>
-                            <button type="submit" className={`btn rounded-full ${email.trim() !== "" ? "btn-primary" : "bg-primary/50 btn-primary"} text-white disabled:bg-primary/50`} disabled={isSendingEmail && "disabled"}>{(isSendingEmail && error == null) ? <span className="loading loading-dots loading-sm text-white"></span> : 'Send Password Recovery Mail'}</button>
+                            <input type="email" name="email" id="email" value={email} placeholder="Email" className="w-full flex gap-2 justify-between items-center input input-bordered input-md bg-bg focus-within:border-dark-accent/50 rounded-full dark:focus-within:outline-dark-accent dark:border-dark-accent/50 dark:bg-black" onChange={(e)=>setEmail(e.target.value)}/>
+                            <button type="submit" className={`btn border-none rounded-full ${email.trim() !== "" ? "bg-primary hover:bg-primary/80" : "hover:bg-primary/50 bg-primary/50"} text-white disabled:bg-primary/50`} disabled={isSendingEmail && "disabled"}>{(isSendingEmail && error == null) ? <span className="loading loading-dots loading-sm text-white"></span> : 'Send Password Recovery Mail'}</button>
                         </form>
                     </div>}
             </div>
-            <div className="w-full lg:h-full flex flex-col justify-center items-center border-l-[1px] border-neutral-100 dark:border-neutral/90 col-span-1 overflow-clip">
+            <div className="w-full lg:h-full flex flex-col justify-center items-center border-l-[1px] text-neutral-dark dark:text-dark-accent border-neutral-100 dark:border-neutral-light/10 col-span-1 overflow-clip">
                 <p>Welcome to</p>
                 <div className="flex py-4 px-10">
                     <Link to='/' className="cursor-pointer"> <img src={logo1} alt="logo" className="dark:hidden w-48 md:w-56 lg:w-44"/>  </Link>
@@ -75,7 +75,7 @@ const ResetPassword = () => {
                 </div>
                 <p>Log into your account.</p>
                 <ul className="mt-10 gap-4 hidden lg:block">
-                  <Link to={'/register'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral dark:border-white dark:text-white  hover:bg-black hover:text-base-100 dark:hover:bg-white">Register</li></Link>
+                  <Link to={'/register'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:bg-bg">Register</li></Link>
                 </ul>
             </div>
         </div>

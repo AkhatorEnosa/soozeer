@@ -40,10 +40,10 @@ const Navbar = () => {
             <ul className={`flex gap-5 justify-center items-center text-sm font-medium ${!loggedUser?.u_id ? "lg:hidden" : ""}`}>
 
               {isLoading && loggedUser == null ? <span className="loading loading-spinner loading-sm text-primary"></span> : !isLoading && loggedUser == null ? <>
-                    <Link to={'/login'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral dark:border-neutral-100 dark:text-white  hover:bg-black hover:text-base-100 dark:hover:bg-white">Login</li></Link>
-                    <Link to={'/register'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral dark:border-neutral-100 dark:text-white  hover:bg-black hover:text-base-100 dark:hover:bg-white">Register</li></Link>
+                    <Link to={'/login'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:bg-bg">Login</li></Link>
+                    <Link to={'/register'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:bg-bg">Register</li></Link>
                 </> :
-                <div className="relative flex flex-col gap-5 justify-center items-center text-neutral dark:text-slate-200" onClick={()=> setShowSubMenu(!showSubMenu)}>
+                <div className="relative flex flex-col gap-5 justify-center items-center text-neutral dark:text-bg" onClick={()=> setShowSubMenu(!showSubMenu)}>
                   <div className="w-full flex gap-2 items-center md:px-2 md:py-1 rounded-full bg-primary/5 border-[1px] dark:border-neutral-700 cursor-pointer z-50">
                       <img src={loggedUser.u_img} alt="profile_pic" className="w-8 h-8 border-[1px] border-black/30 rounded-full"/>
                       <li className="hidden md:flex tracking-tight">{loggedUser.name}</li>
