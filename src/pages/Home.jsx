@@ -342,38 +342,40 @@ const Home = () => {
 
   // User list
   const userList = useMemo(() => {
-    if (!otherUsers?.length) return (
+    if (!otherUsers?.length && !isLoading && !isLoadingOtherUsers) {return (
       <div className="w-full py-10 flex flex-col text-neutral-dark dark:text-dark-text gap-4">
         userListEmptyState()
       </div>
-    );
-    return otherUsers.slice(0, 4).map((user) => (
-      <OtherUsersCard
-        key={user.id}
-        userImg={user.u_img}
-        name={user.name}
-        uName={user.u_name}
-        uid={user.u_id === loggedUser?.u_id}
-        userIdVal={user.u_id}
-        followed={followed(user.u_id)}
-        following={isLoadingFollows}
-        toggleFollow={() => {
-          const verifyFollow = follows.find((follow) => follow.followed_id === user.u_id && follow.follower_id === loggedUser?.u_id);
-          if (!verifyFollow) {
-            dispatch(followUser({
-              uid: loggedUser.u_id,
-              creatorName: loggedUser.name,
-              creatorImg: loggedUser.u_img,
-              receiverUid: user.u_id,
-              receiverName: user.name,
-              receiverImg: user.u_img,
-            }));
-          } else {
-            removeFollow(verifyFollow.id);
-          }
-        }}
-      />
-    ));
+    ) } else {
+      return otherUsers?.slice(0, 4).map((user) => (
+        <OtherUsersCard
+          key={user.id}
+          userImg={user.u_img}
+          name={user.name}
+          uName={user.u_name}
+          uid={user.u_id === loggedUser?.u_id}
+          userIdVal={user.u_id}
+          followed={followed(user.u_id)}
+          following={isLoadingFollows}
+          toggleFollow={() => {
+            const verifyFollow = follows.find((follow) => follow.followed_id === user.u_id && follow.follower_id === loggedUser?.u_id);
+            if (!verifyFollow) {
+              dispatch(followUser({
+                uid: loggedUser.u_id,
+                creatorName: loggedUser.name,
+                creatorImg: loggedUser.u_img,
+                receiverUid: user.u_id,
+                receiverName: user.name,
+                receiverImg: user.u_img,
+              }));
+            } else {
+              removeFollow(verifyFollow.id);
+            }
+          }}
+        />
+      ));
+    }
+
   }, [otherUsers, loggedUser, userListEmptyState, follows, isLoadingFollows, dispatch, followed, removeFollow]);
 
   // Content rendering
@@ -499,7 +501,7 @@ const Home = () => {
     }
   };
 
-  if (error) {
+  if (!isLoading && error) {
     return (renderErrorState('Network or server error occurred. Please try again later.'));
   } else {
     return (
@@ -563,7 +565,7 @@ const Home = () => {
             </div>
           </div>
           <div className="hidden sticky top-0 lg:flex flex-col gap-5 h-fit col-span-2 py-3 z-0">
-            {loggedUser?.u_id || isLoadingOtherUsers ? (
+            {loggedUser?.u_id || isLoading ? (
               <>
                 <form onSubmit={handleSearch} className="flex flex-col gap-5 py-2 bg-bg dark:bg-black dark:text-dark-accent z-50">
                   <input
@@ -578,7 +580,7 @@ const Home = () => {
                 </form>
                 <div className="py-3 border-t-[1px] border-[1px] text-neutral-dark border-black/5 dark:border-dark-accent/20 rounded-md">
                   <h2 className="font-bold text-xl px-5 pb-4 dark:text-dark-accent">Suggested For You</h2>
-                  {isLoadingOtherUsers ? renderLoadingState('h-10') : <div className="w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">{userList}</div>}
+                  {isLoadingOtherUsers || isLoading ? renderLoadingState('h-10') : <div className="w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">{userList}</div>}
                 </div>
               </>
             ) : (
