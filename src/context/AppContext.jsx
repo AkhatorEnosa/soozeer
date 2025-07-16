@@ -29,7 +29,7 @@ export function AppProvider({ children }) {
   
     // Empty state component
     const renderEmptyState = (icon, message) => (
-      <div className="w-full py-10 flex flex-col text-neutral-dark dark:text-dark-text gap-4">
+      <div className="w-full h-screen justify-center items-center py-10 flex flex-col text-neutral-dark dark:text-dark-text gap-4">
         <h1 className="w-full h-56 flex flex-col justify-center items-center z-50 text-9xl">
           <i className={`bi ${icon}`}></i>
           <p className="text-sm">{message}</p>

@@ -1,5 +1,5 @@
 import { Link, useNavigate, useParams } from "react-router-dom"
-import { useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import ViewPostCard from "../components/ViewPostCard"
 import Footer from "../sections/Footer"
 import OtherUsersCard from "../components/OtherUsersCard"
@@ -25,6 +25,7 @@ import NotLoggedInModal from "../components/NotLoggedInModal"
 import usePosts from "../hooks/usePosts"
 import PostCard from "../components/PostCard"
 import supabase from "../config/supabaseClient.config"
+import { AppContext } from "../context/AppContext"
 // import Navbar from "../components/Navbar"
 
 const Post = () => {
@@ -38,10 +39,11 @@ const Post = () => {
 
   const {id: paramsId} = useParams()
 
-  const { loggedUser, otherUsers, isLoading, isLoadingOtherUsers } = useSelector((state) => state.app)
-  const { postComments, likes, bookmarks, isDeletingPost, isBookmarking, isLiking } = useSelector((state) => state.posts)
+  const { error, loggedUser, otherUsers, isLoading, isLoadingOtherUsers } = useSelector((state) => state.app)
+  const { postError, postComments, likes, bookmarks, isDeletingPost, isBookmarking, isLiking } = useSelector((state) => state.posts)
   const { currentPost, comments, posted, isLoadingPost, isPosting, isDeletingComment, errorComment } = useSelector((state) => state.singlePost)
   const { follows, isLoadingFollows } = useSelector((state) => state.follows)
+  const { renderErrorState } = useContext(AppContext)
   const dispatch = useDispatch()
 
   usePosts()
@@ -499,101 +501,105 @@ const Post = () => {
     }
   }
 
-  return (
-    <div className="w-full h-screen flex flex-col items-center px-2 md:p-0 md:m-0 dark:text-inherit">
-      {/* <Navbar /> */}
+  if(error || postError) {
+    return renderErrorState('Something went wrong. Please try again later.');
+  } else {
+    return (
+      <div className="w-full h-screen flex flex-col items-center px-2 md:p-0 md:m-0 dark:text-inherit">
+        {/* <Navbar /> */}
 
-        <div className="w-full lg:grid lg:grid-cols-8 px-2 md:px-20 mt-2 md:mt-4 lg:mt-0 pb-28 lg:pb-0 md:gap-2 mb-14 lg:mb-0">
-          <SideBar
-          uid={loggedUser !== null ? loggedUser.u_id : null} 
-          toggleSearchBar={handleShowSearch}/>
+          <div className="w-full lg:grid lg:grid-cols-8 px-2 md:px-20 mt-2 md:mt-4 lg:mt-0 pb-28 lg:pb-0 md:gap-2 mb-14 lg:mb-0">
+            <SideBar
+            uid={loggedUser !== null ? loggedUser.u_id : null} 
+            toggleSearchBar={handleShowSearch}/>
 
-        {currentPost == 'error' ? <div className="main w-full flex flex-col justify-center items-center col-span-6 border-[1px] border-black/5 "><p>This page does not exist.</p></div> :
-          <>
-            {isLoadingPost ? <div className={loggedUser?.u_id !== null && "main w-full flex flex-col col-span-4 border-[1px] border-black/5  dark:border-slate-500/20"}>
-                <div className="flex w-full flex-col gap-4 opacity-15 px-5">
-                  <div className="flex items-center gap-4">
-                    <div className="skeleton dark:bg-slate-600 h-16 w-16 shrink-0 rounded-full"></div>
-                    <div className="flex flex-col gap-4">
-                      <div className="skeleton dark:bg-slate-600 h-4 w-20"></div>
-                      <div className="skeleton dark:bg-slate-600 h-4 w-28"></div>
+          {currentPost == 'error' ? <div className="main w-full flex flex-col justify-center items-center col-span-6 border-[1px] border-black/5 "><p>This page does not exist.</p></div> :
+            <>
+              {isLoadingPost ? <div className={loggedUser?.u_id !== null && "main w-full flex flex-col col-span-4 border-[1px] border-black/5  dark:border-slate-500/20"}>
+                  <div className="flex w-full flex-col gap-4 opacity-15 px-5">
+                    <div className="flex items-center gap-4">
+                      <div className="skeleton dark:bg-slate-600 h-16 w-16 shrink-0 rounded-full"></div>
+                      <div className="flex flex-col gap-4">
+                        <div className="skeleton dark:bg-slate-600 h-4 w-20"></div>
+                        <div className="skeleton dark:bg-slate-600 h-4 w-28"></div>
+                      </div>
                     </div>
+                    <div className="skeleton dark:bg-slate-600 h-32 w-full"></div>
                   </div>
-                  <div className="skeleton dark:bg-slate-600 h-32 w-full"></div>
+                </div> : 
+
+                // main section 
+                <div className={loggedUser?.u_id !== null && "main w-full lg:h-screen flex flex-col col-span-4 border-r-[1px] border-l-[1px] border-black/5  dark:border-slate-500/20 overflow-scroll no-scrollbar"}>
+
+                <div className="w-full flex justify-between px-3 bg-bg/50 dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">
+                  <BackBtn link={() => navigate(-1)} title={'Back'}/>
+
+                  {currentPost?.post_id ? <BackBtn link={() => navigate(`/post/${currentPost?.post_id}`)} title={'Jump to origin'}/> : ''}
                 </div>
-              </div> : 
 
-              // main section 
-              <div className={loggedUser?.u_id !== null && "main w-full lg:h-screen flex flex-col col-span-4 border-r-[1px] border-l-[1px] border-black/5  dark:border-slate-500/20 overflow-scroll no-scrollbar"}>
-
-              <div className="w-full flex justify-between px-3 bg-bg/50 dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">
-                <BackBtn link={() => navigate(-1)} title={'Back'}/>
-
-                {currentPost?.post_id ? <BackBtn link={() => navigate(`/post/${currentPost?.post_id}`)} title={'Jump to origin'}/> : ''}
-              </div>
-
-              <div>
-                {content}
-                {loggedUser?.u_id && newCommentForm}
-              </div>
-              <div>
-                {allComments}
-                <p className="py-8 flex justify-center text-primary">.</p>
-              </div>
-
-            </div>}
-
-            {/* side bar */}
-          <div className="hidden sticky right-0 top-0 lg:flex flex-col gap-5 h-fit col-span-2 py-3">
-          {loggedUser?.u_id ? <>
-            {/* search  */}
-             <form onSubmit={handleSearch} className="flex flex-col gap-5 py-2 dark:bg-black z-50">
-                <input type="text" name="search" id="search" value={search} placeholder="Search..." className="w-full px-4 py-2 border-[1px] bg-bg dark:border-dark-accent/40 text-neutral-dark dark:text-dark-accent text-sm placeholder:text-inherit outline-none dark:bg-black dark:focus-within:bg-black/50 rounded-full" onChange={(e)=>setSearch(e.target.value)}/>
-            </form>
-            <div className="py-3 border-t-[1px] border-[1px] border-black/5  dark:border-slate-500/20 rounded-md">
-                  <h2 className="font-bold text-xl px-5 pb-4 text-neutral-dark dark:text-neutral-lighter">You might be interested in</h2>
-                  {isLoading || isLoadingOtherUsers ? <div className="flex flex-col gap-4">
-                      <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-                      <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-                      <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-                      <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-                    </div> : <div className="w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
-                    {userList}
-                  </div>}
+                <div>
+                  {content}
+                  {loggedUser?.u_id && newCommentForm}
                 </div>
-              </> : 
-              <div className="w-full h-fit flex flex-col py-32 justify-center items-center text-neutral-dark dark:text-dark-accent">
-                <p>Join Us To</p>
-                <h1 className="font-bold text-4xl">Explore</h1>
-                <ul className="flex mt-10 gap-4">
-                  <Link to="/login">
-                    <li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:bg-bg">Login</li>
-                  </Link>
-                  <Link to="/register">
-                    <li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:bg-bg">Register</li>
-                  </Link>
-                </ul>
+                <div>
+                  {allComments}
+                  <p className="py-8 flex justify-center text-primary">.</p>
+                </div>
+
+              </div>}
+
+              {/* side bar */}
+            <div className="hidden sticky right-0 top-0 lg:flex flex-col gap-5 h-fit col-span-2 py-3">
+            {loggedUser?.u_id ? <>
+              {/* search  */}
+              <form onSubmit={handleSearch} className="flex flex-col gap-5 py-2 dark:bg-black z-50">
+                  <input type="text" name="search" id="search" value={search} placeholder="Search..." className="w-full px-4 py-2 border-[1px] bg-bg dark:border-dark-accent/40 text-neutral-dark dark:text-dark-accent text-sm placeholder:text-inherit outline-none dark:bg-black dark:focus-within:bg-black/50 rounded-full" onChange={(e)=>setSearch(e.target.value)}/>
+              </form>
+              <div className="py-3 border-t-[1px] border-[1px] border-black/5  dark:border-slate-500/20 rounded-md">
+                    <h2 className="font-bold text-xl px-5 pb-4 text-neutral-dark dark:text-neutral-lighter">You might be interested in</h2>
+                    {isLoading || isLoadingOtherUsers ? <div className="flex flex-col gap-4">
+                        <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
+                        <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
+                        <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
+                        <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
+                      </div> : <div className="w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
+                      {userList}
+                    </div>}
+                  </div>
+                </> : 
+                <div className="w-full h-fit flex flex-col py-32 justify-center items-center text-neutral-dark dark:text-dark-accent">
+                  <p>Join Us To</p>
+                  <h1 className="font-bold text-4xl">Explore</h1>
+                  <ul className="flex mt-10 gap-4">
+                    <Link to="/login">
+                      <li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:bg-bg">Login</li>
+                    </Link>
+                    <Link to="/register">
+                      <li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:bg-bg">Register</li>
+                    </Link>
+                  </ul>
+                </div>
+                }
               </div>
-              }
-            </div>
-          </>}
-        </div>
+            </>}
+          </div>
 
-        {/* search modal  */}
-        <SearchModal 
-          handleSearch={handleSearch}
-          search={search}
-          handleChange={(e)=>setSearch(e.target.value)}
-        />
+          {/* search modal  */}
+          <SearchModal 
+            handleSearch={handleSearch}
+            search={search}
+            handleChange={(e)=>setSearch(e.target.value)}
+          />
 
 
-         <Footer 
-          uid={loggedUser !== null && loggedUser?.u_id} 
-          toggleSearchBar={handleShowSearch}/>
+          <Footer 
+            uid={loggedUser !== null && loggedUser?.u_id} 
+            toggleSearchBar={handleShowSearch}/>
 
-          <NotLoggedInModal uid={loggedUser?.u_id}/>
-    </div>
-  )
+            <NotLoggedInModal uid={loggedUser?.u_id}/>
+      </div>
+    )
+  }
 }
 
 export default Post

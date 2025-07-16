@@ -18,8 +18,8 @@ import { AppContext } from "../context/AppContext"
 const Notifications = () => {
   const [search, setSearch] = useState('')
 
-  const {notifications, loggedUser, otherUsers, isLoading, isLoadingOtherUsers} = useSelector((state) => state.app)
-  const { renderLoadingState } = useContext(AppContext)
+  const {error, notifications, loggedUser, otherUsers, isLoading, isLoadingOtherUsers} = useSelector((state) => state.app)
+  const { renderLoadingState, renderErrorState } = useContext(AppContext)
   const {mutate} = useNotifications()
   const dispatch = useDispatch()
 
@@ -190,47 +190,51 @@ let content;
         }
     }
 
-  return (
-    <div className="w-full flex flex-col items-center pb-28 lg:pb-0">
-        {/* <Navbar/> */}
+    if(error) {
+      return renderErrorState('Something went wrong. Please try again later.');
+    } else {
+      return (
+        <div className="w-full flex flex-col items-center pb-28 lg:pb-0">
+            {/* <Navbar/> */}
 
-        <div className="w-full md:grid md:grid-cols-8 px-2 md:px-20 mt-2 md:mt-0 pb-20 md:pb-28 lg:pb-0 gap-2 mb-7 md:mb-14 lg:mb-0">
-          <SideBar
-          uid={loggedUser !== null ? loggedUser.u_id : null} 
-          page={'notification'} 
-          toggleSearchBar={handleShowSearch}/>
+            <div className="w-full md:grid md:grid-cols-8 px-2 md:px-20 mt-2 md:mt-0 pb-20 md:pb-28 lg:pb-0 gap-2 mb-7 md:mb-14 lg:mb-0">
+              <SideBar
+              uid={loggedUser !== null ? loggedUser.u_id : null} 
+              page={'notification'} 
+              toggleSearchBar={handleShowSearch}/>
 
-          {/* main section  */}
-          <div className="main w-full flex flex-col md:col-span-5 lg:col-span-4 border-r-[1px] border-l-[1px] border-black/5 dark:border-neutral-300/10">
-            <h1 className="p-5 text-xl font-bold text-neutral-dark dark:text-dark-accent dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">Notifications</h1>
-            <div className="divide-y-[1px] divide-black/5 dark:divide-neutral-300/10">{content}</div>
-            <p className="py-8 flex justify-center text-primary">.</p>
-          </div>
+              {/* main section  */}
+              <div className="main w-full flex flex-col md:col-span-5 lg:col-span-4 border-r-[1px] border-l-[1px] border-black/5 dark:border-neutral-300/10">
+                <h1 className="p-5 text-xl font-bold text-neutral-dark dark:text-dark-accent dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">Notifications</h1>
+                <div className="divide-y-[1px] divide-black/5 dark:divide-neutral-300/10">{content}</div>
+                <p className="py-8 flex justify-center text-primary">.</p>
+              </div>
 
 
-          {/* side bar */}
-          <div className="side-nav hidden sticky right-0 top-5 md:flex flex-col gap-5 h-fit md:col-span-3 lg:col-span-2 py-3 border-[1px] border-black/5 dark:border-neutral-300/10 rounded-md">
+              {/* side bar */}
+              <div className="side-nav hidden sticky right-0 top-5 md:flex flex-col gap-5 h-fit md:col-span-3 lg:col-span-2 py-3 border-[1px] border-black/5 dark:border-neutral-300/10 rounded-md">
 
-              <h2 className="font-bold text-xl px-3 text-neutral-dark dark:text-dark-accent">Suggested for you</h2>
-              {!loggedUser && isLoadingOtherUsers ? renderLoadingState("h-10") : <div className="w-full divide-y-[1px] divide-black/5 dark:divide-neutral-300/10">
-                {userList}
-              </div>}
-          </div>
+                  <h2 className="font-bold text-xl px-3 text-neutral-dark dark:text-dark-accent">Suggested for you</h2>
+                  {!loggedUser && isLoadingOtherUsers ? renderLoadingState("h-10") : <div className="w-full divide-y-[1px] divide-black/5 dark:divide-neutral-300/10">
+                    {userList}
+                  </div>}
+              </div>
+            </div>
+
+            {/* search modal  */}
+            <SearchModal 
+              handleSearch={handleSearch}
+              search={search}
+              handleChange={(e)=>setSearch(e.target.value)}
+            />
+
+            <Footer 
+              uid={loggedUser !== null && loggedUser?.u_id} 
+              page={'notification'} 
+              toggleSearchBar={handleShowSearch}/>
         </div>
-
-        {/* search modal  */}
-        <SearchModal 
-          handleSearch={handleSearch}
-          search={search}
-          handleChange={(e)=>setSearch(e.target.value)}
-        />
-
-        <Footer 
-          uid={loggedUser !== null && loggedUser?.u_id} 
-          page={'notification'} 
-          toggleSearchBar={handleShowSearch}/>
-    </div>
-  )
+      )
+    }
 }
 
 export default Notifications

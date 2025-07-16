@@ -242,12 +242,12 @@ const Home = () => {
   const [showPostInModal, setShowPostInModal] = useState(false);
   const textAreaRef = useRef(null);
 
-  const { renderEmptyState, renderLoadingState, userListEmptyState } = useContext(AppContext);
+  const { renderErrorState, renderEmptyState, renderLoadingState, userListEmptyState } = useContext(AppContext);
   const { id: paramsId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { loggedUser, otherUsers, isLoading, isLoadingOtherUsers } = useSelector((state) => state.app);
+  const { error, loggedUser, otherUsers, isLoading, isLoadingOtherUsers } = useSelector((state) => state.app);
   const { posts, likes, bookmarks, postComments, posted, isAddingPost, isDeletingPost, isBookmarking, isLiking } = useSelector((state) => state.posts);
   const { follows, isLoadingFollows } = useSelector((state) => state.follows);
 
@@ -499,106 +499,111 @@ const Home = () => {
     }
   };
 
-  return (
-    <div className="w-full h-screen flex flex-col items-center px-2 md:p-0 md:m-0">
-      {loggedUser && (
-        <PostFormModal
-          isOpen={showPostInModal}
-          onClose={closePostFormModal}
-          isJournal={tab === 'journal'}
-          loggedUser={loggedUser}
-          textAreaRef={textAreaRef}
-          postValue={postValue}
-          setPostValue={setPostValue}
-          title={title}
-          setTitle={setTitle}
-          journalText={journalText}
-          setJournalText={setJournalText}
-          privacy={privacy}
-          setPrivacy={setPrivacy}
-          handleSubmit={tab === 'journal' ? handleSubmitJournal : handleSubmit}
-          isAddingPost={isAddingPost}
-        />
-      )}
-      <div className="w-full lg:grid lg:grid-cols-8 px-2 md:px-20 mt-2 md:mt-0 pb-20 md:pb-28 lg:pb-0 md:gap-2 mb-7 md:mb-14 lg:mb-0">
-        {/* side bar */}
-        <SideBar uid={loggedUser?.u_id || null} page="home" toggleSearchBar={handleShowSearch} />
-
-        <div className={loggedUser?.u_id ? 'w-full flex flex-col col-span-4 border-r-[1px] border-l-[1px] mt-5 border-black/5 dark:border-dark-accent/20' : 'w-full flex flex-col col-span-4 border-r-[1px] border-l-[1px] border-black/5 dark:border-dark-accent/20 justify-center items-center'}>
-          {loggedUser?.u_id && (
-            <div className="sticky top-0 flex justify-evenly text-center  text-neutral-dark dark:text-dark-accent w-full bg-bg/90 dark:bg-black/90 backdrop-blur-md overflow-scroll no-scrollbar text-sm md:text-base font-medium z-40">
-              <button className={`w-full ${tab === 'forYou' ? 'bg-primary/5 font-bold border-b-2 border-primary' : ''} py-3 px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('forYou')}>
-                For you
-              </button>
-              <button className={`w-full ${tab === 'following' ? 'bg-primary/5 font-bold border-b-[1px] border-primary' : ''} py-3 px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('following')}>
-                Following
-              </button>
-              <button className={`w-full ${tab === 'journal' ? 'bg-accent/5 font-bold border-b-[1px] border-accent' : ''} py-3 px-10 hover:bg-accent/5 cursor-pointer`} onClick={() => setTab('journal')}>
-                Journal
-              </button>
+  if (error) {
+    return (renderErrorState('Network or server error occurred. Please try again later.'));
+  } else {
+    return (
+      <div className="w-full h-screen flex flex-col items-center px-2 md:p-0 md:m-0">
+        {loggedUser && (
+          <PostFormModal
+            isOpen={showPostInModal}
+            onClose={closePostFormModal}
+            isJournal={tab === 'journal'}
+            loggedUser={loggedUser}
+            textAreaRef={textAreaRef}
+            postValue={postValue}
+            setPostValue={setPostValue}
+            title={title}
+            setTitle={setTitle}
+            journalText={journalText}
+            setJournalText={setJournalText}
+            privacy={privacy}
+            setPrivacy={setPrivacy}
+            handleSubmit={tab === 'journal' ? handleSubmitJournal : handleSubmit}
+            isAddingPost={isAddingPost}
+          />
+        )}
+        <div className="w-full lg:grid lg:grid-cols-8 px-2 md:px-20 mt-2 md:mt-0 pb-20 md:pb-28 lg:pb-0 md:gap-2 mb-7 md:mb-14 lg:mb-0">
+          {/* side bar */}
+          <SideBar uid={loggedUser?.u_id || null} page="home" toggleSearchBar={handleShowSearch} />
+  
+          <div className={loggedUser?.u_id ? 'w-full flex flex-col col-span-4 border-r-[1px] border-l-[1px] mt-5 border-black/5 dark:border-dark-accent/20' : 'w-full flex flex-col col-span-4 border-r-[1px] border-l-[1px] border-black/5 dark:border-dark-accent/20 justify-center items-center'}>
+            {loggedUser?.u_id && (
+              <div className="sticky top-0 flex justify-evenly text-center  text-neutral-dark dark:text-dark-accent w-full bg-bg/90 dark:bg-black/90 backdrop-blur-md overflow-scroll no-scrollbar text-sm md:text-base font-medium z-40">
+                <button className={`w-full ${tab === 'forYou' ? 'bg-primary/5 font-bold border-b-2 border-primary' : ''} py-3 px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('forYou')}>
+                  For you
+                </button>
+                <button className={`w-full ${tab === 'following' ? 'bg-primary/5 font-bold border-b-[1px] border-primary' : ''} py-3 px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('following')}>
+                  Following
+                </button>
+                <button className={`w-full ${tab === 'journal' ? 'bg-accent/5 font-bold border-b-[1px] border-accent' : ''} py-3 px-10 hover:bg-accent/5 cursor-pointer`} onClick={() => setTab('journal')}>
+                  Journal
+                </button>
+              </div>
+            )}
+            <div className="relative flex flex-col">
+              {isLoading ? (
+                renderLoadingState('h-40')
+              ) : (
+                <div className="relative w-full text-neutral-dark dark:text-dark-accent divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
+                  {loggedUser && (
+                    <div className="w-full flex justify-end lg:justify-start items-center px-4 my-5 text-sm dark:text-dark-accent fixed bottom-20 left-0 lg:sticky lg:top-12 py-2 lg:bg-bg/90 dark:lg:dark:bg-black/90 lg:backdrop-blur-sm z-[110]">
+                      <button
+                        className={`w-fit flex gap-2 justify-center items-center border-[1px] border-black bg-bg dark:bg-black dark:border-dark-accent font-semibold ${tab === 'journal' ? 'hover:bg-accent/5 hover:border-accent hover:text-accent dark-hover:text-inherit' : 'hover:bg-primary/5 hover:border-primary hover:text-primary'} px-4 py-2 rounded-full shadow-md lg:shadow-none`}
+                        onClick={() => setShowPostInModal(!showPostInModal)}
+                      >
+                        <i className="bi bi-pencil"></i>{tab === 'journal' ? 'Write Journal' : 'Write Post'}
+                      </button>
+                    </div>
+                  )}
+                  {renderContent}
+                  <p className="py-8 flex justify-center text-primary">.</p>
+                </div>
+              )}
             </div>
-          )}
-          <div className="relative flex flex-col">
-            {isLoading ? (
-              renderLoadingState('h-40')
+          </div>
+          <div className="hidden sticky top-0 lg:flex flex-col gap-5 h-fit col-span-2 py-3 z-0">
+            {loggedUser?.u_id || isLoadingOtherUsers ? (
+              <>
+                <form onSubmit={handleSearch} className="flex flex-col gap-5 py-2 bg-bg dark:bg-black dark:text-dark-accent z-50">
+                  <input
+                    type="text"
+                    name="search"
+                    id="search"
+                    value={search}
+                    placeholder="Search..."
+                    className="w-full px-4 py-2 border-[1px] bg-bg dark:border-dark-accent/40 text-neutral-dark dark:text-dark-accent text-sm placeholder:text-inherit outline-none dark:bg-black dark:focus-within:bg-black/50 rounded-full"
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                </form>
+                <div className="py-3 border-t-[1px] border-[1px] text-neutral-dark border-black/5 dark:border-dark-accent/20 rounded-md">
+                  <h2 className="font-bold text-xl px-5 pb-4 dark:text-dark-accent">Suggested For You</h2>
+                  {isLoadingOtherUsers ? renderLoadingState('h-10') : <div className="w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">{userList}</div>}
+                </div>
+              </>
             ) : (
-              <div className="relative w-full text-neutral-dark dark:text-dark-accent divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
-                {loggedUser && (
-                  <div className="w-full flex justify-end lg:justify-start items-center px-4 my-5 text-sm dark:text-dark-accent fixed bottom-20 left-0 lg:sticky lg:top-12 py-2 lg:bg-bg/90 dark:lg:dark:bg-black/90 lg:backdrop-blur-sm z-[110]">
-                    <button
-                      className={`w-fit flex gap-2 justify-center items-center border-[1px] border-black bg-bg dark:bg-black dark:border-dark-accent font-semibold ${tab === 'journal' ? 'hover:bg-accent/5 hover:border-accent hover:text-accent dark-hover:text-inherit' : 'hover:bg-primary/5 hover:border-primary hover:text-primary'} px-4 py-2 rounded-full shadow-md lg:shadow-none`}
-                      onClick={() => setShowPostInModal(!showPostInModal)}
-                    >
-                      <i className="bi bi-pencil"></i>{tab === 'journal' ? 'Write Journal' : 'Write Post'}
-                    </button>
-                  </div>
-                )}
-                {renderContent}
-                <p className="py-8 flex justify-center text-primary">.</p>
+              <div className="w-full h-fit flex flex-col py-32 justify-center items-center text-neutral-dark dark:text-dark-accent">
+                <p>Join Us To</p>
+                <h1 className="font-bold text-4xl">Explore</h1>
+                <ul className="flex mt-10 gap-4">
+                  <Link to="/login">
+                    <li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:bg-bg">Login</li>
+                  </Link>
+                  <Link to="/register">
+                    <li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:bg-bg">Register</li>
+                  </Link>
+                </ul>
               </div>
             )}
           </div>
         </div>
-        <div className="hidden sticky top-0 lg:flex flex-col gap-5 h-fit col-span-2 py-3 z-0">
-          {loggedUser?.u_id || isLoadingOtherUsers ? (
-            <>
-              <form onSubmit={handleSearch} className="flex flex-col gap-5 py-2 bg-bg dark:bg-black dark:text-dark-accent z-50">
-                <input
-                  type="text"
-                  name="search"
-                  id="search"
-                  value={search}
-                  placeholder="Search..."
-                  className="w-full px-4 py-2 border-[1px] bg-bg dark:border-dark-accent/40 text-neutral-dark dark:text-dark-accent text-sm placeholder:text-inherit outline-none dark:bg-black dark:focus-within:bg-black/50 rounded-full"
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              </form>
-              <div className="py-3 border-t-[1px] border-[1px] text-neutral-dark border-black/5 dark:border-dark-accent/20 rounded-md">
-                <h2 className="font-bold text-xl px-5 pb-4 dark:text-dark-accent">Suggested For You</h2>
-                {isLoadingOtherUsers ? renderLoadingState('h-10') : <div className="w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">{userList}</div>}
-              </div>
-            </>
-          ) : (
-            <div className="w-full h-fit flex flex-col py-32 justify-center items-center text-neutral-dark dark:text-dark-accent">
-              <p>Join Us To</p>
-              <h1 className="font-bold text-4xl">Explore</h1>
-              <ul className="flex mt-10 gap-4">
-                <Link to="/login">
-                  <li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:bg-bg">Login</li>
-                </Link>
-                <Link to="/register">
-                  <li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:bg-bg">Register</li>
-                </Link>
-              </ul>
-            </div>
-          )}
-        </div>
+        <SearchModal handleSearch={handleSearch} search={search} handleChange={(e) => setSearch(e.target.value)} />
+        <Footer uid={loggedUser?.u_id || null} page="home" toggleSearchBar={handleShowSearch} />
+        <NotLoggedInModal uid={loggedUser?.u_id} />
       </div>
-      <SearchModal handleSearch={handleSearch} search={search} handleChange={(e) => setSearch(e.target.value)} />
-      <Footer uid={loggedUser?.u_id || null} page="home" toggleSearchBar={handleShowSearch} />
-      <NotLoggedInModal uid={loggedUser?.u_id} />
-    </div>
-  );
+    );
+  }
+
 };
 
 export default Home;
