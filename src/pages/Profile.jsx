@@ -108,7 +108,7 @@ const Profile = () => {
       }
     }
 
-    getOtherusers({loggedId:loggedUser?.u_id, currentId: profileId})
+    getOtherusers({loggedId: loggedUser?.u_id, currentId: profileId})
     setCurrentProfile(JSON.parse(JSON.stringify(profileUser)))
   }, [profileId, currentProfile !== null ? "" : currentProfile, loggedUser, profileUser])
 
@@ -213,23 +213,27 @@ const Profile = () => {
   }
 
   // Render user list
-  const renderUserList = () => {
-    if (!loggedUser?.u_id) return userListEmptyState;
-    if (!otherUsers || otherUsers.length === 0 || isLoadingOtherUsers) return userListEmptyState;
-
-    return otherUsers.slice(0, 4).map((user) => (
-      <OtherUsersCard
-        key={user.id}
-        userImg={user.u_img}
-        name={user.name}
-        uName={user.u_name}
-        userIdVal={user.u_id}
-        followed={followed(user.u_id)}
-        following={isLoadingFollows}
-        toggleFollow={() => handleFollowToggle(user)}
-      />
-    ));
-  };
+  const renderUserList = useMemo(() => {
+    if (!otherUsers?.length && !isLoading && !isLoadingOtherUsers) {return (
+      <div className="w-full py-10 flex flex-col text-neutral-dark dark:text-dark-text gap-4">
+        userListEmptyState()
+      </div>
+    ) } else {
+  
+      return otherUsers?.slice(0, 4).map((user) => (
+        <OtherUsersCard
+          key={user.id}
+          userImg={user.u_img}
+          name={user.name}
+          uName={user.u_name}
+          userIdVal={user.u_id}
+          followed={followed(user.u_id)}
+          following={isLoadingFollows}
+          toggleFollow={() => handleFollowToggle(user)}
+        />
+      ));
+    }
+  }, [loggedUser, otherUsers, isLoadingOtherUsers, userListEmptyState, isLoadingFollows]);
 
   // Handle follow toggle logic
   const handleFollowToggle = (user) => {
@@ -500,7 +504,7 @@ const Profile = () => {
 
   // Main render
   const content = isLoading ? renderLoadingState("h-20") : renderContent();
-  const userList = renderUserList();
+  const userList = renderUserList;
 
   // Toggle Search Bar 
   const handleShowSearch = () => {
@@ -773,14 +777,14 @@ const Profile = () => {
   
                   {/* side bar */}
                   <div className="hidden sticky right-0 top-0 lg:flex flex-col gap-5 h-fit col-span-2 py-3">
-                  {loggedUser?.u_id ? <>
+                  {loggedUser?.u_id || isLoading ? <>
                     {/* search  */}
                     <form onSubmit={handleSearch} className="flex flex-col gap-5 py-2 bg-bg dark:bg-black z-50">
                         <input type="text" name="search" id="search" value={search} placeholder="Search..." className="w-full px-4 py-2 border-[1px] bg-bg dark:border-dark-accent/40 text-neutral-dark dark:text-dark-accent text-sm placeholder:text-inherit outline-none dark:bg-black dark:focus-within:bg-black/50 rounded-full" onChange={(e)=>setSearch(e.target.value)}/>
                     </form>
                     <div className="py-3 border-t-[1px] border-[1px] border-black/5  dark:border-slate-500/20 rounded-md">
                       <h2 className="capitalize font-bold text-xl px-5 mb-3 text-neutral-dark dark:text-neutral-lighter">Other Interests</h2>
-                      {isLoadingOtherUsers ? renderLoadingState("h-10") : <div className="w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
+                      {isLoadingOtherUsers || isLoading ? renderLoadingState('h-10') : <div className="w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
                         {userList}
                       </div>}
                     </div></> : 
