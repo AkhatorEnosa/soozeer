@@ -32,7 +32,7 @@ export function AppProvider({ children }) {
       <div className="w-full py-10 flex flex-col text-neutral-dark dark:text-dark-text gap-4">
         <h1 className="w-full h-56 flex flex-col justify-center items-center z-50 text-9xl">
           <i className={`bi ${icon}`}></i>
-          <p className="">{message}</p>
+          <p className="text-sm">{message}</p>
         </h1>
       </div>
     );
@@ -41,8 +41,16 @@ export function AppProvider({ children }) {
     const userListEmptyState = () => (
       <h1 className="w-full h-56 flex flex-col gap-4 justify-center items-center z-50 text-5xl text-neutral-dark dark:text-dark-text py-5">
         <i className="bi bi-people"></i>
-        <p className="">No body to see, yet!</p>
+        <p className="text-sm">No body to see, yet!</p>
       </h1>
+    );
+
+    // Network and other Error state
+    const renderErrorState = (message) => (
+      <div className="w-full h-56 flex flex-col justify-center items-center z-50 text-5xl text-neutral-dark dark:text-dark-text py-5">
+        <i className="bi bi-exclamation-triangle-fill"></i>
+        <p className="text-sm">{message}</p>
+      </div>
     );
     
 
@@ -55,7 +63,8 @@ export function AppProvider({ children }) {
         handleLogout,
         renderLoadingState,
         renderEmptyState,
-        userListEmptyState
+        userListEmptyState,
+        renderErrorState
     }}>
         {children}
    </AppContext.Provider>

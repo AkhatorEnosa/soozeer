@@ -102,7 +102,7 @@ const Profile = () => {
   useEffect(() => {
     setProfilePic(currentProfile?.u_img)
     const getOtherusers = (uid) => {
-      if(loggedUser !== null && !isLoadingOtherUsers) {
+      if(!isLoadingOtherUsers) {
         others(uid)
       }
     }

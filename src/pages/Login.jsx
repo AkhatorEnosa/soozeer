@@ -45,7 +45,7 @@ const Login = () => {
     }
 
   return (
-    <div className="w-full text-neutral-dark dark:text-dark-accent py-20 flex flex-col items-center overflow-clip">
+    <div className="w-full h-screen text-neutral-dark dark:text-dark-accent py-20 flex flex-col items-center overflow-clip">
         <div className="w-full h-full flex flex-col-reverse justify-center items-center lg:grid lg:grid-cols-3 gap-5 lg:gap-0">
             <div className="w-full col-span-2 flex flex-col justify-center items-center dark:text-dark-accent">
                 <div className="w-full md:w-[35rem] lg:w-[60%] lg:px-5 flex flex-col justify-center items-center gap-10 border-[2px] border-black/5 dark:border-neutral-light/5 rounded-md p-4 md:shadow-md dark:shadow-neutral-light/20">

@@ -342,7 +342,11 @@ const Home = () => {
 
   // User list
   const userList = useMemo(() => {
-    if (!otherUsers?.length) return userListEmptyState();
+    if (!otherUsers?.length) return (
+      <div className="w-full py-10 flex flex-col text-neutral-dark dark:text-dark-text gap-4">
+        userListEmptyState()
+      </div>
+    );
     return otherUsers.slice(0, 4).map((user) => (
       <OtherUsersCard
         key={user.id}
