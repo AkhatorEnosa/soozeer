@@ -58,7 +58,7 @@ const UpdatePassword = () => {
     }
 
   return (
-    <div className="w-full h-screen dark:text-[#CBC9C9] flex flex-col items-center overflow-clip">
+    <div className="w-full h-screen text-neutral-dark dark:text-dark-accent flex flex-col items-center overflow-clip">
         <div className="w-full h-full flex flex-col-reverse justify-center items-center lg:grid lg:grid-cols-3 gap-5 lg:gap-0">
             <div className="w-full col-span-2 flex flex-col justify-center items-center">
                 {updatingPassword ? 
@@ -76,18 +76,18 @@ const UpdatePassword = () => {
                     </div>
                 
                 : 
-                <div className="w-full md:w-[35rem] lg:w-96 flex flex-col justify-center items-center gap-10 border-[1px] border-black/5 dark:border-neutral-100/5 rounded-md p-4 md:shadow-md dark:shadow-neutral">
+                <div className="w-full md:w-[35rem] lg:w-[60%] lg:px-5 flex flex-col justify-center items-center gap-10 border-[2px] border-black/5 dark:border-neutral-light/5 rounded-md p-4 md:shadow-md dark:shadow-neutral-light/20">
                     <h1 className="text-2xl font-medium hidden lg:flex">Update Password</h1>
                     <form onSubmit={handleSubmit} className="w-full flex flex-col gap-5">
-                        <label className="w-full flex gap-2 justify-between items-center input input-bordered input-md">
-                            <input type={showPassword ? "text" : "password"} name="password" id="password" value={password} placeholder="Password" className="w-full" autoComplete="" onChange={(e)=>setPassword(e.target.value)}/>
-                            <span className="cursor-pointer text-neutral/50 dark:text-[#CBC9C9]" onClick={() => setShowPassword(!showPassword)}>{showPassword ?<i className="bi bi-eye-slash-fill"></i> : <i className="bi bi-eye-fill"></i>}</span>
-                        </label>
-                        <label className="w-full flex gap-2 justify-between items-center input input-bordered input-md">
-                            <input type={showPassword ? "text" : "password"} name="confirm-password" id="confirm-password" value={confirmPassword} placeholder="Re-enter Password" className="w-full" autoComplete="" onChange={(e)=>setConfirmPassword(e.target.value)}/>
-                            <span className="cursor-pointer text-neutral/50 dark:text-[#CBC9C9]" onClick={() => setShowPassword(!showPassword)}>{showPassword ?<i className="bi bi-eye-slash-fill"></i> : <i className="bi bi-eye-fill"></i>}</span>
-                        </label>
-                        <button type="submit" className="btn btn-primary text-white" disabled={isLoading && "disabled"}>{(isLoading && error == null) ? <span className="loading loading-dots loading-sm text-white"></span> : 'Update Password'}</button>
+                        <div className="w-full flex gap-2 justify-between items-center input input-bordered input-md bg-bg focus-within:border-dark-accent/50 rounded-full dark:focus-within:outline-dark-accent dark:border-dark-accent/50 dark:bg-black ">
+                            <input type={showPassword ? "text" : "password"} name="password" id="password" value={password} placeholder="Password" className="w-full dark:placeholder:text-dark-accent" autoComplete="" onChange={(e)=>setPassword(e.target.value)}/>
+                            <span className="cursor-pointer text-neutral/50 dark:text-dark-accent" onClick={() => setShowPassword(!showPassword)}>{showPassword ?<i className="bi bi-eye-slash-fill"></i> : <i className="bi bi-eye-fill"></i>}</span>
+                        </div>
+                        <div className="w-full flex gap-2 justify-between items-center input input-bordered input-md bg-bg focus-within:border-dark-accent/50 rounded-full dark:focus-within:outline-dark-accent dark:border-dark-accent/50 dark:bg-black">
+                            <input type={showPassword ? "text" : "password"} name="confirm-password" id="confirm-password" value={confirmPassword} placeholder="Re-enter Password" className="w-full dark:placeholder:text-dark-accent" autoComplete="" onChange={(e)=>setConfirmPassword(e.target.value)}/>
+                            <span className="cursor-pointer text-neutral/50 dark:text-dark-accent" onClick={() => setShowPassword(!showPassword)}>{showPassword ?<i className="bi bi-eye-slash-fill"></i> : <i className="bi bi-eye-fill"></i>}</span>
+                        </div>
+                        <button type="submit" className="btn border-none rounded-full bg-primary hover:bg-primary/80 bg-primary/50 text-white disabled:bg-primary/50" disabled={isLoading && "disabled"}>{(isLoading && error == null) ? <span className="loading loading-dots loading-sm text-white"></span> : 'Update Password'}</button>
                     </form>
                 </div>}
             </div>
@@ -99,7 +99,7 @@ const UpdatePassword = () => {
                 </div>
                 <p>Log into your account.</p>
                 <ul className="mt-10 gap-4 hidden lg:block">
-                  <Link to={'/register'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral dark:border-white dark:text-white  hover:bg-black hover:text-base-100 dark:hover:bg-white">Register</li></Link>
+                  <Link to={'/register'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:text-neutral-dark dark:hover:bg-bg">Register</li></Link>
                 </ul>
             </div>
         </div>

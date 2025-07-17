@@ -40,8 +40,8 @@ const Navbar = () => {
             <ul className={`flex gap-5 justify-center items-center text-sm font-medium ${!loggedUser?.u_id ? "lg:hidden" : ""}`}>
 
               {isLoading && loggedUser == null ? <span className="loading loading-spinner loading-sm text-primary"></span> : !isLoading && loggedUser == null ? <>
-                    <Link to={'/login'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:bg-bg">Login</li></Link>
-                    <Link to={'/register'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:bg-bg">Register</li></Link>
+                    <Link to={'/login'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:text-neutral-dark dark:hover:bg-bg">Login</li></Link>
+                    <Link to={'/register'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:text-neutral-dark dark:hover:bg-bg">Register</li></Link>
                 </> :
                 <div className="relative flex flex-col gap-5 justify-center items-center text-neutral dark:text-bg" onClick={()=> setShowSubMenu(!showSubMenu)}>
                   <div className="w-full flex gap-2 items-center md:px-2 md:py-1 rounded-full bg-primary/5 border-[1px] dark:border-neutral-700 cursor-pointer z-50">

@@ -72,9 +72,9 @@ const Register = () => {
                 <div className="w-full md:w-[35rem] lg:w-[60%] lg:px-5 flex flex-col justify-center items-center gap-10 border-[2px] border-black/5 dark:border-neutral-light/5 rounded-md p-4 md:shadow-md dark:shadow-neutral-light/20">
                     <h1 className="text-2xl font-medium text-neutral-dark dark:text-dark-accent">Register</h1>
                     <form onSubmit={handleSubmit} className="w-full flex flex-col gap-5">
-                        <input type="text" name="name" id="name" value={name} placeholder="Fullname" className="w-full flex gap-2 justify-between items-center input input-bordered input-md bg-bg focus-within:border-dark-accent/50 rounded-full dark:focus-within:outline-dark-accent dark:border-dark-accent/50 dark:bg-black" onChange={(e)=>setName(e.target.value)}/>
-                        <input type="text" name="username" id="username" value={u_name} placeholder="Username" className="w-full flex gap-2 justify-between items-center input input-bordered input-md bg-bg focus-within:border-dark-accent/50 rounded-full dark:focus-within:outline-dark-accent dark:border-dark-accent/50 dark:bg-black" onChange={(e)=>setUname(e.target.value)}/>
-                        <input type="email" name="email" id="email" value={email} placeholder="Email" className="w-full flex gap-2 justify-between items-center input input-bordered input-md bg-bg focus-within:border-dark-accent/50 rounded-full dark:focus-within:outline-dark-accent dark:border-dark-accent/50 dark:bg-black" onChange={(e)=>setEmail(e.target.value)}/>
+                        <input type="text" name="name" id="name" value={name} placeholder="Fullname" className="w-full flex gap-2 justify-between items-center input input-bordered input-md bg-bg dark:placeholder:text-dark-accent focus-within:border-dark-accent/50 rounded-full dark:focus-within:outline-dark-accent dark:border-dark-accent/50 dark:bg-black" onChange={(e)=>setName(e.target.value)}/>
+                        <input type="text" name="username" id="username" value={u_name} placeholder="Username" className="w-full flex gap-2 justify-between items-center input input-bordered input-md bg-bg dark:placeholder:text-dark-accent focus-within:border-dark-accent/50 rounded-full dark:focus-within:outline-dark-accent dark:border-dark-accent/50 dark:bg-black" onChange={(e)=>setUname(e.target.value)}/>
+                        <input type="email" name="email" id="email" value={email} placeholder="Email" className="w-full flex gap-2 justify-between items-center input input-bordered input-md bg-bg dark:placeholder:text-dark-accent focus-within:border-dark-accent/50 rounded-full dark:focus-within:outline-dark-accent dark:border-dark-accent/50 dark:bg-black" onChange={(e)=>setEmail(e.target.value)}/>
                          <select className="w-full flex gap-2 justify-between items-center input input-bordered input-md bg-bg focus-within:border-dark-accent/50 rounded-full dark:focus-within:outline-dark-accent dark:border-dark-accent/50 dark:bg-black" defaultValue={"Gender?"} onChange={(e) => setGender(e.target.value)}>
                             <option disabled>Gender?</option>
                             <option>Male</option>
@@ -97,9 +97,9 @@ const Register = () => {
                     <Link to='/' className="cursor-pointer"> <img src={logo1} alt="logo" className="dark:hidden w-48 md:w-56 lg:w-44"/>  </Link>
                     <Link to='/' className="cursor-pointer"> <img src={logo2} alt="logo" className="hidden dark:flex w-48 md:w-56 lg:w-44"/> </Link>
                 </div>
-                <p>Join Us to explore this platform.</p>
+                <p>Log in to your account</p>
                 <ul className="mt-10 gap-4 hidden lg:block">
-                  <Link to={'/login'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:bg-bg">Login</li></Link>
+                  <Link to={'/login'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:text-neutral-dark dark:hover:bg-bg">Login</li></Link>
                 </ul>
             </div>
         </div>

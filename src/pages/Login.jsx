@@ -51,7 +51,7 @@ const Login = () => {
                 <div className="w-full md:w-[35rem] lg:w-[60%] lg:px-5 flex flex-col justify-center items-center gap-10 border-[2px] border-black/5 dark:border-neutral-light/5 rounded-md p-4 md:shadow-md dark:shadow-neutral-light/20">
                     <h1 className="text-2xl font-medium hidden lg:flex">Login</h1>
                     <form onSubmit={handleSubmit} className="w-full flex flex-col gap-5">
-                        <input type="email" name="email" id="email" value={email} placeholder="Email" className="w-full flex gap-2 justify-between items-center input input-bordered input-md bg-bg focus-within:border-dark-accent/50 rounded-full dark:focus-within:outline-dark-accent dark:border-dark-accent/50 dark:bg-black" onChange={(e)=>setEmail(e.target.value)}/>
+                        <input type="email" name="email" id="email" value={email} placeholder="Email" className="w-full flex gap-2 justify-between items-center input input-bordered input-md bg-bg dark:placeholder:text-dark-accent focus-within:border-dark-accent/50 rounded-full dark:focus-within:outline-dark-accent dark:border-dark-accent/50 dark:bg-black" onChange={(e)=>setEmail(e.target.value)}/>
                         
                         <div className="w-full flex gap-2 justify-between items-center input input-bordered input-md bg-bg focus-within:border-dark-accent/50 rounded-full dark:focus-within:outline-dark-accent dark:border-dark-accent/50 dark:bg-black">
                             <input type={showPassword ? "text" : "password"} name="password" id="password" value={password} placeholder="Password" className="w-full dark:placeholder:text-dark-accent" autoComplete="" onChange={(e)=>setPassword(e.target.value)}/>
@@ -71,9 +71,9 @@ const Login = () => {
                     <Link to='/' className="cursor-pointer"> <img src={logo1} alt="logo" className="dark:hidden w-48 md:w-56 lg:w-44"/>  </Link>
                     <Link to='/' className="cursor-pointer"> <img src={logo2} alt="logo" className="hidden dark:flex w-48 md:w-56 lg:w-44"/> </Link>
                 </div>
-                <p>Log into your account.</p>
+                <p>Join Us to explore this platform</p>
                 <ul className="mt-10 gap-4 hidden lg:block">
-                  <Link to={'/register'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:bg-bg">Register</li></Link>
+                  <Link to={'/register'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:text-neutral-dark dark:hover:bg-bg">Register</li></Link>
                 </ul>
             </div>
         </div>

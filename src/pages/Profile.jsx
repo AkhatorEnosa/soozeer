@@ -793,10 +793,10 @@ const Profile = () => {
                       <h1 className="font-bold text-4xl">Explore</h1>
                       <ul className="flex mt-10 gap-4">
                         <Link to="/login">
-                          <li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:bg-bg">Login</li>
+                          <li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:text-neutral-dark dark:hover:bg-bg">Login</li>
                         </Link>
                         <Link to="/register">
-                          <li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:bg-bg">Register</li>
+                          <li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:text-neutral-dark dark:hover:bg-bg">Register</li>
                         </Link>
                       </ul>
                     </div>
