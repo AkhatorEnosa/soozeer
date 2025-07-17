@@ -9,7 +9,7 @@ const initialState = {
     searchedUsers: [],
     notifications: [],
     isLoading: true,
-    isLoadingOtherUsers: false,
+    isLoadingOtherUsers: true,
     isLoadingProfile: true,
     isUpdatingProfile: false,
     updated: false,

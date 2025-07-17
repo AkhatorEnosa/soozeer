@@ -248,7 +248,7 @@ const Home = () => {
   const dispatch = useDispatch();
 
   const { error, loggedUser, otherUsers, isLoading, isLoadingOtherUsers } = useSelector((state) => state.app);
-  const { posts, likes, bookmarks, postComments, posted, isAddingPost, isDeletingPost, isBookmarking, isLiking } = useSelector((state) => state.posts);
+  const { posts, likes, bookmarks, postComments, posted, isAddingPost, isLoadingPosts, isDeletingPost, isBookmarking, isLiking } = useSelector((state) => state.posts);
   const { follows, isLoadingFollows } = useSelector((state) => state.follows);
 
   usePosts();
@@ -380,106 +380,114 @@ const Home = () => {
 
   // Content rendering
   const renderContent = useMemo(() => {
-    if (!posts) return null;
+    // if (!posts) return null;
 
-    if (tab === 'forYou') {
-      const allPosts = posts.filter((post) => post.type === 'post');
-      return allPosts.length > 0 ? (
-        allPosts.map((post) => (
-          <PostCardWrapper
-            key={post.id}
-            post={post}
-            loggedUser={loggedUser}
-            follows={follows}
-            likes={likes}
-            bookmarks={bookmarks}
-            isLiking={isLiking}
-            isBookmarking={isBookmarking}
-            isDeletingPost={isDeletingPost}
-            navigate={navigate}
-            dispatch={dispatch}
-            removeLike={removeLike}
-            removeBookmark={removeBookmark}
-            removeFollow={removeFollow}
-            countComments={countComments}
-            countLikes={countLikes}
-            likedPost={likedPost}
-            bookmarkedPost={bookmarkedPost}
-            countBookmarks={countBookmarks}
-            followed={followed}
-            deletePost={deletePost}
-          />
-        ))
-      ) : (
-        <div className="w-full h-56 flex flex-col justify-center items-center">
-          {renderEmptyState('bi bi-chat-left-text', 'No posts to see yet')}
-          <p className="text-base">Start following people to see their posts here.</p>
-        </div>
+    if(isLoadingPosts) {
+      return ( 
+        <span className="loading loading-spinner loading-sm text-primary"></span>
       );
-    } else if (tab === 'following') {
-      const followedIds = follows.filter((follow) => follow.follower_id === loggedUser?.u_id).map((x) => x.followed_id);
-      const followingPosts = posts.filter((post) => (post.u_id === loggedUser?.u_id || followedIds.includes(post.u_id)) && post.type === 'post');
-      return followingPosts.length > 0 ? (
-        followingPosts.map((post) => (
-          <PostCardWrapper
-            key={post.id}
-            post={post}
-            loggedUser={loggedUser}
-            follows={follows}
-            likes={likes}
-            bookmarks={bookmarks}
-            isLiking={isLiking}
-            isBookmarking={isBookmarking}
-            isDeletingPost={isDeletingPost}
-            navigate={navigate}
-            dispatch={dispatch}
-            removeLike={removeLike}
-            removeBookmark={removeBookmark}
-            removeFollow={removeFollow}
-            countComments={countComments}
-            countLikes={countLikes}
-            likedPost={likedPost}
-            bookmarkedPost={bookmarkedPost}
-            countBookmarks={countBookmarks}
-            followed={followed}
-            deletePost={deletePost}
-          />
-        ))
-      ) : (
-        <div className="w-full h-56 flex flex-col justify-center items-center">
-          {renderEmptyState('bi bi-people', 'No one to see yet')}
-          <p className="text-base">Start following people to see their posts here.</p>
-        </div>
-      );
-    } else if (tab === 'journal') {
-      if (!loggedUser) {
-        setTab('forYou');
-        return null;
+    } else {
+      if (tab === 'forYou') {
+        const allPosts = posts?.filter((post) => post.type === 'post');
+        
+        return allPosts.length > 0 ? (
+          allPosts.map((post) => (
+            <PostCardWrapper
+              key={post.id}
+              post={post}
+              loggedUser={loggedUser}
+              follows={follows}
+              likes={likes}
+              bookmarks={bookmarks}
+              isLiking={isLiking}
+              isBookmarking={isBookmarking}
+              isDeletingPost={isDeletingPost}
+              navigate={navigate}
+              dispatch={dispatch}
+              removeLike={removeLike}
+              removeBookmark={removeBookmark}
+              removeFollow={removeFollow}
+              countComments={countComments}
+              countLikes={countLikes}
+              likedPost={likedPost}
+              bookmarkedPost={bookmarkedPost}
+              countBookmarks={countBookmarks}
+              followed={followed}
+              deletePost={deletePost}
+            />
+          ))
+        ) : (
+          <div className="w-full h-screen flex flex-col justify-center items-center">
+            {renderEmptyState('bi bi-chat-left-text', 'No posts to see yet')}
+            <p className="text-neutral-dark dark:text-dark-accent font-semibold">Start following people to see their posts here.</p>
+          </div>
+        );
+      } else if (tab === 'following') {
+        const followedIds = follows.filter((follow) => follow.follower_id === loggedUser?.u_id).map((x) => x.followed_id);
+        const followingPosts = posts.filter((post) => (post.u_id === loggedUser?.u_id || followedIds.includes(post.u_id)) && post.type === 'post');
+        return followingPosts.length > 0 ? (
+          followingPosts.map((post) => (
+            <PostCardWrapper
+              key={post.id}
+              post={post}
+              loggedUser={loggedUser}
+              follows={follows}
+              likes={likes}
+              bookmarks={bookmarks}
+              isLiking={isLiking}
+              isBookmarking={isBookmarking}
+              isDeletingPost={isDeletingPost}
+              navigate={navigate}
+              dispatch={dispatch}
+              removeLike={removeLike}
+              removeBookmark={removeBookmark}
+              removeFollow={removeFollow}
+              countComments={countComments}
+              countLikes={countLikes}
+              likedPost={likedPost}
+              bookmarkedPost={bookmarkedPost}
+              countBookmarks={countBookmarks}
+              followed={followed}
+              deletePost={deletePost}
+            />
+          ))
+        ) : (
+          <div className="w-full h-screen flex flex-col justify-center items-center">
+            {renderEmptyState('bi bi-chat-left-text', 'No posts to see yet')}
+            <p className="text-neutral-dark dark:text-dark-accent font-semibold">Start following people to see their posts here.</p>
+          </div>
+        );
+      } else if (tab === 'journal') {
+        if (!loggedUser) {
+          setTab('forYou');
+          return null;
+        }
+        const filterJournals = posts.filter((post) => post.type === 'journal' && (post.privacy === 'Everyone' || post.u_id === loggedUser?.u_id));
+        return filterJournals.length > 0 ? (
+          filterJournals.map((post) => (
+            <JournalCardWrapper
+              key={post.id}
+              post={post}
+              loggedUser={loggedUser}
+              likes={likes}
+              isLiking={isLiking}
+              isDeletingPost={isDeletingPost}
+              dispatch={dispatch}
+              removeLike={removeLike}
+              countLikes={countLikes}
+              likedPost={likedPost}
+              deletePost={deletePost}
+            />
+          ))
+        ) : (
+          <div className="w-full h-56 flex flex-col justify-center items-center">
+            {renderEmptyState('bi bi-journal', 'No journals to see yet')}
+          </div>
+        );
       }
-      const filterJournals = posts.filter((post) => post.type === 'journal' && (post.privacy === 'Everyone' || post.u_id === loggedUser?.u_id));
-      return filterJournals.length > 0 ? (
-        filterJournals.map((post) => (
-          <JournalCardWrapper
-            key={post.id}
-            post={post}
-            loggedUser={loggedUser}
-            likes={likes}
-            isLiking={isLiking}
-            isDeletingPost={isDeletingPost}
-            dispatch={dispatch}
-            removeLike={removeLike}
-            countLikes={countLikes}
-            likedPost={likedPost}
-            deletePost={deletePost}
-          />
-        ))
-      ) : (
-        <div className="w-full h-56 flex flex-col justify-center items-center">
-          {renderEmptyState('bi bi-journal', 'No journals to see yet')}
-        </div>
-      );
     }
-  }, [tab, posts, loggedUser, follows, likes, bookmarks, countBookmarks, renderEmptyState, isLiking, isBookmarking, isDeletingPost, navigate, dispatch, removeLike, removeBookmark, removeFollow, countComments, countLikes, likedPost, bookmarkedPost, followed, deletePost]);
+
+  }, [tab, posts, loggedUser, follows, likes, bookmarks, countBookmarks, renderEmptyState, isLoadingPosts, isLiking, isBookmarking, isDeletingPost, navigate, dispatch, removeLike, removeBookmark, removeFollow, countComments, countLikes, likedPost, bookmarkedPost, followed, deletePost]);
 
   const closePostFormModal = useCallback(() => {
     setShowPostInModal(false);
@@ -525,13 +533,13 @@ const Home = () => {
             isAddingPost={isAddingPost}
           />
         )}
-        <div className="w-full lg:grid lg:grid-cols-8 px-2 md:px-20 mt-2 md:mt-0 pb-20 md:pb-28 lg:pb-0 md:gap-2 mb-7 md:mb-14 lg:mb-0">
+        <div className={`w-full lg:grid lg:grid-cols-8 px-2 md:px-20 mt-2 md:mt-0 pb-20 md:pb-28 lg:pb-0 md:gap-2 mb-7 md:mb-14 lg:mb-0`}>
           {/* side bar */}
-          <SideBar uid={loggedUser?.u_id || null} page="home" toggleSearchBar={handleShowSearch} />
+          {loggedUser && <SideBar uid={loggedUser?.u_id || null} page="home" toggleSearchBar={handleShowSearch} />}
   
-          <div className={loggedUser?.u_id ? 'w-full flex flex-col col-span-4 border-r-[1px] border-l-[1px] mt-5 border-black/5 dark:border-dark-accent/20' : 'w-full flex flex-col col-span-4 border-r-[1px] border-l-[1px] border-black/5 dark:border-dark-accent/20 justify-center items-center'}>
+          <div className={loggedUser?.u_id ? 'w-full flex flex-col col-span-4 border-r-[1px] border-l-[1px] mt-5 border-black/5 dark:border-dark-accent/20' : 'w-full flex flex-col col-span-6 border-r-[1px] border-l-[1px] border-black/5 dark:border-dark-accent/20 justify-center items-center'}>
             {loggedUser?.u_id && (
-              <div className="sticky top-0 flex justify-evenly text-center  text-neutral-dark dark:text-dark-accent w-full bg-bg/90 dark:bg-black/90 backdrop-blur-md overflow-scroll no-scrollbar text-sm md:text-base font-medium z-40">
+              <div className="sticky top-0 flex justify-evenly text-center text-neutral-dark w-full bg-bg/90 dark:bg-black/90 backdrop-blur-md overflow-scroll no-scrollbar text-sm md:text-neutral-dark dark:text-dark-accent font-semibold z-40">
                 <button className={`w-full ${tab === 'forYou' ? 'bg-primary/5 font-bold border-b-2 border-primary' : ''} py-3 px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('forYou')}>
                   For you
                 </button>

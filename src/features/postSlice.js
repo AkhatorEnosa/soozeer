@@ -15,7 +15,7 @@ const initialState = {
     isAddingPost: false,
     posted: false,
     postDetails: null,
-    isLoadingPosts: false,
+    isLoadingPosts: true,
     isDeletingPost: false,
     isLiking: false,
     isBookmarking: false,
