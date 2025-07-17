@@ -43,14 +43,13 @@ const Post = () => {
   const { postError, postComments, likes, bookmarks, isDeletingPost, isBookmarking, isLiking } = useSelector((state) => state.posts)
   const { currentPost, comments, posted, isLoadingPost, isPosting, isDeletingComment, errorComment } = useSelector((state) => state.singlePost)
   const { follows, isLoadingFollows } = useSelector((state) => state.follows)
-  const { renderErrorState } = useContext(AppContext)
+  const { renderErrorState, renderLoadingState } = useContext(AppContext)
   const dispatch = useDispatch()
 
   usePosts()
   const {mutate} = useAddComment()
   const {mutate:currPostComments} = useComments()
-  // const {mutate:del} = useDeletePost()
-  const {mutate:others} = useOtherUsers()
+  useOtherUsers({ loggedId: loggedUser?.u_id, currentId: loggedUser?.u_id });
   useLikes()
   useBookmarks()
   useCommentBookmarks()
@@ -75,18 +74,6 @@ const Post = () => {
       )
       .subscribe()
   }, [])
-  
-   
-  // fetch all other users asides the one logged in or the one whose profile is being view at the moment
-  useEffect(() => {
-    const getOtherusers = (uid) => {
-      if(loggedUser !== null) {
-        others(uid)
-      }
-    }
-
-    getOtherusers({loggedId:loggedUser?.u_id, currentId: loggedUser?.u_id})
-  }, [loggedUser])
 
   useEffect(() => {
     currPostComments(paramsId)
@@ -515,8 +502,9 @@ const Post = () => {
 
           {currentPost == 'error' ? <div className="main w-full flex flex-col justify-center items-center col-span-6 border-[1px] border-black/5 "><p>This page does not exist.</p></div> :
             <>
-              {isLoadingPost ? <div className={loggedUser?.u_id !== null && "main w-full flex flex-col col-span-4 border-[1px] border-black/5  dark:border-slate-500/20"}>
-                  <div className="flex w-full flex-col gap-4 opacity-15 px-5">
+              {isLoadingPost || isLoading ? 
+                <div className={`main w-full flex flex-col col-span-4 border-[1px] ${loggedUser ? "col-span-4" : "col-span-6"} border-black/5  dark:border-slate-500/20`}>
+                  <div className="flex w-full flex-col gap-4 opacity-40 px-5">
                     <div className="flex items-center gap-4">
                       <div className="skeleton dark:bg-slate-600 h-16 w-16 shrink-0 rounded-full"></div>
                       <div className="flex flex-col gap-4">
@@ -524,7 +512,7 @@ const Post = () => {
                         <div className="skeleton dark:bg-slate-600 h-4 w-28"></div>
                       </div>
                     </div>
-                    <div className="skeleton dark:bg-slate-600 h-32 w-full"></div>
+                    <div className="skeleton dark:bg-slate-600 h-80 w-full"></div>
                   </div>
                 </div> 
                 
@@ -553,21 +541,14 @@ const Post = () => {
 
               {/* side bar */}
             <div className="hidden sticky right-0 top-0 lg:flex flex-col gap-5 h-fit col-span-2 py-3">
-            {loggedUser?.u_id ? <>
+            {loggedUser?.u_id|| isLoading ? <>
               {/* search  */}
               <form onSubmit={handleSearch} className="flex flex-col gap-5 py-2 dark:bg-black z-50">
                   <input type="text" name="search" id="search" value={search} placeholder="Search..." className="w-full px-4 py-2 border-[1px] bg-bg dark:border-dark-accent/40 text-neutral-dark dark:text-dark-accent text-sm placeholder:text-inherit outline-none dark:bg-black dark:focus-within:bg-black/50 rounded-full" onChange={(e)=>setSearch(e.target.value)}/>
               </form>
               <div className="py-3 border-t-[1px] border-[1px] border-black/5  dark:border-slate-500/20 rounded-md">
                     <h2 className="font-bold text-xl px-5 pb-4 text-neutral-dark dark:text-neutral-lighter">You might be interested in</h2>
-                    {isLoading || isLoadingOtherUsers ? <div className="flex flex-col gap-4">
-                        <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-                        <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-                        <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-                        <div className="skeleton dark:bg-slate-600 h-10 w-full opacity-15"></div>
-                      </div> : <div className="w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
-                      {userList}
-                    </div>}
+                    {isLoadingOtherUsers || isLoading ? renderLoadingState('h-10') : <div className="w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">{userList}</div>}
                   </div>
                 </> : 
                 <div className="w-full h-fit flex flex-col py-32 justify-center items-center text-neutral-dark dark:text-dark-accent">

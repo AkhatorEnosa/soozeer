@@ -27,7 +27,7 @@ const Notifications = () => {
 
   const { follows, isLoadingFollows } = useSelector((state) => state.follows)
   useFollows()
-  const {mutate:others} = useOtherUsers()
+  useOtherUsers({ loggedId: loggedUser?.u_id, currentId: loggedUser?.u_id });
 
   const getNotifications = async(uid) => {
     if(loggedUser?.u_id !== null && uid !== undefined) {
@@ -42,16 +42,7 @@ const Notifications = () => {
     }
   }
 
-  // fetch all other users asides the one logged in or the one whose profile is being view at the moment
-  const getOtherusers = (uid) => {
-      if(loggedUser !== null) {
-        others(uid)
-      }
-    }
-
-
   useEffect(() => {
-    getOtherusers({loggedId:loggedUser?.u_id, currentId: loggedUser?.u_id})
     getNotifications(loggedUser?.u_id)
     if(!isLoading && loggedUser == null) {
       navigate('/login')

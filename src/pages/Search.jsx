@@ -24,8 +24,6 @@ import { AppContext } from "../context/AppContext"
 
 const Search = () => {
   const [search, setSearch] = useState("")
-  // const [theme, setTheme] = useState(localStorage.getItem("theme") === "dark" ? localStorage.getItem("theme") : "light")
-  // const [systemThemeIsDark, setSystemThemeIsDark] = useState(false)
 
   const params = useParams()
   const navigate = useNavigate();
@@ -44,18 +42,11 @@ const Search = () => {
   useBookmarks()
   useComments()
   useFollows()
-  const {mutate:others} = useOtherUsers()
+  useOtherUsers({ loggedId: loggedUser?.u_id, currentId: loggedUser?.u_id });
   const {mutate:searchQuery} = useSearchQuery()
-
-  // fetch all other users asides the one logged in or the one whose profile is being view at the moment
-  const getOtherusers = (uid) => {
-      if(loggedUser !== null) {
-        others(uid)
-      }
-    }
+  
 
   useEffect(() => {
-    getOtherusers({loggedId:loggedUser?.u_id, currentId: loggedUser?.u_id})
     if(!isLoading && loggedUser == null) {
       navigate('/login')
     }

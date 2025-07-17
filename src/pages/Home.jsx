@@ -257,7 +257,7 @@ const Home = () => {
   useLikes();
   useBookmarks();
   useFollows();
-  const { mutate: others } = useOtherUsers();
+  useOtherUsers({ loggedId: loggedUser?.u_id, currentId: loggedUser?.u_id });
 
   // Handle body scroll locking
   useEffect(() => {
@@ -280,17 +280,9 @@ const Home = () => {
     return () => channel.unsubscribe();
   }, [dispatch]);
 
-  // Fetch other users
-  const getOtherUsers = useCallback(() => {
-    if (loggedUser) {
-      others({ loggedId: loggedUser.u_id, currentId: loggedUser.u_id });
-    }
-  }, [loggedUser, others]);
-
   useEffect(() => {
-    getOtherUsers();
     dispatch(getPostComments());
-  }, [getOtherUsers, dispatch]);
+  }, [dispatch]);
 
   // Handle post submission
   const handleSubmit = useCallback(() => {
@@ -343,7 +335,7 @@ const Home = () => {
   // User list
   const userList = useMemo(() => {
     if (!otherUsers?.length && !isLoading && !isLoadingOtherUsers) {return (
-      <div className="w-full py-10 flex flex-col text-neutral-dark dark:text-dark-text gap-4">
+      <div className="w-full py-10 flex flex-col text-neutral-dark dark:text-dark-accent gap-4">
         userListEmptyState()
       </div>
     ) } else {

@@ -134,16 +134,19 @@ const Messages = () => {
         <div className="w-full flex flex-col items-center px-2 md:p-0 md:m-0">
   
             <div className="sticky w-full lg:grid text-neutral-dark dark:text-dark-accent lg:grid-cols-8 px-2 md:px-20 pb-10 md:pb-28 md:gap-2 lg:mb-0 lg:pb-0">
-              <SideBar
+              {loggedUser && <SideBar
               uid={loggedUser !== null ? loggedUser.u_id : null} 
               page={'messages'} 
               toggleSearchBar={handleShowSearch}
-              />
+              />}
   
   
-              {messages == 'error' ? <div className="main w-full flex flex-col justify-center items-center col-span-6 border-[1px] border-black/5 "><p>This page does not exist.</p></div> :
-                <div className="top-0 grid grid-cols-6 col-span-6 gap-2 mt-5">
-                  <div className="col-span-6 md:col-span-3 border-[1px] border-black/5 dark:border-slate-500/20 h-fit rounded-md">
+              {
+                messages == 'error' ? 
+                <div className="main w-full flex flex-col justify-center items-center col-span-6 border-[1px] border-black/5 "><p>This page does not exist.</p></div> 
+                :
+                <div className={`w-full top-0 grid grid-cols-6 ${loggedUser ? "col-span-6" : "col-span-8"} gap-2 mt-5`}>
+                  <div className={`${loggedUser ? "col-span-3" : "col-span-4"} border-[1px] border-black/5 dark:border-slate-500/20 h-fit rounded-md`}>
                   {/* <div className="hidden w-full lg:flex px-3 bg-bg/50 backdrop-blur-sm sticky top-0 z-[100]">
                     <BackBtn link={() => navigate(-1)} title={'Back'}/>
                   </div> */}

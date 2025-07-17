@@ -1,21 +1,18 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { getOtherUsers } from "../features/appSlice";
 
-const useOtherUsers = () => {
-    const queryClient = useQueryClient()
-    const dispatch = useDispatch()
-  
-    return useMutation({
-        mutationFn: async(uid) => {
-            dispatch(getOtherUsers(uid))
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ['users']
-            })
-        }
-    })
-}
+const useOtherUsers = (uid) => {
+  const dispatch = useDispatch();
 
-export default useOtherUsers
+  return useQuery({
+    queryKey: ['otherUsers', uid.loggedId, uid.currentId],
+    queryFn: async () => {
+      const result = await dispatch(getOtherUsers(uid)).unwrap(); // Assuming getOtherUsers is a thunk
+      return result;
+    },
+    enabled: !!uid.loggedId && !!uid.currentId, // Only run if IDs are present
+  });
+};
+
+export default useOtherUsers;

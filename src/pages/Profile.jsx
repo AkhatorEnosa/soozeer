@@ -76,9 +76,10 @@ const Profile = () => {
   useBookmarks()
   useComments ()
   useFollows()
+  useOtherUsers({ loggedId: loggedUser?.u_id, currentId: profileId });
 
   const {mutate:del} = useDeletePost()
-  const {mutate:others} = useOtherUsers()
+  // const {mutate:others} = useOtherUsers()
   const {mutate:profile} = useGetCurrentProfile()
   // const {mutate:profileFollows} = useFollows()
   const {mutate:profileLikedPosts} = useGetLikedPosts()
@@ -99,18 +100,11 @@ const Profile = () => {
       body.style.overflowY = 'scroll'
     }
   }, [showEdit, showFollowsModal])
-  
-  useEffect(() => {
-    setProfilePic(currentProfile?.u_img)
-    const getOtherusers = (uid) => {
-      if(!isLoadingOtherUsers) {
-        others(uid)
-      }
-    }
 
-    getOtherusers({loggedId: loggedUser?.u_id, currentId: profileId})
-    setCurrentProfile(JSON.parse(JSON.stringify(profileUser)))
-  }, [profileId, currentProfile !== null ? "" : currentProfile, loggedUser, profileUser])
+useEffect(() => {
+  setCurrentProfile({ ...profileUser });
+  setProfilePic(profileUser?.u_img);
+}, [profileId, loggedUser?.u_id, profileUser?.u_id]);
 
   // get today's full date in YYYY-MM-DD format 
   const getTodayDate = () => {
@@ -233,7 +227,7 @@ const Profile = () => {
         />
       ));
     }
-  }, [loggedUser, otherUsers, isLoadingOtherUsers, userListEmptyState, isLoadingFollows]);
+  }, [loggedUser, otherUsers, isLoading, isLoadingOtherUsers, userListEmptyState, isLoadingFollows]);
 
   // Handle follow toggle logic
   const handleFollowToggle = (user) => {
