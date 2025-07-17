@@ -686,17 +686,17 @@ const Profile = () => {
   
           {/* main section  */}
             <div className="w-full lg:grid lg:grid-cols-8 px-2 md:px-20 mt-2 md:mt-0 mb-24 lg:pb-0 md:gap-2 mb:mb-0">
-              <SideBar
+              {loggedUser && <SideBar
               uid={loggedUser !== null ? loggedUser.u_id : null} 
               page={'profile'} 
               paramsId={profileId}
-              toggleSearchBar={handleShowSearch}/>
+              toggleSearchBar={handleShowSearch}/>}
   
               {profileUser == 'error' ? <div className="main w-full flex flex-col justify-center items-center col-span-6 border-r-[1px] border-l-[1px] border-black/5 "><p>This page does not exist.</p></div> :
   
                 // main section 
                 <>
-                  <div className="main w-full flex flex-col col-span-4 border-r-[1px] border-l-[1px] border-black/5 dark:border-slate-500/20">
+                  <div className={loggedUser?.u_id !== null && "main w-full flex flex-col col-span-4 border-[1px] border-black/5  dark:border-slate-500/20"}>
   
                     <div className="w-full flex px-3 bg-bg/50 dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">
                       <BackBtn link={() => navigate(-1)} title={'Back'}/>

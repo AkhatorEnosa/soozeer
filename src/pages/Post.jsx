@@ -509,9 +509,9 @@ const Post = () => {
         {/* <Navbar /> */}
 
           <div className="w-full lg:grid lg:grid-cols-8 px-2 md:px-20 mt-2 md:mt-4 lg:mt-0 pb-28 lg:pb-0 md:gap-2 mb-14 lg:mb-0">
-            <SideBar
+            {loggedUser && <SideBar
             uid={loggedUser !== null ? loggedUser.u_id : null} 
-            toggleSearchBar={handleShowSearch}/>
+            toggleSearchBar={handleShowSearch}/> }
 
           {currentPost == 'error' ? <div className="main w-full flex flex-col justify-center items-center col-span-6 border-[1px] border-black/5 "><p>This page does not exist.</p></div> :
             <>
@@ -526,27 +526,30 @@ const Post = () => {
                     </div>
                     <div className="skeleton dark:bg-slate-600 h-32 w-full"></div>
                   </div>
-                </div> : 
+                </div> 
+                
+                : 
 
                 // main section 
-                <div className={loggedUser?.u_id !== null && "main w-full lg:h-screen flex flex-col col-span-4 border-r-[1px] border-l-[1px] border-black/5  dark:border-slate-500/20 overflow-scroll no-scrollbar"}>
+                <div className={`main w-full lg:h-screen flex flex-col ${loggedUser ? "col-span-4" : "col-span-6"} border-r-[1px] border-l-[1px] border-black/5  dark:border-slate-500/20 overflow-scroll no-scrollbar`}>
 
-                <div className="w-full flex justify-between px-3 bg-bg/50 dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">
-                  <BackBtn link={() => navigate(-1)} title={'Back'}/>
+                  <div className="w-full flex justify-between px-3 bg-bg/50 dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">
+                    <BackBtn link={() => navigate(-1)} title={'Back'}/>
 
-                  {currentPost?.post_id ? <BackBtn link={() => navigate(`/post/${currentPost?.post_id}`)} title={'Jump to origin'}/> : ''}
+                    {currentPost?.post_id ? <BackBtn link={() => navigate(`/post/${currentPost?.post_id}`)} title={'Jump to origin'}/> : ''}
+                  </div>
+
+                  <div>
+                    {content}
+                    {loggedUser?.u_id && newCommentForm}
+                  </div>
+                  <div>
+                    {allComments}
+                    <p className="py-8 flex justify-center text-primary">.</p>
+                  </div>
+
                 </div>
-
-                <div>
-                  {content}
-                  {loggedUser?.u_id && newCommentForm}
-                </div>
-                <div>
-                  {allComments}
-                  <p className="py-8 flex justify-center text-primary">.</p>
-                </div>
-
-              </div>}
+              }
 
               {/* side bar */}
             <div className="hidden sticky right-0 top-0 lg:flex flex-col gap-5 h-fit col-span-2 py-3">
