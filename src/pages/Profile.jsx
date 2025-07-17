@@ -696,7 +696,7 @@ const Profile = () => {
   
                 // main section 
                 <>
-                  <div className={loggedUser?.u_id !== null && "main w-full flex flex-col col-span-4 border-[1px] border-black/5  dark:border-slate-500/20"}>
+                  <div className={`main w-full flex flex-col ${loggedUser ? "col-span-4" : "col-span-6"} border-r-[1px] border-l-[1px] border-black/5  dark:border-slate-500/20 overflow-scroll no-scrollbar`}>
   
                     <div className="w-full flex px-3 bg-bg/50 dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">
                       <BackBtn link={() => navigate(-1)} title={'Back'}/>

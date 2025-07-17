@@ -43,7 +43,7 @@ const JournalCard = ({privacy, postUserIdVal, postUserId, title, journal, uImg, 
   }
 
   return (
-    <div className={`w-full px-5 py-4 flex flex-col dark:text-dark-text gap-3`}>
+    <div className={`w-full px-5 py-4 flex flex-col dark:text-dark-accent gap-3`}>
         <div className="w-full p-2 shadow-sm">
             <div className="flex justify-center items-center">
                 <div className="w-full flex flex-col gap-0">

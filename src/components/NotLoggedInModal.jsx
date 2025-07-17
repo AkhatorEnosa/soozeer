@@ -15,7 +15,7 @@ const NotLoggedInModal = ({uid}) => {
   
   return (
     <>
-      {showModal && !uid && <div className={showModal && !uid ? "fixed bottom-0 bg-bg/50 dark:bg-black/50 border-t-2 border-primary backdrop-blur-md py-10 px-10 gap-5 lg:gap-10 flex flex-col md:flex-row md:items-center justify-between w-screen z-[1200] text-neutral-dark dark:text-dark-text transition-all duration-300" : "fixed -bottom-64 bg-bg/50 dark:bg-black/50 border-t-2 border-primary backdrop-blur-md py-10 px-10 gap-10 flex items-center justify-between w-screen z-[1200] dark:text-dark-text transition-all duration-300"}>
+      {showModal && !uid && <div className={showModal && !uid ? "fixed bottom-0 bg-bg/50 dark:bg-black/50 border-t-2 border-primary backdrop-blur-md py-10 px-10 gap-5 lg:gap-10 flex flex-col md:flex-row md:items-center justify-between w-screen z-[1200] text-neutral-dark dark:text-dark-accent transition-all duration-300" : "fixed -bottom-64 bg-bg/50 dark:bg-black/50 border-t-2 border-primary backdrop-blur-md py-10 px-10 gap-5 lg:gap-10 flex flex-col md:flex-row md:items-center justify-between w-screen z-[1200] text-neutral-dark dark:text-dark-accent transition-all duration-300"}>
           <div className="flex flex-col w-fit h-full justify-center gap-2 text-[12px] md:text-sm">
               <div>
                   <Link to='/' className="lg:py-5 cursor-pointer"> <img src={logo1} alt="logo" className=" dark:hidden w-32 md:w-36 lg:w-44"/> </Link>
