@@ -20,42 +20,37 @@ const initialState = {
     isLiking: false,
     isBookmarking: false,
     errorPost: false,
-    hasNextPage: true,
-    page: 1,
-  };
+    hasNextPage: true
+}
 
 
+// const randomizeSortFilter = () => {
+//     const seeds = [ 'created_at', 'body', 'journal']
+//     const seed = seeds[Math.floor(Math.random() * seeds.length)]
 
-export const getPosts = createAsyncThunk(
-    'posts/getPosts',
-    async ({ page = 1, pageSize = 5 }) => {
-      try {
-        const from = (page - 1) * pageSize;
-        const to = from + pageSize - 1;
-  
-        const { data, error, count } = await supabase
-          .from('posts')
-          .select('*', { count: 'exact' })
-          .eq('post_id', 0)
-          .order('created_at', { ascending: false })
-          .range(from, to);
+//     return seed
+// }
+
+
+export const getPosts = createAsyncThunk('posts/getPosts', async () => {
+    try {
+        const { data, error } = await supabase
+            .from('posts')
+            .select()
+            .eq('post_id', 0)
+            .order('created_at', { ascending: false });
   
         if (error) {
-          console.error('Error fetching posts:', error);
-          throw error;
+            console.error('Error fetching posts:', error);
+            return error;
         }
-  
-        return {
-          data,
-          page,
-          hasNextPage: count ? from + pageSize < count : false,
-        };
-      } catch (err) {
-        console.error('getPosts failed:', err);
-        throw err;
-      }
+    
+        return data;
+    } catch (err) {
+      console.error('getPosts failed:', err);
+      return 'error';
     }
-  );
+});
   
 
 export const getReplies = createAsyncThunk('posts/getReplies', async () => {
@@ -382,18 +377,16 @@ const postSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(getPosts.pending, (state) => {
-            state.isLoadingPosts = true;
-            state.errorPost = false;
+                state.isLoadingPosts = true;
             })
             .addCase(getPosts.fulfilled, (state, action) => {
-            state.isLoadingPosts = false;
-            state.posts = [...state.posts, ...action.payload.data];
-            state.hasNextPage = action.payload.hasNextPage;
-            state.page = action.payload.page;
+                state.posts = action.payload,
+                state.isLoadingPosts = false
             })
             .addCase(getPosts.rejected, (state, action) => {
-            state.isLoadingPosts = false;
-            state.errorPost = action.error.message;
+                state.errorPost = action.error.message
+                state.posts = null,
+                state.isLoadingPosts = false
             })
             .addCase(getReplies.pending, (state) => {
                 state.isLoadingPosts = true;

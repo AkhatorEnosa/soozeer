@@ -1,36 +1,28 @@
 /* eslint-disable react/prop-types */
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import PostCard from "../components/PostCard";
-import Footer from "../sections/Footer";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import OtherUsersCard from "../components/OtherUsersCard";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  bookmarkPost,
-  unlike,
-  likePost,
-  unBookmark,
-  getPostComments,
-  getLikes,
-  getBookmarks,
-} from "../features/postSlice";
-import usePosts from "../hooks/usePosts";
-import useAddPost from "../hooks/useAddPost";
-import useDeletePost from "../hooks/useDeletePost";
-import useLikes from "../hooks/useLikes";
-import useBookmarks from "../hooks/useBookmarks";
-import useFollows from "../hooks/useFollows";
-import { followUser, unfollow } from "../features/followSlice";
-import useOtherUsers from "../hooks/useOtherUsers";
-import SideBar from "../components/SideBar";
-import SearchModal from "../components/SearchModal";
-import NotLoggedInModal from "../components/NotLoggedInModal";
-import supabase from "../config/supabaseClient.config";
-import JournalCard from "../components/JournalCard";
-import { AppContext } from "../context/AppContext";
-import { useInView } from "react-intersection-observer";
 
-// PostFormModal component remains unchanged
+// import Navbar from "../components/Navbar"
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
+import PostCard from "../components/PostCard"
+import Footer from "../sections/Footer"
+import { Link, useNavigate, useParams } from "react-router-dom"
+import OtherUsersCard from "../components/OtherUsersCard"
+import { useDispatch, useSelector } from "react-redux"
+import { bookmarkPost, unlike, likePost, unBookmark, getPostComments, getPosts, getLikes, getBookmarks } from "../features/postSlice"
+import usePosts from "../hooks/usePosts"
+import useAddPost from "../hooks/useAddPost"
+import useDeletePost from "../hooks/useDeletePost"
+import useLikes from "../hooks/useLikes"
+import useBookmarks from "../hooks/useBookmarks"
+import useFollows from "../hooks/useFollows"
+import { followUser, unfollow } from "../features/followSlice"
+import useOtherUsers from "../hooks/useOtherUsers"
+import SideBar from "../components/SideBar"
+import SearchModal from "../components/SearchModal"
+import NotLoggedInModal from "../components/NotLoggedInModal"
+import supabase from "../config/supabaseClient.config"
+import JournalCard from "../components/JournalCard"
+import { AppContext } from "../context/AppContext"
+
 const PostFormModal = ({ isOpen, onClose, isJournal, loggedUser, textAreaRef, postValue, setPostValue, title, setTitle, journalText, setJournalText, privacy, setPrivacy, handleSubmit, isAddingPost }) => (
   <dialog
     open={isOpen}
@@ -122,7 +114,6 @@ const PostFormModal = ({ isOpen, onClose, isJournal, loggedUser, textAreaRef, po
   </dialog>
 );
 
-// PostCardWrapper and JournalCardWrapper remain unchanged
 const PostCardWrapper = ({ post, loggedUser, follows, likes, bookmarks, isLiking, isBookmarking, isDeletingPost, navigate, dispatch, removeLike, removeBookmark, removeFollow, countComments, countBookmarks, countLikes, likedPost, bookmarkedPost, followed, deletePost }) => {
   const toggleFollow = useCallback(() => {
     const verifyFollow = follows.find((x) => x.followed_id === post.u_id && x.follower_id === loggedUser?.u_id);
@@ -141,7 +132,7 @@ const PostCardWrapper = ({ post, loggedUser, follows, likes, bookmarks, isLiking
   }, [dispatch, follows, loggedUser, post, removeFollow]);
 
   const toggleLike = useCallback(() => {
-    const verifyLike = likes.find((x) => x.post_id === PostCardWrapper.id && x.u_id === loggedUser?.u_id);
+    const verifyLike = likes.find((x) => x.post_id === post.id && x.u_id === loggedUser?.u_id);
     if (!verifyLike) {
       dispatch(likePost({
         postId: post.id,
@@ -231,6 +222,7 @@ const JournalCardWrapper = ({ post, loggedUser, likes, isLiking, isDeletingPost,
       privacy={post.privacy}
       datetime={post.created_at}
       liking={isLiking}
+      // bookmarking={isBookmarking}
       deleting={isDeletingPost}
       likes={countLikes(post.id)}
       liked={likedPost(post.id)}
@@ -249,7 +241,6 @@ const Home = () => {
   const [privacy, setPrivacy] = useState(null);
   const [showPostInModal, setShowPostInModal] = useState(false);
   const textAreaRef = useRef(null);
-  const { ref: inViewRef, inView } = useInView();
 
   const { renderErrorState, renderEmptyState, renderLoadingState, userListEmptyState } = useContext(AppContext);
   const { id: paramsId } = useParams();
@@ -257,37 +248,16 @@ const Home = () => {
   const dispatch = useDispatch();
 
   const { error, loggedUser, otherUsers, isLoading, isLoadingOtherUsers } = useSelector((state) => state.app);
-  const { likes, bookmarks, postComments, posted, isAddingPost, isDeletingPost, isBookmarking, isLiking } = useSelector((state) => state.posts);
+  const { posts, likes, bookmarks, postComments, posted, isAddingPost, isLoadingPosts, isDeletingPost, isBookmarking, isLiking } = useSelector((state) => state.posts);
   const { follows, isLoadingFollows } = useSelector((state) => state.follows);
 
-  // Use the usePosts hook
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading: isLoadingPosts,
-    error: postsError,
-  } = usePosts();
-
+  usePosts();
   const { mutate } = useAddPost();
   const { mutate: del } = useDeletePost();
   useLikes();
   useBookmarks();
   useFollows();
   useOtherUsers({ loggedId: loggedUser?.u_id, currentId: loggedUser?.u_id });
-
-  // Flatten posts from pages
-  const posts = useMemo(() => {
-    return data?.pages.flatMap((page) => page.data) || [];
-  }, [data]);
-
-  // Trigger fetchNextPage when the observer comes into view
-  useEffect(() => {
-    if (inView && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   // Handle body scroll locking
   useEffect(() => {
@@ -301,6 +271,7 @@ const Home = () => {
       .channel('schema-db-changes')
       .on('postgres_changes', { event: '*', schema: 'public' }, () => {
         setTimeout(() => {
+          dispatch(getPosts());
           dispatch(getLikes());
           dispatch(getBookmarks());
         }, 10000);
@@ -363,13 +334,11 @@ const Home = () => {
 
   // User list
   const userList = useMemo(() => {
-    if (!otherUsers?.length && !isLoading && !isLoadingOtherUsers) {
-      return (
-        <div className="w-full py-10 flex flex-col text-neutral-dark dark:text-dark-accent gap-4">
-          {userListEmptyState()}
-        </div>
-      );
-    } else {
+    if (!otherUsers?.length && !isLoading && !isLoadingOtherUsers) {return (
+      <div className="w-full py-10 flex flex-col text-neutral-dark dark:text-dark-accent gap-4">
+        userListEmptyState()
+      </div>
+    ) } else {
       return otherUsers?.slice(0, 4).map((user) => (
         <OtherUsersCard
           key={user.id}
@@ -398,141 +367,119 @@ const Home = () => {
         />
       ));
     }
+
   }, [otherUsers, loggedUser, userListEmptyState, follows, isLoadingFollows, dispatch, followed, removeFollow]);
 
   // Content rendering
   const renderContent = useMemo(() => {
-    if (isLoadingPosts) {
-      return <span className="loading loading-spinner loading-sm text-primary"></span>;
-    }
+    // if (!posts) return null;
 
-    if (postsError) {
-      return renderErrorState('Error loading posts. Please try again.');
-    }
+    if(isLoadingPosts) {
+      return ( 
+        <span className="loading loading-spinner loading-sm text-primary"></span>
+      );
+    } else {
+      if (tab === 'forYou') {
+        const allPosts = posts?.filter((post) => post.type === 'post');
 
-    if (tab === 'forYou') {
-      const allPosts = posts?.filter((post) => post.type === 'post');
-      return allPosts.length > 0 ? (
-        allPosts.map((post) => (
-          <PostCardWrapper
-            key={post.id}
-            post={post}
-            loggedUser={loggedUser}
-            follows={follows}
-            likes={likes}
-            bookmarks={bookmarks}
-            isLiking={isLiking}
-            isBookmarking={isBookmarking}
-            isDeletingPost={isDeletingPost}
-            navigate={navigate}
-            dispatch={dispatch}
-            removeLike={removeLike}
-            removeBookmark={removeBookmark}
-            removeFollow={removeFollow}
-            countComments={countComments}
-            countLikes={countLikes}
-            likedPost={likedPost}
-            bookmarkedPost={bookmarkedPost}
-            countBookmarks={countBookmarks}
-            followed={followed}
-            deletePost={deletePost}
-          />
-        ))
-      ) : (
-        <div className="w-full h-screen flex flex-col justify-center items-center">
-          {renderEmptyState('bi bi-chat-left-text', 'No posts to see yet')}
-          <p className="text-neutral-dark dark:text-dark-accent font-semibold">Start following people to see their posts here.</p>
-        </div>
-      );
-    } else if (tab === 'following') {
-      const followedIds = follows.filter((follow) => follow.follower_id === loggedUser?.u_id).map((x) => x.followed_id);
-      const followingPosts = posts.filter((post) => (post.u_id === loggedUser?.u_id || followedIds.includes(post.u_id)) && post.type === 'post');
-      return followingPosts.length > 0 ? (
-        followingPosts.map((post) => (
-          <PostCardWrapper
-            key={post.id}
-            post={post}
-            loggedUser={loggedUser}
-            follows={follows}
-            likes={likes}
-            bookmarks={bookmarks}
-            isLiking={isLiking}
-            isBookmarking={isBookmarking}
-            isDeletingPost={isDeletingPost}
-            navigate={navigate}
-            dispatch={dispatch}
-            removeLike={removeLike}
-            removeBookmark={removeBookmark}
-            removeFollow={removeFollow}
-            countComments={countComments}
-            countLikes={countLikes}
-            likedPost={likedPost}
-            bookmarkedPost={bookmarkedPost}
-            countBookmarks={countBookmarks}
-            followed={followed}
-            deletePost={deletePost}
-          />
-        ))
-      ) : (
-        <div className="w-full h-screen flex flex-col justify-center items-center">
-          {renderEmptyState('bi bi-chat-left-text', 'No posts to see yet')}
-          <p className="text-neutral-dark dark:text-dark-accent font-semibold">Start following people to see their posts here.</p>
-        </div>
-      );
-    } else if (tab === 'journal') {
-      if (!loggedUser) {
-        setTab('forYou');
-        return null;
+        return allPosts.length > 0 ? (
+          allPosts.map((post) => (
+            <PostCardWrapper
+              key={post.id}
+              post={post}
+              loggedUser={loggedUser}
+              follows={follows}
+              likes={likes}
+              bookmarks={bookmarks}
+              isLiking={isLiking}
+              isBookmarking={isBookmarking}
+              isDeletingPost={isDeletingPost}
+              navigate={navigate}
+              dispatch={dispatch}
+              removeLike={removeLike}
+              removeBookmark={removeBookmark}
+              removeFollow={removeFollow}
+              countComments={countComments}
+              countLikes={countLikes}
+              likedPost={likedPost}
+              bookmarkedPost={bookmarkedPost}
+              countBookmarks={countBookmarks}
+              followed={followed}
+              deletePost={deletePost}
+            />
+          ))
+        ) : (
+          <div className="w-full h-screen flex flex-col justify-center items-center">
+            {renderEmptyState('bi bi-chat-left-text', 'No posts to see yet')}
+            <p className="text-neutral-dark dark:text-dark-accent font-semibold">Start following people to see their posts here.</p>
+          </div>
+        );
+      } else if (tab === 'following') {
+        const followedIds = follows.filter((follow) => follow.follower_id === loggedUser?.u_id).map((x) => x.followed_id);
+        const followingPosts = posts.filter((post) => (post.u_id === loggedUser?.u_id || followedIds.includes(post.u_id)) && post.type === 'post');
+        return followingPosts.length > 0 ? (
+          followingPosts.map((post) => (
+            <PostCardWrapper
+              key={post.id}
+              post={post}
+              loggedUser={loggedUser}
+              follows={follows}
+              likes={likes}
+              bookmarks={bookmarks}
+              isLiking={isLiking}
+              isBookmarking={isBookmarking}
+              isDeletingPost={isDeletingPost}
+              navigate={navigate}
+              dispatch={dispatch}
+              removeLike={removeLike}
+              removeBookmark={removeBookmark}
+              removeFollow={removeFollow}
+              countComments={countComments}
+              countLikes={countLikes}
+              likedPost={likedPost}
+              bookmarkedPost={bookmarkedPost}
+              countBookmarks={countBookmarks}
+              followed={followed}
+              deletePost={deletePost}
+            />
+          ))
+        ) : (
+          <div className="w-full h-screen flex flex-col justify-center items-center">
+            {renderEmptyState('bi bi-chat-left-text', 'No posts to see yet')}
+            <p className="text-neutral-dark dark:text-dark-accent font-semibold">Start following people to see their posts here.</p>
+          </div>
+        );
+      } else if (tab === 'journal') {
+        if (!loggedUser) {
+          setTab('forYou');
+          return null;
+        }
+        const filterJournals = posts.filter((post) => post.type === 'journal' && (post.privacy === 'Everyone' || post.u_id === loggedUser?.u_id));
+        return filterJournals.length > 0 ? (
+          filterJournals.map((post) => (
+            <JournalCardWrapper
+              key={post.id}
+              post={post}
+              loggedUser={loggedUser}
+              likes={likes}
+              isLiking={isLiking}
+              isDeletingPost={isDeletingPost}
+              dispatch={dispatch}
+              removeLike={removeLike}
+              countLikes={countLikes}
+              likedPost={likedPost}
+              deletePost={deletePost}
+            />
+          ))
+        ) : (
+          <div className="w-full h-56 flex flex-col justify-center items-center">
+            {renderEmptyState('bi bi-journal', 'No journals to see yet')}
+          </div>
+        );
       }
-      const filterJournals = posts.filter((post) => post.type === 'journal' && (post.privacy === 'Everyone' || post.u_id === loggedUser?.u_id));
-      return filterJournals.length > 0 ? (
-        filterJournals.map((post) => (
-          <JournalCardWrapper
-            key={post.id}
-            post={post}
-            loggedUser={loggedUser}
-            likes={likes}
-            isLiking={isLiking}
-            isDeletingPost={isDeletingPost}
-            dispatch={dispatch}
-            removeLike={removeLike}
-            countLikes={countLikes}
-            likedPost={likedPost}
-            deletePost={deletePost}
-          />
-        ))
-      ) : (
-        <div className="w-full h-56 flex flex-col justify-center items-center">
-          {renderEmptyState('bi bi-journal', 'No journals to see yet')}
-        </div>
-      );
     }
-  }, [
-    tab,
-    posts,
-    loggedUser,
-    follows,
-    likes,
-    bookmarks,
-    countBookmarks,
-    renderEmptyState,
-    isLoadingPosts,
-    postsError,
-    isLiking,
-    isBookmarking,
-    isDeletingPost,
-    navigate,
-    dispatch,
-    removeLike,
-    removeBookmark,
-    removeFollow,
-    countComments,
-    countLikes,
-    likedPost,
-    bookmarkedPost,
-    followed,
-    deletePost,
-  ]);
+
+  }, [tab, posts, loggedUser, follows, likes, bookmarks, countBookmarks, renderEmptyState, isLoadingPosts, isLiking, isBookmarking, isDeletingPost, navigate, dispatch, removeLike, removeBookmark, removeFollow, countComments, countLikes, likedPost, bookmarkedPost, followed, deletePost]);
 
   const closePostFormModal = useCallback(() => {
     setShowPostInModal(false);
@@ -555,7 +502,7 @@ const Home = () => {
   };
 
   if (!isLoading && error) {
-    return renderErrorState('Network or server error occurred. Please try again later.');
+    return (renderErrorState('Network or server error occurred. Please try again later.'));
   } else {
     return (
       <div className="w-full h-screen flex flex-col items-center px-2 md:p-0 md:m-0">
@@ -581,6 +528,7 @@ const Home = () => {
         <div className={`w-full lg:grid lg:grid-cols-8 px-2 md:px-20 mt-2 md:mt-0 pb-20 md:pb-28 lg:pb-0 md:gap-2 mb-7 md:mb-14 lg:mb-0`}>
           {/* side bar */}
           {loggedUser && <SideBar uid={loggedUser?.u_id || null} page="home" toggleSearchBar={handleShowSearch} />}
+  
           <div className={loggedUser?.u_id ? 'w-full flex flex-col col-span-4 border-r-[1px] border-l-[1px] mt-5 border-black/5 dark:border-dark-accent/20' : 'w-full flex flex-col col-span-6 border-r-[1px] border-l-[1px] border-black/5 dark:border-dark-accent/20 justify-center items-center'}>
             {loggedUser?.u_id && (
               <div className="sticky top-0 flex justify-evenly text-center text-neutral-dark w-full bg-bg/90 dark:bg-black/90 backdrop-blur-md overflow-scroll no-scrollbar text-sm md:text-neutral-dark dark:text-dark-accent font-semibold z-40">
@@ -611,16 +559,7 @@ const Home = () => {
                     </div>
                   )}
                   {renderContent}
-                  {isFetchingNextPage && (
-                    <div className="py-8 flex justify-center">
-                      <span className="loading loading-spinner loading-sm text-primary"></span>
-                    </div>
-                  )}
-                  {hasNextPage && (
-                    <div ref={inViewRef} className="py-8 flex justify-center text-primary">
-                      .
-                    </div>
-                  )}
+                  <p className="py-8 flex justify-center text-primary">.</p>
                 </div>
               )}
             </div>
@@ -666,6 +605,7 @@ const Home = () => {
       </div>
     );
   }
+
 };
 
 export default Home;
