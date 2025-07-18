@@ -8,7 +8,6 @@ import Footer from "../sections/Footer";
 import Conversation from "../components/Conversation";
 import supabase from "../config/supabaseClient.config";
 import SearchModal from "../components/SearchModal";
-import useOtherUsers from "../hooks/useOtherUsers";
 import { AppContext } from "../context/AppContext";
 
 const Messages = () => {
@@ -21,7 +20,6 @@ const Messages = () => {
   const { messages, isLoadingMessages, isDeleting, errorMessages } = useSelector((state) => state.message)
   const { renderLoadingState, renderErrorState } = useContext(AppContext)
   const dispatch = useDispatch()
-  const {mutate:others} = useOtherUsers()
 
   useEffect(() => {
     // console.log(!loggedUser?.u_id)
@@ -39,12 +37,6 @@ const Messages = () => {
 
     return () => clearTimeout(timeoutId);
   }, [loggedUser?.u_id])
-
-  const getOtherusers = (uid) => {
-      if(loggedUser !== null) {
-        others(uid)
-      }
-    } 
   
   const udpatedMessageStatus = async(uid) => {
     if(loggedUser !== null || uid!== undefined) {
@@ -59,7 +51,6 @@ const Messages = () => {
   }
 
   useEffect(() => {
-    getOtherusers({loggedId:loggedUser?.u_id, currentId: loggedUser?.u_id})
     udpatedMessageStatus(loggedUser?.u_id )
   }, [loggedUser?.u_id])
 
