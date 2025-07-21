@@ -362,7 +362,7 @@ const Search = () => {
               uid={loggedUser !== null ? loggedUser.u_id : null} 
               page={'search'} />
 
-              <div className="main w-full flex flex-col col-span-4 border-[1px] border-black/5  dark:border-neutral-300/10 py-4 lg:px-5 lg:py-7 gap-2 lg:gap-5 text-neutral-dark dark:text-dark-text rounded-md">
+              <div className="main w-full flex flex-col col-span-6 xl:col-span-4 border-[1px] border-black/5  dark:border-neutral-300/10 py-4 lg:px-5 lg:py-7 gap-2 lg:gap-5 text-neutral-dark dark:text-dark-text rounded-md">
 
                 <div className="w-full flex px-3 bg-bg/50 dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">
                   <BackBtn link={() => navigate(-1)} title={'Back'}/>
@@ -398,16 +398,16 @@ const Search = () => {
                     </>
               </div>
 
-            {/* side bar */}
-            <div className="hidden sticky right-0 top-5 lg:flex flex-col gap-5 h-fit col-span-2 py-3 border-[1px] border-black/5 dark:border-neutral-300/10 rounded-md">
+              {/* side bar */}
+              <div className="hidden sticky right-0 top-5 xl:flex flex-col gap-5 h-fit col-span-2 py-3 border-[1px] border-black/5 dark:border-neutral-300/10 rounded-md">
 
-              <div>
-                <h2 className="capitalize font-bold text-xl px-3 mb-4 text-neutral-dark dark:text-neutral-lighter">Other Interests</h2>
-                {isLoadingOtherUsers ? renderLoadingState("h-10") : <div className="w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
-                  {userList}
-                </div>}
+                <div>
+                  <h2 className="capitalize font-bold text-xl px-3 mb-4 text-neutral-dark dark:text-neutral-lighter">Other Interests</h2>
+                  {isLoadingOtherUsers ? renderLoadingState("h-10") : <div className="w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
+                    {userList}
+                  </div>}
+                </div>
               </div>
-            </div>
           </div>
 
           <Footer 
