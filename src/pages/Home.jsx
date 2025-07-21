@@ -529,13 +529,13 @@ const Home = () => {
           {/* side bar */}
           {loggedUser && <SideBar uid={loggedUser?.u_id || null} page="home" toggleSearchBar={handleShowSearch} />}
   
-          <div className={loggedUser?.u_id ? 'w-full flex flex-col col-span-4 border-r-[1px] border-l-[1px] mt-5 border-black/5 dark:border-dark-accent/20' : 'w-full flex flex-col col-span-6 border-r-[1px] border-l-[1px] border-black/5 dark:border-dark-accent/20 justify-center items-center'}>
+          <div className={loggedUser?.u_id ? 'w-full flex flex-col col-span-6 xl:col-span-4 border-r-[1px] border-l-[1px] mt-5 border-black/5 dark:border-dark-accent/20' : 'w-full flex flex-col col-span-6 border-r-[1px] border-l-[1px] border-black/5 dark:border-dark-accent/20 justify-center items-center'}>
             {loggedUser?.u_id && (
-              <div className="sticky top-0 flex justify-evenly text-center text-neutral-dark w-full bg-bg/90 dark:bg-black/90 backdrop-blur-md overflow-scroll no-scrollbar text-sm md:text-neutral-dark dark:text-dark-accent font-semibold z-40">
-                <button className={`w-full ${tab === 'forYou' ? 'bg-primary/5 font-bold border-b-2 border-primary' : ''} py-3 px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('forYou')}>
+              <div className="sticky top-0 grid grid-cols-3 justify-evenly text-center text-neutral-dark w-full bg-bg/90 dark:bg-black/90 backdrop-blur-md overflow-scroll no-scrollbar text-xs md:text-sm md:text-neutral-dark dark:text-dark-accent font-semibold z-40">
+                <button className={`w-full ${tab === 'forYou' ? 'bg-primary/5 font-bold border-b-2 border-primary' : ''} py-3 px-4 md:px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('forYou')}>
                   For you
                 </button>
-                <button className={`w-full ${tab === 'following' ? 'bg-primary/5 font-bold border-b-[1px] border-primary' : ''} py-3 px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('following')}>
+                <button className={`w-full ${tab === 'following' ? 'bg-primary/5 font-bold border-b-[1px] border-primary' : ''} py-3 px-4 md:px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('following')}>
                   Following
                 </button>
                 <button className={`w-full ${tab === 'journal' ? 'bg-accent/5 font-bold border-b-[1px] border-accent' : ''} py-3 px-10 hover:bg-accent/5 cursor-pointer`} onClick={() => setTab('journal')}>
@@ -564,7 +564,7 @@ const Home = () => {
               )}
             </div>
           </div>
-          <div className="hidden sticky top-0 lg:flex flex-col gap-5 h-fit col-span-2 py-3 z-0">
+          <div className="hidden sticky top-0 xl:flex flex-col gap-5 h-fit col-span-2 py-3 z-0">
             {loggedUser?.u_id || isLoading ? (
               <>
                 <form onSubmit={handleSearch} className="flex flex-col gap-5 py-2 bg-bg dark:bg-black dark:text-dark-accent z-50">

@@ -86,7 +86,7 @@ const Footer = ({uid, page, paramsId, toggleSearchBar}) => {
   // }
 
   return (
-    <>{uid && <div className='lg:hidden w-full h-20 flex fixed justify-center bottom-0 bg-bg/90 backdrop-blur-sm dark:bg-dark-bg/90 px-4 md:px-20 z-40 border-t-[1px] border-primary/20 text-lg md:text-2xl dark:text-dark-accent'>
+    <>{uid && <div className='lg:hidden w-full h-14 md:h-20 flex fixed justify-center bottom-0 bg-bg/90 backdrop-blur-sm dark:bg-dark-bg/90 px-4 md:px-20 z-40 border-t-[1px] border-primary/20 text-lg md:text-2xl dark:text-dark-accent'>
         <ul className='w-full h-full lg:max-w-[90%] grid grid-cols-5'>
             <Link to={'/'} className=" text-neutral dark:text-dark-accent">
                 <li className={page === 'home' ? "text-primary backdrop-blur-none border-b-2 border-primary h-full flex flex-col justify-center items-center cursor-pointer" : "hover:text-primary hover hover:border-b-2 hover:border-primary h-full flex flex-col justify-center items-center cursor-pointer"}><i className={page === 'home' ? "bi-house-door-fill" : "bi-house-door"}></i></li>

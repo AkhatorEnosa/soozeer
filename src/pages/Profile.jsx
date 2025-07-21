@@ -526,7 +526,7 @@ const Profile = () => {
           toggleSearchBar={() => document.getElementById("my_modal_2").showModal()}
         />
       )}
-        <div className={`main w-full flex flex-col ${loggedUser ? "col-span-4" : "col-span-6"} border-r-[1px] border-l-[1px] border-black/5 dark:border-slate-500/20 overflow-scroll no-scrollbar`}>
+        <div className={`main w-full flex flex-col ${loggedUser ? "col-span-6 xl:col-span-4" : "col-span-8 xl:col-span-6"} border-r-[1px] border-l-[1px] border-black/5 dark:border-slate-500/20 overflow-scroll no-scrollbar`}>
           <div className="w-full flex px-3 bg-bg/50 dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">
             <BackBtn link={() => navigate(-1)} title="Back" />
           </div>
@@ -622,7 +622,7 @@ const Profile = () => {
             </div>
           </div>
         </div>
-        <div className="hidden sticky right-0 top-0 lg:flex flex-col gap-5 h-fit col-span-2 py-3">
+        <div className="hidden sticky right-0 top-0 xl:flex flex-col gap-5 h-fit col-span-2 py-3">
           {loggedUser?.u_id || isLoading ? (
             <>
               <form onSubmit={handleSearch} className="flex flex-col gap-5 py-2 bg-bg dark:bg-black z-50">

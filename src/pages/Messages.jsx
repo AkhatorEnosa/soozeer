@@ -129,7 +129,7 @@ const Messages = () => {
                 messages == 'error' ? 
                 <div className="main w-full flex flex-col justify-center items-center col-span-6 border-[1px] border-black/5 "><p>This page does not exist.</p></div> 
                 :
-                <div className={`w-full top-0 grid grid-cols-6 ${loggedUser ? "col-span-6" : "col-span-8"} gap-2 mt-5`}>
+                <div className={`w-full top-0 grid grid-cols-6 ${loggedUser ? "col-span-6" : "col-span-8"} bg-red gap-2 mt-5`}>
                   <div className={`col-span-3 border-[1px] border-black/5 dark:border-slate-500/20 h-fit rounded-md`}>
                   {/* <div className="hidden w-full lg:flex px-3 bg-bg/50 backdrop-blur-sm sticky top-0 z-[100]">
                     <BackBtn link={() => navigate(-1)} title={'Back'}/>

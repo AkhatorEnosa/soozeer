@@ -38,6 +38,18 @@ export default {
                     DEFAULT: '#CBC9C9',
                     muted: '#C0C0C0',
                 },
+            },
+            screens: {
+                'xs': '320px',    // Extra small devices (phones)
+                'sm': '640px',    // Small devices (tablets)
+                'md': '768px',    // Medium devices (small laptops)
+                'lg': '1024px',   // Large devices (desktops)
+                'xl': '1280px',   // Extra large devices (large desktops)
+                '2xl': '1536px',  // 2X large devices
+                '3xl': '1920px',  // 3X large devices (large screens)
+                
+                // You can also add custom breakpoints
+                'tall': { 'raw': '(min-height: 800px)' }, // For tall screens
             }
         }
     },
