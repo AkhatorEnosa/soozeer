@@ -493,7 +493,6 @@ const Post = () => {
   } else {
     return (
       <div className="w-full h-screen flex flex-col items-center px-2 md:p-0 md:m-0 dark:text-inherit">
-        {/* <Navbar /> */}
 
           <div className="w-full lg:grid lg:grid-cols-8 px-2 md:px-20 mt-2 md:mt-4 lg:mt-0 pb-28 lg:pb-0 md:gap-2 mb-14 lg:mb-0">
             {loggedUser && <SideBar
@@ -503,7 +502,7 @@ const Post = () => {
             {currentPost == 'error' ? <div className="main w-full flex flex-col justify-center items-center col-span-6 border-[1px] border-black/5 "><p>This page does not exist.</p></div> :
               <>
                 {isLoadingPost || isLoading ? 
-                  <div className={`main w-full flex flex-col col-span-4 border-[1px] ${loggedUser ? "col-span-4" : "col-span-6"} border-black/5  dark:border-slate-500/20`}>
+                  <div className={`main w-full flex flex-col col-span-4 border-[1px] ${loggedUser ? "col-span-6 xl:col-span-4" : "col-span-8 xl:col-span-6"} border-black/5  dark:border-slate-500/20`}>
                     <div className="flex w-full flex-col gap-4 opacity-40 px-5">
                       <div className="flex items-center gap-4">
                         <div className="skeleton dark:bg-slate-600 h-16 w-16 shrink-0 rounded-full"></div>
@@ -519,7 +518,7 @@ const Post = () => {
                   : 
 
                   // main section 
-                  <div className={`main w-full lg:h-screen flex flex-col ${loggedUser ? "col-span-4" : "col-span-6"} border-r-[1px] border-l-[1px] border-black/5  dark:border-slate-500/20 overflow-scroll no-scrollbar`}>
+                  <div className={`main w-full lg:h-screen flex flex-col ${loggedUser ? "col-span-6 xl:col-span-4" : "col-span-8 xl:col-span-6"} border-r-[1px] border-l-[1px] border-black/5  dark:border-slate-500/20 overflow-scroll no-scrollbar`}>
 
                     <div className="w-full flex justify-between px-3 bg-bg/50 dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">
                       <BackBtn link={() => navigate(-1)} title={'Back'}/>
@@ -540,7 +539,7 @@ const Post = () => {
                 }
 
                 {/* side bar */}
-              <div className="hidden sticky right-0 top-0 lg:flex flex-col gap-5 h-fit col-span-2 py-3">
+              <div className="hidden sticky right-0 top-0 xl:flex flex-col gap-5 h-fit col-span-2 py-3">
               {loggedUser?.u_id|| isLoading ? <>
                 {/* search  */}
                 <form onSubmit={handleSearch} className="flex flex-col gap-5 py-2 dark:bg-black z-50">
