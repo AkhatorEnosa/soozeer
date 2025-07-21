@@ -9,6 +9,7 @@ import Conversation from "../components/Conversation";
 import supabase from "../config/supabaseClient.config";
 import SearchModal from "../components/SearchModal";
 import { AppContext } from "../context/AppContext";
+import useOtherUsers from "../hooks/useOtherUsers";
 
 const Messages = () => {
   const [search, setSearch] = useState('')
@@ -20,18 +21,12 @@ const Messages = () => {
   const { messages, isLoadingMessages, isDeleting, errorMessages } = useSelector((state) => state.message)
   const { renderLoadingState, renderErrorState } = useContext(AppContext)
   const dispatch = useDispatch()
+  useOtherUsers({ loggedId: loggedUser?.u_id, currentId: loggedUser?.u_id });
 
   useEffect(() => {
-    // console.log(!loggedUser?.u_id)
-
     const timeoutId = setTimeout(() => {
-      if(!loggedUser?.u_id == true) {
-        // console.log("Not loggedIn")
-        // console.log(loggedUser?.u_id)
+      if(!loggedUser?.u_id) {
         navigate('/')
-      } else {
-        // console.log("Logged in")
-        // console.log(loggedUser?.u_id)
       }
     }, 1000);
 
@@ -94,8 +89,6 @@ const Messages = () => {
     } else {
       if(messages !== null  && !isLoadingMessages ) {
         if(messages?.length > 0) {
-          // console.log("group message ", groupMessages().filter(message => message.id == conversationId)[0].img)
-          // messages.map(message => console.log(message.sender_name))
           content = groupMessages().map(message => (
             <Message 
               key={message.id}
@@ -137,7 +130,7 @@ const Messages = () => {
                 <div className="main w-full flex flex-col justify-center items-center col-span-6 border-[1px] border-black/5 "><p>This page does not exist.</p></div> 
                 :
                 <div className={`w-full top-0 grid grid-cols-6 ${loggedUser ? "col-span-6" : "col-span-8"} gap-2 mt-5`}>
-                  <div className={`${loggedUser ? "col-span-3" : "col-span-4"} border-[1px] border-black/5 dark:border-slate-500/20 h-fit rounded-md`}>
+                  <div className={`col-span-3 border-[1px] border-black/5 dark:border-slate-500/20 h-fit rounded-md`}>
                   {/* <div className="hidden w-full lg:flex px-3 bg-bg/50 backdrop-blur-sm sticky top-0 z-[100]">
                     <BackBtn link={() => navigate(-1)} title={'Back'}/>
                   </div> */}

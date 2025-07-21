@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { v4 as uuidv4 } from 'uuid';
 import { addMessage } from "../features/messageSlice"
@@ -34,12 +34,6 @@ const Conversation = ({messageId, messages, userId, users, name, img}) => {
     //     .subscribe()
     // }, [])
 
-    const content = 
-                    <div className={`hidden md:flex flex-col text-center justify-center items-center h-96 text-neutral-dark dark:text-dark-accent ${userId ? "col-span-3" : "col-span-2"} border-[1px] border-black/5 dark:border-neutral-300/10 px-4 py-4 rounded-md`}>
-                        <h1 className="font-bold text-3xl">Select a message</h1>
-                        <p>Choose from your existing conversations, start a new one, or just keep soozing 😂 .</p>
-                    </div>
-
     const findMessage = messages?.find(message => message.message_id == messageId)
     // console.log(findMessage)
     
@@ -55,7 +49,7 @@ const Conversation = ({messageId, messages, userId, users, name, img}) => {
     }
 
     // scroll to current message onload 
-    useMemo(() => {
+    useEffect(() => {
         if(messageId !== 'conversations' && messagesRef.current !== null) {
             messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
             messagesRef.current.scrollIntoView({
@@ -63,18 +57,6 @@ const Conversation = ({messageId, messages, userId, users, name, img}) => {
             })
         }
     }, [messageId, messages])
-  
-    useMemo(() => {
-        if (divRef.current) {
-            divRef.current.style.height = 'auto';
-            if(divRef.current.scrollHeight <= 150) {
-                divRef.current.style.height = `${divRef.current.scrollHeight}px`
-                // console.log(divRef.current.style.height)
-            } else {
-                divRef.current.style.height = "150px";
-            }
-        }
-    }, [messageValue])
 
     // send message 
     const handleSubmit = (e) => {
@@ -90,6 +72,18 @@ const Conversation = ({messageId, messages, userId, users, name, img}) => {
             }))
         }
     }
+  
+    useEffect(() => {
+        if (divRef.current) {
+            divRef.current.style.height = 'auto';
+            if(divRef.current.scrollHeight <= 150) {
+                divRef.current.style.height = `${divRef.current.scrollHeight}px`
+                // console.log(divRef.current.style.height)
+            } else {
+                divRef.current.style.height = "150px";
+            }
+        }
+    }, [messageValue])
 
 
     useMemo(() => {
@@ -100,7 +94,7 @@ const Conversation = ({messageId, messages, userId, users, name, img}) => {
 
     if(messageId !== 'conversations') {
         if(findMessage !== undefined) {
-        // console.log(findMessage)
+        console.log(findMessage)
             // console.log(messageId)
             getConversationMessages(findMessage)
             return (
@@ -120,14 +114,12 @@ const Conversation = ({messageId, messages, userId, users, name, img}) => {
                 />
             )
         } else {
-            const matchUserWithCurrentParam = users?.find(user => user.u_id == messageId)
-            // console.log("matchUserWithCurrentParam", matchUserWithCurrentParam)
-
-            if(matchUserWithCurrentParam !== undefined) {
-    
+            const getUserWithCurrParamId = users?.find(user => user.u_id == messageId)
+            
+            if(getUserWithCurrParamId !== undefined) {
                 const getConversationMessages = () => {
                     if(findMessage == undefined) {
-                        const filterMessages = messages?.filter(x => x.sender_id == matchUserWithCurrentParam?.u_id || x.receiver_id == matchUserWithCurrentParam.u_id)
+                        const filterMessages = messages?.filter(x => x.sender_id == getUserWithCurrParamId?.u_id || x.receiver_id == getUserWithCurrParamId.u_id)
                         // console.log(filterMessages)
                         const sortMessages = filterMessages?.sort((a, b) => a.id - b.id)
 
@@ -136,9 +128,9 @@ const Conversation = ({messageId, messages, userId, users, name, img}) => {
                 }
                 return (
                     <ConversationSection 
-                        toUId={matchUserWithCurrentParam.u_id}
-                        toImg={matchUserWithCurrentParam.u_img}
-                        toName={matchUserWithCurrentParam.name}
+                        toUId={getUserWithCurrParamId.u_id}
+                        toImg={getUserWithCurrParamId.u_img}
+                        toName={getUserWithCurrParamId.name}
                         messagesRef={messagesRef}
                         divRef={divRef}
                         messageValue={messageValue}
@@ -152,13 +144,19 @@ const Conversation = ({messageId, messages, userId, users, name, img}) => {
                 )
             } else {
                 return (
-                    content
+                    <div className="hidden md:flex flex-col text-center justify-center items-center h-96 col-span-3 border-[1px] border-black/5 dark:border-neutral-300/10 px-4 py-4 rounded-md">
+                        <h1 className="font-bold text-3xl">Select a message</h1>
+                        <p>Choose from your existing conversations, start a new one, or just keep soozing 😂 .</p>
+                    </div>
                 )
             }
         }
     } else {
         return (
-            content
+            <div className="hidden md:flex flex-col text-center justify-center items-center h-96 col-span-3 border-[1px] border-black/5 dark:border-neutral-300/10 px-4 py-4 rounded-md">
+                <h1 className="font-bold text-3xl">Select a message</h1>
+                <p>Choose from your existing conversations, start a new one, or just keep soozing 😂 .</p>
+            </div>
         )
     }
 }
