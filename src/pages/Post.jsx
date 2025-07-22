@@ -251,17 +251,21 @@ const Post = () => {
     }
   };
 
+  const handleTextAreaFocus = () => {
+    textareaRef.current.focus();
+  }
+
   // Render functions
   const renderLoadingContent = () => (
-    <div className="flex w-full flex-col gap-4 opacity-15">
+    <div className="flex w-full flex-col gap-4 opacity-40">
       <div className="flex items-center gap-4">
-        <div className="skeleton dark:bg-slate-600 h-16 w-16 shrink-0 rounded-lg"></div>
+        <div className="skeleton bg-neutral-dark/20 dark:bg-slate-600 h-16 w-16 shrink-0 rounded-lg"></div>
         <div className="flex flex-col gap-4">
-          <div className="skeleton dark:bg-slate-600 h-4 w-20"></div>
-          <div className="skeleton dark:bg-slate-600 h-4 w-28"></div>
+          <div className="skeleton bg-neutral-dark/20 dark:bg-slate-600 h-4 w-20"></div>
+          <div className="skeleton bg-neutral-dark/20 dark:bg-slate-600 h-4 w-28"></div>
         </div>
       </div>
-      <div className="skeleton dark:bg-slate-600 h-96 w-full"></div>
+      <div className="skeleton bg-neutral-dark/20 dark:bg-slate-600 h-96 w-full"></div>
     </div>
   );
 
@@ -345,8 +349,8 @@ const Post = () => {
     if (isLoadingPost) {
       return (
         <div className="w-full flex gap-4">
-          <div className="skeleton dark:bg-slate-600 w-14 h-14 md:w-32 md:h-32 opacity-15"></div>
-          <div className="skeleton dark:bg-slate-600 h-32 md:h-52 w-full opacity-15"></div>
+          <div className="skeleton bg-neutral-dark/20 dark:bg-slate-600 w-14 h-14 md:w-32 md:h-32 opacity-15"></div>
+          <div className="skeleton bg-neutral-dark/20 dark:bg-slate-600 h-32 md:h-52 w-full opacity-15"></div>
         </div>
       );
     }
@@ -379,6 +383,7 @@ const Post = () => {
         following={isLoadingFollows}
         followed={followed(currentPost.u_id)}
         commentsCount={countComments(currentPost.id)}
+        focusInput={() => handleTextAreaFocus()}
         likes={countLikes(currentPost.id)}
         liked={likedPost(currentPost.id)}
         bookmarks={countBookmarks(currentPost.id)}

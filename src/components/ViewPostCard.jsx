@@ -49,7 +49,7 @@ const ViewPostCard = ({userId, deleting, liking, bookmarking, following, postUse
         {
         userId ? <div className="w-full border-t-[1px] border-black/5 px-5 py-4 gap-2 justify-between items-center text-[10px] md:text-xs pt-2 grid grid-cols-7 text-xs">
           <div className="w-full flex gap-20 col-span-6">
-            <button className={`relative z-20 flex justify-center items-center gap-1 px-2 bg-neutral-100 dark:bg-neutral-500/30 hover:bg-primary/10 rounded-full hover:text-primary cursor-pointer`}><i className="bi bi-chat text-xs md:text-base" onClick={focusInput}></i>{commentsCount} </button>
+            <button className={`relative z-20 flex justify-center items-center gap-1 px-2 bg-neutral-100 dark:bg-neutral-500/30 hover:bg-primary/10 rounded-full hover:text-primary cursor-pointer`}><i className="bi bi-chat text-xs md:text-base" onClick={() => focusInput()}></i>{commentsCount} </button>
 
             <button className={`relative z-20 flex justify-center items-center gap-1 px-2 ${liked ? "bg-[#f50569]/10 text-[#f50569]" : "bg-neutral-100 dark:bg-neutral-500/30"} hover:bg-[#f50569]/10 rounded-full hover:text-[#f50569] cursor-pointer`} onClick={likePost} disabled={liking}><i className={liked == false ? "bi bi-heart text-xs md:text-base" : "bi bi-heart-fill text-[#f50569] text-xs md:text-base"}></i>{likes} </button>
 
