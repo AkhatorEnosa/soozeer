@@ -40,7 +40,7 @@ const Notifications = () => {
       .eq('receiver_id', uid)
       .neq('creator_id', uid)
     }
-  }
+  } 
 
   useEffect(() => {
     getNotifications(loggedUser?.u_id)
@@ -203,7 +203,7 @@ let content;
 
 
               {/* side bar */}
-              <div className="side-nav hidden sticky right-0 top-5 xl:flex flex-col gap-5 h-fit xl:col-span-3 py-3 border-[1px] border-black/5 dark:border-neutral-300/10 rounded-md">
+              <div className="side-nav hidden sticky right-0 top-5 xl:flex flex-col gap-5 h-fit xl:col-span-2 py-3 border-[1px] border-black/5 dark:border-neutral-300/10 rounded-md">
 
                   <h2 className="font-bold text-xl px-3 text-neutral-dark dark:text-dark-accent">Suggested for you</h2>
                   {!loggedUser && isLoadingOtherUsers ? renderLoadingState("h-10") : <div className="w-full divide-y-[1px] divide-black/5 dark:divide-neutral-300/10">
