@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { follows } from "../features/followSlice";
 
@@ -7,28 +7,23 @@ const useFollows = () => {
 
     return useQuery({
         queryKey: ['follows'],
-        queryFn: () => {
-            const result = dispatch(follows())
-            return result;
+        queryFn: async () => {
+            try {
+                const result = await dispatch(follows()).unwrap();
+                return result || [];
+            } catch (error) {
+                console.error('Failed to fetch follows:', error);
+                throw error; 
+            }
         },
         initialData: [],
         refetchOnWindowFocus: false,
         refetchOnReconnect: true,
-        retry: true
-    })
-    // const queryClient = useQueryClient()
-    // const dispatch = useDispatch()
-  
-    // return useMutation({
-    //     mutationFn: async(profileId) => {
-    //         dispatch(follows(profileId))
-    //     },
-    //     onSuccess: () => {
-    //         queryClient.invalidateQueries({
-    //             queryKey: ['follows']
-    //         })
-    //     }
-    // })
-}
+        retry: 3,
+        onError: (error) => {
+            console.error('Follows fetch error:', error);
+        }
+    });
+};
 
-export default useFollows
+export default useFollows;

@@ -273,7 +273,7 @@ export const logOut = createAsyncThunk('app/logOut', async () => {
             return error;
         }
 
-        window.location.replace('/#/');
+        window.location.replace('/#/login');
         return 'logged_out';
     } catch (err) {
         console.error('logOut thunk failed:', err);

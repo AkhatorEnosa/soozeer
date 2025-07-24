@@ -6,12 +6,24 @@ const useOtherUsers = (uid) => {
   const dispatch = useDispatch();
 
   return useQuery({
-    queryKey: ['otherUsers', uid.loggedId, uid.currentId],
+    queryKey: ['otherUsers', uid?.loggedId, uid?.currentId],
     queryFn: async () => {
-      const result = await dispatch(getOtherUsers(uid)).unwrap(); // Assuming getOtherUsers is a thunk
-      return result;
+      try {
+        const result = await dispatch(getOtherUsers(uid)).unwrap();
+        return result || [];
+      } catch (error) {
+        console.error('Failed to fetch other users:', error);
+        throw error;
+      }
     },
-    enabled: !!uid.loggedId && !!uid.currentId, // Only run if IDs are present
+    initialData: [],
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: true,
+    retry: 3,
+    enabled: Boolean(uid?.loggedId && uid?.currentId), 
+    onError: (error) => {
+      console.error('Failed to fetch other users:', error);
+    }
   });
 };
 

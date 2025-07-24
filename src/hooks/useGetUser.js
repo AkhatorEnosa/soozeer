@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { getUser } from "../features/appSlice";
 
@@ -7,16 +7,16 @@ const useGetUser = () => {
 
     return useQuery({
         queryKey: ['user'],
-        queryFn: () => {
-            const result = dispatch(getUser())
+        queryFn: async () => {
+            const result = await dispatch(getUser()).unwrap();
             return result;
         },
-        initialData: [],
+        initialData: null, 
         refetchOnWindowFocus: false,
         refetchOnReconnect: true,
-        networkMode:"offlineFirst",
-        retry: true
-    })
-}
+        networkMode: "offlineFirst",
+        retry: 3, 
+    });
+};
 
-export default useGetUser
+export default useGetUser;
