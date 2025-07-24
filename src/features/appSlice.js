@@ -12,6 +12,7 @@ const initialState = {
     isLoadingOtherUsers: true,
     isLoadingProfile: true,
     isUpdatingProfile: false,
+    isLoadingNotifications: false,
     updated: false,
     isSendingEmail: false,
     emailSent: false,
@@ -448,11 +449,11 @@ const appSlice = createSlice({
       })
       .addCase(getNotifications.pending, (state) => {
         state.notifications = null;
-        state.isLoading = true;
+        state.isLoadingNotifications = true;
       })
       .addCase(getNotifications.fulfilled, (state, action) => {
         state.notifications = action.payload;
-        state.isLoading = false;
+        state.isLoadingNotifications = false;
       })
       .addCase(getNotifications.rejected, (state, action) => {
         state.error = action.error;

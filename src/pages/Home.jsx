@@ -22,6 +22,8 @@ import NotLoggedInModal from "../components/NotLoggedInModal"
 import supabase from "../config/supabaseClient.config"
 import JournalCard from "../components/JournalCard"
 import { AppContext } from "../context/AppContext"
+import logo1 from '../assets/logo-grayscale.png'
+import logo2 from '../assets/logo-grayscale-white.png'
 
 const PostFormModal = ({ isOpen, onClose, isJournal, loggedUser, textAreaRef, postValue, setPostValue, title, setTitle, journalText, setJournalText, privacy, setPrivacy, handleSubmit, isAddingPost }) => (
   <dialog
@@ -501,9 +503,20 @@ const Home = () => {
     }
   };
 
-  if (!isLoading && error) {
+  if(isLoading) {
+    return (
+      <div className="w-full h-screen flex flex-col gap-10 justify-center items-center">
+        <div className="flex py-4 px-10">
+            <Link to='/' className="cursor-pointer"> <img src={logo1} alt="logo" className="dark:hidden w-48 md:w-56 lg:w-72"/>  </Link>
+            <Link to='/' className="cursor-pointer"> <img src={logo2} alt="logo" className="hidden dark:flex w-48 md:w-56 lg:w-72"/> </Link>
+        </div>
+        <span className="loading loading-spinner loading-lg text-primary"></span>
+      </div>
+    );
+  }
+  else if (!isLoading && error) {
     return (renderErrorState('Network or server error occurred. Please try again later.'));
-  } else {
+  } else if (loggedUser?.u_id && !isLoading && !error) {
     return (
       <div className="w-full h-screen flex flex-col items-center px-2 md:p-0 md:m-0">
         {loggedUser && (
@@ -544,7 +557,7 @@ const Home = () => {
               </div>
             )}
             <div className="relative flex flex-col">
-              {isLoading ? (
+              {isLoadingPosts ? (
                 renderLoadingState('h-40')
               ) : (
                 <div className="relative w-full text-neutral-dark dark:text-dark-accent divide-y-[1px] divide-black/5 dark:divide-slate-500/20">

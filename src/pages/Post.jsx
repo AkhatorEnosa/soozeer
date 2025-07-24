@@ -73,7 +73,8 @@ const Post = () => {
     currentPost, 
     comments, 
     posted, 
-    isLoadingPost, 
+    isLoadingPost,
+    isLoadingComments,
     isPosting, 
     isDeletingComment, 
     errorComment 
@@ -304,7 +305,7 @@ const Post = () => {
     return (
       <div className="relative w-full h-auto flex gap-2 p-2 z-40">
         <div className="flex w-full gap-2 items-start relative">
-          <div className="flex w-8 h-8 overflow-clip z-20 rounded-full shadow-sm cursor-default">
+          <div className="flex w-8 h-8 overflow-clip border-[1px] bg-bg dark:border-dark-accent/40 z-20 rounded-full shadow-sm cursor-default">
             <img 
               src={loggedUser?.u_img} 
               alt="" 
@@ -346,6 +347,12 @@ const Post = () => {
   };
 
   const renderPostContent = () => {
+    if (errorComment) {
+      return <div className="w-full h-56 flex flex-col justify-center items-center">Network error. Try reload page.</div>;
+    }
+
+    if (!currentPost) return null;
+
     if (isLoadingPost) {
       return (
         <div className="w-full flex gap-4">
@@ -353,82 +360,95 @@ const Post = () => {
           <div className="skeleton bg-neutral-dark/20 dark:bg-slate-600 h-32 md:h-52 w-full opacity-15"></div>
         </div>
       );
+    } else {
+      return (
+        <ViewPostCard 
+          key={currentPost.id}
+          userId={loggedUser?.u_id}
+          postUserId={currentPost.u_id !== loggedUser?.u_id}
+          postUserIdVal={currentPost.u_id}
+          uImg={currentPost.u_img}
+          uName={currentPost.u_name}
+          postContent={currentPost.body}
+          datetime={currentPost.created_at}
+          postId={currentPost.id}
+          liking={isLiking}
+          bookmarking={isBookmarking}
+          deleting={isDeletingPost}
+          toggleFollow={() => handleFollowUser({
+            u_id: currentPost.u_id,
+            u_name: currentPost.u_name,
+            u_img: currentPost.u_img
+          })}
+          following={isLoadingFollows}
+          followed={followed(currentPost.u_id)}
+          commentsCount={countComments(currentPost.id)}
+          focusInput={() => handleTextAreaFocus()}
+          likes={countLikes(currentPost.id)}
+          liked={likedPost(currentPost.id)}
+          bookmarks={countBookmarks(currentPost.id)}
+          bookmarked={bookmarkedPost(currentPost.id)}
+          likePost={() => handleLikePost(currentPost)}
+          bookmarkPost={() => handleBookmarkPost(currentPost)}
+          deletePost={() => deletePost(currentPost.id)}
+        />
+      );
     }
 
-    if (errorComment) {
-      return <div className="w-full h-56 flex flex-col justify-center items-center">Network error. Try reload page.</div>;
-    }
-
-    if (!currentPost) return null;
-
-    return (
-      <ViewPostCard 
-        key={currentPost.id}
-        userId={loggedUser?.u_id}
-        postUserId={currentPost.u_id !== loggedUser?.u_id}
-        postUserIdVal={currentPost.u_id}
-        uImg={currentPost.u_img}
-        uName={currentPost.u_name}
-        postContent={currentPost.body}
-        datetime={currentPost.created_at}
-        postId={currentPost.id}
-        liking={isLiking}
-        bookmarking={isBookmarking}
-        deleting={isDeletingPost}
-        toggleFollow={() => handleFollowUser({
-          u_id: currentPost.u_id,
-          u_name: currentPost.u_name,
-          u_img: currentPost.u_img
-        })}
-        following={isLoadingFollows}
-        followed={followed(currentPost.u_id)}
-        commentsCount={countComments(currentPost.id)}
-        focusInput={() => handleTextAreaFocus()}
-        likes={countLikes(currentPost.id)}
-        liked={likedPost(currentPost.id)}
-        bookmarks={countBookmarks(currentPost.id)}
-        bookmarked={bookmarkedPost(currentPost.id)}
-        likePost={() => handleLikePost(currentPost)}
-        bookmarkPost={() => handleBookmarkPost(currentPost)}
-        deletePost={() => deletePost(currentPost.id)}
-      />
-    );
   };
 
   const renderComments = () => {
     if (!comments?.length) return null;
 
-    return comments.map(comment => (
-      <PostCard 
-        key={comment.id}
-        userId={loggedUser?.u_id}
-        postUserId={comment.u_id === loggedUser?.u_id}
-        postUserIdVal={comment.u_id}
-        uImg={comment.u_img}
-        openComment={() => navigate(`/post/${comment.id}`)}
-        uName={comment.u_name}
-        postContent={comment.body}
-        datetime={comment.created_at}
-        postId={comment.id}
-        liking={isLiking}
-        bookmarking={isBookmarking}
-        deleting={isDeletingComment}
-        toggleFollow={() => handleFollowUser({
-          u_id: comment.u_id,
-          u_name: comment.u_name,
-          u_img: comment.u_img
-        })}
-        followed={followed(comment.u_id)}
-        comments={countReplies(comment.id)}
-        likes={countLikes(comment.id)}
-        liked={likedPost(comment.id)}
-        bookmarks={countBookmarks(comment.id)}
-        bookmarked={bookmarkedPost(comment.id)}
-        likePost={() => handleLikePost(comment)}
-        bookmarkPost={() => handleBookmarkPost(comment)}
-        deletePost={() => deleteComment(comment.id)}
-      />
-    ));
+    if (errorComment) {
+      return <div className="w-full h-56 flex flex-col justify-center items-center">Network error. Try reload page.</div>;
+    }
+
+    if(isLoadingComments) {
+      return (
+        <div className="w-full flex flex-col gap-4">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <div key={index} className="flex items-center gap-4">
+              <div className="loading loading-spinner "></div>
+            </div>
+          ))}
+        </div>
+      );
+    } else {
+
+      return comments.map(comment => (
+        <PostCard 
+          key={comment.id}
+          userId={loggedUser?.u_id}
+          postUserId={comment.u_id === loggedUser?.u_id}
+          postUserIdVal={comment.u_id}
+          uImg={comment.u_img}
+          openComment={() => navigate(`/post/${comment.id}`)}
+          uName={comment.u_name}
+          postContent={comment.body}
+          datetime={comment.created_at}
+          postId={comment.id}
+          liking={isLiking}
+          bookmarking={isBookmarking}
+          deleting={isDeletingComment}
+          toggleFollow={() => handleFollowUser({
+            u_id: comment.u_id,
+            u_name: comment.u_name,
+            u_img: comment.u_img
+          })}
+          followed={followed(comment.u_id)}
+          comments={countReplies(comment.id)}
+          likes={countLikes(comment.id)}
+          liked={likedPost(comment.id)}
+          bookmarks={countBookmarks(comment.id)}
+          bookmarked={bookmarkedPost(comment.id)}
+          likePost={() => handleLikePost(comment)}
+          bookmarkPost={() => handleBookmarkPost(comment)}
+          deletePost={() => deleteComment(comment.id)}
+        />
+      ));
+    }
+    
   };
 
   const renderSidebar = () => (
@@ -505,9 +525,9 @@ const Post = () => {
             } border-r-[1px] border-l-[1px] border-black/5 dark:border-slate-500/20 overflow-scroll no-scrollbar`}>
               <div className="w-full flex justify-between px-3 bg-bg/50 dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">
                 <BackBtn link={() => navigate(-1)} title={'Back'}/>
-                {currentPost?.post_id && (
+                {/* {currentPost?.post_id && (
                   <BackBtn link={() => navigate(`/post/${currentPost.post_id}`)} title={'Jump to origin'}/>
-                )}
+                )} */}
               </div>
 
               <div>
@@ -515,7 +535,7 @@ const Post = () => {
                 {renderNewCommentForm()}
               </div>
               <div>
-                {renderComments()}
+                {!isLoading && renderComments()}
                 <p className="py-8 flex justify-center text-primary">.</p>
               </div>
             </div>

@@ -11,7 +11,7 @@ const initialState = {
     commentBookmarks: [],
     isPosting: false,
     posted: false,
-    isLoadingComment: false,
+    isLoadingComment: true,
     isLikingComment: false,
     isBookmarkingComment: false,
     isDeletingComment: false,
@@ -374,9 +374,11 @@ const singlePostSlice = createSlice({
             })
             .addCase(getComments.pending, (state) => {
                 state.isLoadingComment = true;
+                console.log("Fetching comments...")
             })
             .addCase(getComments.fulfilled, (state, action) => {
                 state.comments = action.payload,
+                console.log("Comments fetched:", action.payload),
                 state.isLoadingComment = false
             })
             .addCase(getComments.rejected, (state, action) => {
