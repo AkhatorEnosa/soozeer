@@ -503,7 +503,7 @@ const Home = () => {
     }
   };
 
-  if(isLoading) {
+  if(isLoading && !error) {
     return (
       <div className="w-full h-screen flex flex-col gap-10 justify-center items-center">
         <div className="flex py-4 px-10">
@@ -516,7 +516,7 @@ const Home = () => {
   }
   else if (!isLoading && error) {
     return (renderErrorState('Network or server error occurred. Please try again later.'));
-  } else if (loggedUser?.u_id && !isLoading && !error) {
+  } else if (!isLoading && !error) {
     return (
       <div className="w-full h-screen flex flex-col items-center px-2 md:p-0 md:m-0">
         {loggedUser && (
