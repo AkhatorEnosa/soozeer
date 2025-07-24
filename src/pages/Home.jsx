@@ -557,8 +557,10 @@ const Home = () => {
               </div>
             )}
             <div className="relative flex flex-col">
-              {isLoadingPosts ? (
-                renderLoadingState('h-40')
+              {isLoading || isLoadingPosts ? (
+                <div className="w-full flex flex-col gap-4 p-5">
+                  <span className="loading loading-spinner loading-lg text-primary"></span>
+                </div>
               ) : (
                 <div className="relative w-full text-neutral-dark dark:text-dark-accent divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
                   {loggedUser && (
