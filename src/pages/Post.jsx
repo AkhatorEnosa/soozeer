@@ -531,8 +531,7 @@ const Post = () => {
               </div>
 
               <div>
-                {isLoadingPost || isLoading ? renderLoadingContent() : renderPostContent()}
-                {renderNewCommentForm()}
+                {isLoadingPost || isLoading ? renderLoadingContent() : <>{renderPostContent()}  {renderNewCommentForm()}</>}
               </div>
               <div>
                 {!isLoading && renderComments()}
