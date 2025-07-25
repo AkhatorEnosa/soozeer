@@ -18,7 +18,7 @@ import { AppContext } from "../context/AppContext"
 const Notifications = () => {
   const [search, setSearch] = useState('')
 
-  const {error, notifications, loggedUser, otherUsers, isLoading, isLoadingOtherUsers} = useSelector((state) => state.app)
+  const {error, notifications, loggedUser, otherUsers, isLoading, isLoadingNotifications, isLoadingOtherUsers} = useSelector((state) => state.app)
   const { renderLoadingState, renderErrorState } = useContext(AppContext)
   const {mutate} = useNotifications()
   const dispatch = useDispatch()
@@ -143,7 +143,7 @@ let content;
           userList = <h1 className="w-full h-56 flex flex-col gap-4 justify-center items-center z-50 text-9xl"><i className="bi bi-people"></i> <p className="text-base">No body to see, yet!</p></h1>
       }
 
-    if(isLoading) {
+    if(isLoading || isLoadingNotifications) {
         content = renderLoadingState("h-20")
     }else {
         if(loggedUser !== null && notifications !== null && notifications.length > 0){
