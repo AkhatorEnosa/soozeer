@@ -376,11 +376,11 @@ const Home = () => {
   const renderContent = useMemo(() => {
     // if (!posts) return null;
 
-    if(isLoadingPosts) {
-      return ( 
-        <span className="loading loading-spinner loading-sm text-primary"></span>
-      );
-    } else {
+    // if(isLoadingPosts) {
+    //   return ( 
+    //     <span className="loading loading-spinner loading-sm text-primary"></span>
+    //   );
+    // } else {
       if (tab === 'forYou') {
         const allPosts = posts?.filter((post) => post.type === 'post');
 
@@ -411,9 +411,8 @@ const Home = () => {
             />
           ))
         ) : (
-          <div className="w-full h-screen flex flex-col justify-center items-center">
+          <div className="w-full flex flex-col justify-center items-center">
             {renderEmptyState('bi bi-chat-left-text', 'No posts to see yet')}
-            <p className="text-neutral-dark dark:text-dark-accent font-semibold">Start following people to see their posts here.</p>
           </div>
         );
       } else if (tab === 'following') {
@@ -446,9 +445,8 @@ const Home = () => {
             />
           ))
         ) : (
-          <div className="w-full h-screen flex flex-col justify-center items-center">
+          <div className="w-full flex flex-col justify-center items-center">
             {renderEmptyState('bi bi-chat-left-text', 'No posts to see yet')}
-            <p className="text-neutral-dark dark:text-dark-accent font-semibold">Start following people to see their posts here.</p>
           </div>
         );
       } else if (tab === 'journal') {
@@ -474,12 +472,12 @@ const Home = () => {
             />
           ))
         ) : (
-          <div className="w-full h-56 flex flex-col justify-center items-center">
+          <div className="w-full flex flex-col justify-center items-center">
             {renderEmptyState('bi bi-journal', 'No journals to see yet')}
           </div>
         );
       }
-    }
+    // }
 
   }, [tab, posts, loggedUser, follows, likes, bookmarks, countBookmarks, renderEmptyState, isLoadingPosts, isLiking, isBookmarking, isDeletingPost, navigate, dispatch, removeLike, removeBookmark, removeFollow, countComments, countLikes, likedPost, bookmarkedPost, followed, deletePost]);
 
@@ -510,7 +508,7 @@ const Home = () => {
             <Link to='/' className="cursor-pointer"> <img src={logo1} alt="logo" className="dark:hidden w-48 md:w-56 lg:w-72"/>  </Link>
             <Link to='/' className="cursor-pointer"> <img src={logo2} alt="logo" className="hidden dark:flex w-48 md:w-56 lg:w-72"/> </Link>
         </div>
-        <span className="loading loading-spinner loading-lg text-primary"></span>
+        <span className="loading loading-spinner loading-lg text-neutral-dark dark:text-bg"></span>
       </div>
     );
   }
@@ -559,7 +557,7 @@ const Home = () => {
             <div className="relative flex flex-col">
               {isLoading || isLoadingPosts ? (
                 <div className="w-full flex flex-col gap-4 p-5">
-                  <span className="loading loading-spinner loading-lg text-primary"></span>
+                  {renderLoadingState('h-40')}
                 </div>
               ) : (
                 <div className="relative w-full text-neutral-dark dark:text-dark-accent divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
