@@ -374,11 +374,9 @@ const singlePostSlice = createSlice({
             })
             .addCase(getComments.pending, (state) => {
                 state.isLoadingComment = true;
-                console.log("Fetching comments...")
             })
             .addCase(getComments.fulfilled, (state, action) => {
                 state.comments = action.payload,
-                console.log("Comments fetched:", action.payload),
                 state.isLoadingComment = false
             })
             .addCase(getComments.rejected, (state, action) => {
