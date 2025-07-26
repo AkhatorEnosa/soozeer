@@ -3,9 +3,10 @@ import supabase from "../config/supabaseClient.config";
 import { showErrorToast, showSuccessToast } from "../utils/toastNotify";
 
 const initialState = {
-    profileUser: null,
+    allUsers: null,
     loggedUser: null,
     otherUsers: null,
+    profileUser: null,
     searchedUsers: [],
     notifications: [],
     isLoading: true,
@@ -137,9 +138,27 @@ export const getUser = createAsyncThunk('app/getUser', async () => {
     }
 });
 
+export const getUsers = createAsyncThunk('app/getUsers', async () => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select()
+        .order(randomizeSortFilter(), { ascending: false });
+      if (error) {
+        console.error('Error fetching users:', error);
+        return 'error';
+      }
+      return data || [];
+    } catch (error) {
+        console.error('getUsers failed:', error);
+        return 'error';
+    }
+})
+
 
 export const getProfile = createAsyncThunk('app/getProfile', async (profileId) => {
   try {
+    if(profileId) {
       const { data, error } = await supabase
           .from('profiles')
           .select()
@@ -151,6 +170,8 @@ export const getProfile = createAsyncThunk('app/getProfile', async (profileId) =
       }
 
       return data?.[0] || null;
+    }
+
   } catch (err) {
       console.error('getProfile failed:', err);
       return 'error';
@@ -400,6 +421,18 @@ const appSlice = createSlice({
       .addCase(getUser.rejected, (state, action) => {
         state.error = action.error;
         state.loggedUser = null;
+        state.isLoading = false;
+      })
+      .addCase(getUsers.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getUsers.fulfilled, (state, action) => {
+        state.allUsers = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(getUsers.rejected, (state, action) => {
+        state.error = action.error;
+        state.allUsers = null;
         state.isLoading = false;
       })
       .addCase(getProfile.pending, (state) => {

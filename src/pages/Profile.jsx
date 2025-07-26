@@ -34,6 +34,7 @@ import SearchModal from "../components/SearchModal";
 import NotLoggedInModal from "../components/NotLoggedInModal";
 import Footer from "../sections/Footer";
 import BackBtn from "../components/BackBtn";
+import useGetUsers from "../hooks/useGetUsers";
 
 // Profile component
 const Profile = () => {
@@ -58,24 +59,25 @@ const Profile = () => {
 
   // Hooks and navigation
   const navigate = useNavigate();
-  const { id: profileId } = useParams();
+  const { id: profile_Uname } = useParams();
   const dispatch = useDispatch();
   const { renderLoadingState, renderEmptyState, userListEmptyState, renderErrorState } = useContext(AppContext);
-  const { error, profileUser, loggedUser, otherUsers, isLoading, isLoadingProfile, isLoadingOtherUsers, isUpdatingProfile, updated } = useSelector((state) => state.app);
+  const { error, profileUser, loggedUser, allUsers, otherUsers, isLoading, isLoadingProfile, isLoadingOtherUsers, isUpdatingProfile, updated } = useSelector((state) => state.app);
   const { posts, replies, postComments, likedPosts, bookmarkedPosts, likes, bookmarks, isLoadingPosts, isDeletingPost, isBookmarking, isLiking } = useSelector((state) => state.posts);
   const { follows, isLoadingFollows } = useSelector((state) => state.follows);
 
 
-  // const getProfileId = () => {
-  //   if(profileId) {
-  //     const findUser = otherUsers?.find(user => user.u_id === postUserIdVal);
-  //     if(findUser) {
-  //       return findUser.u_name;
-  //     }
-  //   }
-  // }
+  const getProfileId = () => {
+    if(profile_Uname) {
+      const findUser = allUsers?.find(user => user?.u_name === profile_Uname);
+      if(findUser) {
+        return findUser.u_id;
+      }
+    }
+  }
 
   // Custom hooks
+  useGetUsers();
   usePosts();
   useReplies();
   useAddPost();
@@ -83,17 +85,21 @@ const Profile = () => {
   useBookmarks();
   useComments();
   useFollows();
-  useOtherUsers({ loggedId: loggedUser?.u_id, currentId: profileId });
+  useOtherUsers({ loggedId: loggedUser?.u_id, currentId: getProfileId() });
   const { mutate: del } = useDeletePost();
   const { mutate: profile } = useGetCurrentProfile();
   const { mutate: profileLikedPosts } = useGetLikedPosts();
   const { mutate: profileBookmarkedPosts } = useGetBookmarkedPosts();
 
   // Memoized profile data fetching
+  const profileId = getProfileId();
+
   useMemo(() => {
-    profile(profileId);
-    profileLikedPosts(profileId);
-    profileBookmarkedPosts(profileId);
+    if(profileId) {
+      profile(profileId);
+      profileLikedPosts(profileId);
+      profileBookmarkedPosts(profileId);
+    }
   }, [profile, profileId, profileLikedPosts, profileBookmarkedPosts]);
 
   // Handle body scroll lock for modals
@@ -106,7 +112,7 @@ const Profile = () => {
   useEffect(() => {
     setCurrentProfile({ ...profileUser });
     setProfilePic(profileUser?.u_img);
-  }, [profileId, loggedUser?.u_id, profileUser?.u_id]);
+  }, [getProfileId(), loggedUser?.u_id, profileUser?.u_id]);
 
   // Handle profile update completion
   useEffect(() => {
@@ -123,8 +129,8 @@ const Profile = () => {
     return `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, "0")}-${today.getDate().toString().padStart(2, "0")}`;
   };
 
-  const getFollowings = () => follows?.filter((follow) => follow.follower_id === profileId) || [];
-  const getFollowers = () => follows?.filter((follow) => follow.followed_id === profileId) || [];
+  const getFollowings = () => follows?.filter((follow) => follow.follower_id === getProfileId()) || [];
+  const getFollowers = () => follows?.filter((follow) => follow.followed_id === getProfileId()) || [];
 
   // Toggle Search Bar 
   const handleShowSearch = () => {
@@ -277,16 +283,20 @@ const Profile = () => {
 
   // Render posts
   const renderPosts = () => {
-    const filteredPosts = posts?.filter((post) => post?.u_id === profileId && post.type === "post");
+    const filteredPosts = posts?.filter((post) => post?.u_id === getProfileId() && post.type === "post");
     if (!filteredPosts?.length) return renderEmptyState("bi-chat-text", "No Posts yet!");
     return filteredPosts.map((post) => (
-      <PostCard key={post.id} {...getCommonPostProps(post)} {...getPostInteractionHandlers(post)} />
+      <PostCard 
+        key={post.id} 
+        users={allUsers}
+        {...getCommonPostProps(post)} 
+        {...getPostInteractionHandlers(post)} />
     ));
   };
 
   // Render likes
   const renderLikes = () => {
-    if (loggedUser?.u_id !== profileId) {
+    if (loggedUser?.u_id !== getProfileId()) {
       setTab("posts");
       return null;
     }
@@ -294,44 +304,64 @@ const Profile = () => {
     if (!sortedLikedPosts.length) return renderEmptyState("bi-heart", "No Likes yet!");
     return sortedLikedPosts.map((post) =>
       post.type === "post" ? (
-        <PostCard key={post.id} {...getCommonPostProps(post)} {...getPostInteractionHandlers(post)} />
+        <PostCard 
+          key={post.id} 
+          users={allUsers}
+          {...getCommonPostProps(post)} 
+          {...getPostInteractionHandlers(post)} />
       ) : (
-        <JournalCard key={post.id} {...getCommonJournalProps(post)} {...getPostInteractionHandlers(post)} />
+        <JournalCard 
+          key={post.id} 
+          users={allUsers}
+          {...getCommonJournalProps(post)} 
+          {...getPostInteractionHandlers(post)} />
       )
     );
   };
 
   // Render replies
   const renderReplies = () => {
-    const filteredReplies = replies?.filter((reply) => reply?.u_id === profileId && reply?.post_id !== 0);
+    const filteredReplies = replies?.filter((reply) => reply?.u_id === getProfileId() && reply?.post_id !== 0);
     if (!filteredReplies.length) return renderEmptyState("bi-chat-text", "No Replies Yet!");
     return filteredReplies.map((reply) => (
-      <PostCard key={reply.id} {...getCommonPostProps(reply)} {...getPostInteractionHandlers(reply)} />
+      <PostCard 
+        key={reply.id} 
+        users={allUsers}
+        {...getCommonPostProps(reply)} 
+        {...getPostInteractionHandlers(reply)} />
     ));
   };
 
   // Render journals
   const renderJournals = () => {
     const filterJournals =
-      loggedUser?.u_id === profileId
+      loggedUser?.u_id === getProfileId()
         ? posts.filter((post) => post.type === "journal" && post.u_id === loggedUser?.u_id)
-        : posts.filter((post) => post.type === "journal" && post.privacy === "Everyone" && post.u_id === profileId);
+        : posts.filter((post) => post.type === "journal" && post.privacy === "Everyone" && post.u_id === getProfileId());
     if (!filterJournals?.length) return renderEmptyState("bi-chat-text", "No Journals Yet!");
     return filterJournals.map((post) => (
-      <JournalCard key={post.id} {...getCommonJournalProps(post)} {...getPostInteractionHandlers(post)} />
+      <JournalCard 
+        key={post.id} 
+        users={allUsers}
+        {...getCommonJournalProps(post)} 
+        {...getPostInteractionHandlers(post)} />
     ));
   };
 
   // Render bookmarks
   const renderBookmarks = () => {
-    if (loggedUser?.u_id !== profileId) {
+    if (loggedUser?.u_id !== getProfileId()) {
       setTab("posts");
       return null;
     }
     const sortedBookmarkedPosts = [...(bookmarkedPosts || [])].sort((a, b) => b.bookmarks[0].id - a.bookmarks[0].id);
     if (!sortedBookmarkedPosts?.length) return renderEmptyState("bi-bookmark-dash", "No Bookmarks yet!");
     return sortedBookmarkedPosts.map((post) => (
-      <PostCard key={post.id} {...getCommonPostProps(post)} {...getPostInteractionHandlers(post)} />
+      <PostCard 
+        key={post.id} 
+        users={allUsers}
+        {...getCommonPostProps(post)} 
+        {...getPostInteractionHandlers(post)} />
     ));
   };
 
@@ -538,7 +568,7 @@ const Profile = () => {
           uid={loggedUser.u_id}
           uName={loggedUser?.u_name || ''}
           page="profile"
-          paramsId={profileId}
+          paramsId={getProfileId()}
           toggleSearchBar={() => document.getElementById("my_modal_2").showModal()}
         />
       )}
@@ -591,16 +621,16 @@ const Profile = () => {
                       <p className="hover:underline cursor-pointer" onClick={() => { setShowFollowsModal(true); setFollowType("followers"); }}>{getFollowers().length} Followers</p>
                     </div>
                   </div>
-                  {loggedUser && profileId !== loggedUser?.u_id && (
+                  {loggedUser && getProfileId() !== loggedUser?.u_id && (
                     <div className="absolute right-4 h-fit flex gap-2 items-center">
-                      <button className="flex size-8 lg:size-10 gap-1 justify-center items-center text-[10px] md:text-sm text-primary border-[1px] border-primary rounded-full hover:bg-primary hover:text-white" onClick={() => navigate(`/messages/${profileId}`)}>
+                      <button className="flex size-8 lg:size-10 gap-1 justify-center items-center text-[10px] md:text-sm text-primary border-[1px] border-primary rounded-full hover:bg-primary hover:text-white" onClick={() => navigate(`/messages/${getProfileId()}`)}>
                         <i className="bi bi-envelope"></i>
                       </button>
                       <button
-                        className={followed(profileId) ? "group w-fit flex gap-1 justify-center items-center text-[10px] md:text-sm px-2 py-2 text-white bg-primary rounded-full hover:bg-neutral hover:text-white hover:border-neutral transition-all duration-300" : "flex w-fit h-fit gap-1 justify-center items-center text-[10px] md:text-sm px-2 py-2 text-primary border-[1px] border-primary rounded-full hover:bg-primary hover:text-white"}
-                        onClick={() => handleFollowToggle({ u_id: profileId, name: currentProfile.name, u_img: currentProfile.u_img })}
+                        className={followed(getProfileId()) ? "group w-fit flex gap-1 justify-center items-center text-[10px] md:text-sm px-2 py-2 text-white bg-primary rounded-full hover:bg-neutral hover:text-white hover:border-neutral transition-all duration-300" : "flex w-fit h-fit gap-1 justify-center items-center text-[10px] md:text-sm px-2 py-2 text-primary border-[1px] border-primary rounded-full hover:bg-primary hover:text-white"}
+                        onClick={() => handleFollowToggle({ u_id: getProfileId(), name: currentProfile.name, u_img: currentProfile.u_img })}
                       >
-                        {followed(profileId) ? (
+                        {followed(getProfileId()) ? (
                           <>
                             <span className="followed group-hover:hidden flex gap-2 justify-center items-center"><i className="bi bi-patch-check-fill"></i> Following</span>
                             <span className="hidden group-hover:flex gap-2 justify-center items-center"><i className="bi bi-x-circle-fill"></i> Unfollow</span>
@@ -614,15 +644,15 @@ const Profile = () => {
                 </div>
               </div>
             )}
-            {profileId === loggedUser?.u_id && (
+            {getProfileId() === loggedUser?.u_id && (
               <button onClick={handleShowEdit} className="absolute right-3 top-0 z-40 flex gap-2 justify-center m-2 bg-black hover:bg-primary cursor-pointer w-7 h-7 md:w-10 md:h-10 items-center text-sm md:text-lg text-white rounded-full shadow-md" title="Edit Bio">
                 <i className="bi bi-pencil-square"></i>
               </button>
             )}
           </div>
           <div className="tabs divide-y-[1px] divide-black/5 dark:divide-slate-500/20 flex flex-col items-center">
-            <ul className={`grid ${loggedUser?.u_id === profileId ? "w-full grid-cols-5" : "w-full grid-cols-3"} justify-between overflow-scroll no-scrollbar text-sm md:text-neutral-dark font-medium text-neutral-dark dark:text-dark-accent bg-bg/50 dark:bg-black/50 backdrop-blur-sm sticky top-10 z-[100]`} ref={tabsRef}>
-              {["posts", "replies", "journals", ...(loggedUser?.u_id === profileId ? ["likes", "bookmarks"] : [])].map((tabName) => (
+            <ul className={`grid ${loggedUser?.u_id === getProfileId() ? "w-full grid-cols-5" : "w-full grid-cols-3"} justify-between overflow-scroll no-scrollbar text-sm md:text-neutral-dark font-medium text-neutral-dark dark:text-dark-accent bg-bg/50 dark:bg-black/50 backdrop-blur-sm sticky top-10 z-[100]`} ref={tabsRef}>
+              {["posts", "replies", "journals", ...(loggedUser?.u_id === getProfileId() ? ["likes", "bookmarks"] : [])].map((tabName) => (
                 <li
                   key={tabName}
                   className={tab === tabName ? "w-full text-center border-b-2 border-primary dark:text-neutral-lightest py-3 px-0 cursor-pointer" : "w-full text-center hover:border-b-2 border-primary/30 hover:bg-primary/5 py-3 px-0 cursor-pointer"}
@@ -786,7 +816,7 @@ const Profile = () => {
         uid={loggedUser?.u_id || null} 
         uName={loggedUser?.u_name || null}
         page="profile" 
-        paramsId={profileId}
+        paramsId={getProfileId()}
         toggleSearchBar={handleShowSearch} 
       />
       <NotLoggedInModal uid={loggedUser?.u_id} />

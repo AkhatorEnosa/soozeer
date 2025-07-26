@@ -12,7 +12,7 @@ const useGetCurrentProfile = () => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ['users']
+                queryKey: ['userProfile']
             })
         }
     })
