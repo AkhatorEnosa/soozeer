@@ -98,7 +98,8 @@ const Conversation = ({messageId, messages, userId, users, name, img}) => {
             // console.log(messageId)
             getConversationMessages(findMessage)
             return (
-                <ConversationSection 
+                <ConversationSection
+                    users={users} 
                     toUId={findMessage.sender_id}
                     toImg={findMessage.sender_img}
                     toName={findMessage.sender_name}
@@ -128,6 +129,7 @@ const Conversation = ({messageId, messages, userId, users, name, img}) => {
                 }
                 return (
                     <ConversationSection 
+                        users={users}
                         toUId={getUserWithCurrParamId.u_id}
                         toImg={getUserWithCurrParamId.u_img}
                         toName={getUserWithCurrParamId.name}

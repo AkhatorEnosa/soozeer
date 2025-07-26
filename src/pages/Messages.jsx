@@ -142,9 +142,9 @@ const Messages = () => {
                   </div>
                   
                   <Conversation 
+                    users={otherUsers && [...otherUsers, loggedUser]}
                     messageId = {paramsId}
                     messages={messages}
-                    users={otherUsers}
                     userId={loggedUser?.u_id}
                     name={loggedUser?.name}
                     img={loggedUser?.u_img}

@@ -151,6 +151,7 @@ let content;
             content = sortNotifications.map(x => (
                <NotificationCard 
                 key={x.id}
+                users={otherUsers && [...otherUsers, loggedUser]}
                 action={x.for}
                 name={x.creator_name}
                 postId={x.post_id}

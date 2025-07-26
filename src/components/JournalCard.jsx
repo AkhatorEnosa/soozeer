@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 
 /* eslint-disable react/prop-types */
-const JournalCard = ({privacy, postUserIdVal, postUserId, title, journal, uImg, uName, liked, likes, likePost, deletePost, liking, deleting, datetime}) => {
+const JournalCard = ({users, privacy, postUserIdVal, postUserId, title, journal, uImg, uName, liked, likes, likePost, deletePost, liking, deleting, datetime}) => {
 
   const [showDelete, setShowDelete] = useState(false)
   const [expandPost, setExpandPost] = useState(false)
@@ -30,6 +30,15 @@ const JournalCard = ({privacy, postUserIdVal, postUserId, title, journal, uImg, 
     } else {
 
       return text
+    }
+  }
+
+  const getPostUserName = () => {
+    if(postUserIdVal) {
+      const findUser = users?.find(user => user.u_id === postUserIdVal);
+      if(findUser) {
+        return findUser.u_name;
+      }
     }
   }
 
@@ -65,7 +74,7 @@ const JournalCard = ({privacy, postUserIdVal, postUserId, title, journal, uImg, 
                 <div className={`w-fit p-2 rounded-full flex px-2 py-0 ${liked ? "bg-[#FFD700]/10 text-accent" : "bg-neutral-100 dark:bg-neutral-500/30"} hover:text-accent hover:bg-accent/10 cursor-pointer`} title="Star this journal" onClick={likePost} disabled={liking}>
                     <span className="flex justify-center items-center text-sm gap-1 font-light rounded-full transition-all duration-150"><i className={`${liked ? "bi bi-star-fill" : "bi bi-star"}`}></i>{likes}</span>
                 </div>
-                <Link to={`/${postUserIdVal}`} className="w-fit flex items-center justify-end gap-2 px-3 py-2 rounded-full font-semibold hover:bg-primary/5 text-inherit dark:text-[#cbc9c9] hover:underline">
+                <Link to={`/${getPostUserName()}`} className="w-fit flex items-center justify-end gap-2 px-3 py-2 rounded-full font-semibold hover:bg-primary/5 text-inherit dark:text-[#cbc9c9] hover:underline">
                     <img src={uImg} alt="" className="relative z-20 w-6 h-6 object-cover object-center rounded-full  shadow-sm cursor-default border-[1px] border-neutral-500" width={80} height={80}/>
                     <span className="cursor-pointer">{uName}</span>
                 </Link>

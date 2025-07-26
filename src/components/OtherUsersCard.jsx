@@ -10,7 +10,7 @@ const OtherUsersCard = ({uid, userIdVal, userImg, name, uName, followed, followi
             <div className="w-10 h-10 flex justify-center items-center rounded-full cursor-default overflow-hidden">
               <img src={userImg} alt="" className="w-full h-full object-cover" loading="lazy"/>
             </div>
-            <Link to={`../${userIdVal}`}>
+            <Link to={`../${uName}`}>
               <p className="w-fit text-neutral-dark dark:text-dark-accent hover:underline font-semibold line-clamp-1">{name}</p>
               <span className="text-neutral-400 text-xs cursor-default">@{uName}</span>
             </Link>

@@ -270,6 +270,7 @@ const Home = () => {
     return (
       <JournalCard
         key={post.id}
+        users={otherUsers && [...otherUsers, loggedUser]}
         postUserId={post.u_id === loggedUser?.u_id}
         postUserIdVal={post.u_id}
         uImg={post.u_img}

@@ -65,6 +65,16 @@ const Profile = () => {
   const { posts, replies, postComments, likedPosts, bookmarkedPosts, likes, bookmarks, isLoadingPosts, isDeletingPost, isBookmarking, isLiking } = useSelector((state) => state.posts);
   const { follows, isLoadingFollows } = useSelector((state) => state.follows);
 
+
+  // const getProfileId = () => {
+  //   if(profileId) {
+  //     const findUser = otherUsers?.find(user => user.u_id === postUserIdVal);
+  //     if(findUser) {
+  //       return findUser.u_name;
+  //     }
+  //   }
+  // }
+
   // Custom hooks
   usePosts();
   useReplies();

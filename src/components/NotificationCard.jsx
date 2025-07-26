@@ -1,7 +1,16 @@
 import { Link } from "react-router-dom"
 
 /* eslint-disable react/prop-types */
-const NotificationCard = ({action, postId, viewStatus, commentId, img, name, post, followerId}) => {
+const NotificationCard = ({users, action, postId, viewStatus, commentId, img, name, post, followerId}) => {
+
+  const getUserName = () => {
+    if(users) {
+      const findUser = users.find(user => user.u_id === followerId);
+      if(findUser) {
+        return findUser.u_name;
+      }
+    }
+  }
 
   const validateSize = (text) => {
     const strLength = text.length
@@ -23,7 +32,7 @@ const NotificationCard = ({action, postId, viewStatus, commentId, img, name, pos
             <div className="w-full flex gap-2 md:gap-4 items-start">
               <img src={img} className="w-10 h-10 object-cover object-center rounded-full cursor-default" loading="lazy"/>
               <div className="w-full flex flex-col">
-                <span><b><Link to={`/${followerId}`} className="text-neutral dark:text-[#CBC9C9] hover:underline">{name}</Link></b> liked your post</span>
+                <span><b><Link to={`/${getUserName()}`} className="text-neutral dark:text-[#CBC9C9] hover:underline">{name}</Link></b> liked your post</span>
                 <p className="text-black/40 dark:text-neutral-400 text-sm">{validateSize(post)}</p>
               </div>
             </div>
@@ -46,7 +55,7 @@ const NotificationCard = ({action, postId, viewStatus, commentId, img, name, pos
             <div className="w-full flex gap-2 md:gap-4 items-start">
               <img src={img} className="w-10 h-10 object-cover object-center rounded-full cursor-default" loading="lazy"/>
               <div className="w-full flex flex-col">
-                <span><b><Link to={`/${followerId}`} className="text-neutral dark:text-[#CBC9C9] hover:underline">{name}</Link></b> gave your public journal a star</span>
+                <span><b><Link to={`/${getUserName()}`} className="text-neutral dark:text-[#CBC9C9] hover:underline">{name}</Link></b> gave your public journal a star</span>
                 <p className="text-black/40 dark:text-neutral-400 text-sm">{validateSize(post)}</p>
               </div>
             </div>
@@ -65,11 +74,11 @@ const NotificationCard = ({action, postId, viewStatus, commentId, img, name, pos
           </Link>  : 
 
           action === 'follow' ? 
-          <Link to={`/${followerId}`} className="px-3 md:px-5 py-4 lg:py-5 w-full flex items-center justify-between gap-3 text-neutral dark:text-neutral-content">
+          <Link to={`/${getUserName()}`} className="px-3 md:px-5 py-4 lg:py-5 w-full flex items-center justify-between gap-3 text-neutral dark:text-neutral-content">
             <div className="w-full flex gap-4 items-center">
               <img src={img} className="w-10 h-10 rounded-full" loading="lazy"/>
               <div className="w-full flex flex-col">
-                <span><b><Link to={`/${followerId}`} className="text-neutral dark:text-[#CBC9C9] hover:underline">{name}</Link></b> followed you</span>
+                <span><b><Link to={`/${getUserName()}`} className="text-neutral dark:text-[#CBC9C9] hover:underline">{name}</Link></b> followed you</span>
               </div>
             </div>
             <i className="bi bi-person-fill-check text-primary text-xl"></i>
@@ -80,7 +89,7 @@ const NotificationCard = ({action, postId, viewStatus, commentId, img, name, pos
             <div className="w-full flex gap-4 items-center">
               <img src={img} className="w-10 h-10 rounded-full" loading="lazy"/>
               <div className="w-full flex flex-col">
-                <span><b><Link to={`/${followerId}`} className="text-neutral dark:text-[#CBC9C9] hover:underline">{name}</Link></b> liked your comment</span>
+                <span><b><Link to={`/${getUserName()}`} className="text-neutral dark:text-[#CBC9C9] hover:underline">{name}</Link></b> liked your comment</span>
                 <p className="text-black/40 dark:text-neutral-400 text-sm">{validateSize(post)}</p>
               </div>
             </div>
@@ -92,7 +101,7 @@ const NotificationCard = ({action, postId, viewStatus, commentId, img, name, pos
             <div className="w-full flex gap-4 items-center">
               <img src={img} className="w-10 h-10 rounded-full" loading="lazy"/>
               <div className="w-full flex flex-col">
-                <span><b><Link to={`/${followerId}`} className="text-neutral dark:text-[#CBC9C9] hover:underline">{name}</Link></b> liked your reply</span>
+                <span><b><Link to={`/${getUserName()}`} className="text-neutral dark:text-[#CBC9C9] hover:underline">{name}</Link></b> liked your reply</span>
                 <p className="text-black/40 dark:text-neutral-400 text-sm">{validateSize(post)}</p>
               </div>
             </div>
@@ -128,7 +137,7 @@ const NotificationCard = ({action, postId, viewStatus, commentId, img, name, pos
             <div className="w-full flex gap-4 items-center">
               <img src={img} className="w-10 h-10 rounded-full" loading="lazy"/>
               <div className="w-full flex flex-col">
-                <span><b><Link to={`/${followerId}`} className="text-neutral dark:text-[#CBC9C9] hover:underline">{name}</Link></b> commented on your post </span>
+                <span><b><Link to={`/${getUserName()}`} className="text-neutral dark:text-[#CBC9C9] hover:underline">{name}</Link></b> commented on your post </span>
                 <p className="text-black/40 dark:text-neutral-400 text-sm">{validateSize(post)}</p>
               </div>
             </div>
@@ -140,7 +149,7 @@ const NotificationCard = ({action, postId, viewStatus, commentId, img, name, pos
             <div className="w-full flex gap-4 items-center">
               <img src={img} className="w-10 h-10 rounded-full" loading="lazy"/>
               <div className="w-full flex flex-col">
-                <span><b><Link to={`/${followerId}`} className="text-neutral dark:text-[#CBC9C9] hover:underline">{name}</Link></b> replied </span>
+                <span><b><Link to={`/${getUserName()}`} className="text-neutral dark:text-[#CBC9C9] hover:underline">{name}</Link></b> replied </span>
                 <p className="text-black/40 dark:text-neutral-400 text-sm">{validateSize(post)}</p>
               </div>
             </div>

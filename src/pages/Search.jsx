@@ -243,6 +243,7 @@ const Search = () => {
                 post.type === 'journal' ? (
                   <JournalCard
                     key={post.id}
+                    users={otherUsers && [...otherUsers, loggedUser]}
                     postUserId={post.u_id === loggedUser?.u_id}
                     postUserIdVal={post.u_id}
                     uImg={post.u_img} 
@@ -262,6 +263,7 @@ const Search = () => {
                 ) : (
                   <PostCard 
                     key={post.id}
+                    users={otherUsers && [...otherUsers, loggedUser]}
                     userId={loggedUser.u_id}
                     postUserId={post.u_id === loggedUser.u_id}
                     postUserIdVal={post.u_id}
