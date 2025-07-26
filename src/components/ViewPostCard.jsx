@@ -4,9 +4,18 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 /* eslint-disable react/prop-types */
-const ViewPostCard = ({userId, deleting, liking, bookmarking, following, postUserId, postUserIdVal, uImg, uName, toggleFollow, followed, postContent, commentsCount, liked, likes, likePost, bookmarked, bookmarks, bookmarkPost, deletePost, datetime, focusInput}) => {
+const ViewPostCard = ({users,userId, deleting, liking, bookmarking, following, postUserId, postUserIdVal, uImg, uName, toggleFollow, followed, postContent, commentsCount, liked, likes, likePost, bookmarked, bookmarks, bookmarkPost, deletePost, datetime, focusInput}) => {
 
   const [showDelete, setShowDelete] = useState(false)
+
+  const getPostUserName = () => {
+    if(postUserIdVal) {
+      const findUser = users?.find(user => user.u_id === postUserIdVal);
+      if(findUser) {
+        return findUser.u_name;
+      }
+    }
+  }
 
   const body = document.body
   useEffect(() => {
@@ -30,11 +39,11 @@ const ViewPostCard = ({userId, deleting, liking, bookmarking, following, postUse
 
 
           <div className="relative w-full flex gap-2">
-            <Link to={`/${postUserIdVal}`} className="w-12 md:w-14"><img src={uImg} alt="" className="size-10 md:size-12 rounded-full object-cover object-center" loading="lazy"/></Link>
+            <Link to={`/${getPostUserName()}`} className="w-12 md:w-14"><img src={uImg} alt="" className="size-10 md:size-12 rounded-full object-cover object-center" loading="lazy"/></Link>
 
             <div className="w-full flex justify-between items-center mb-2">
               <div className="w-full flex flex-col">
-                <Link to={`/${postUserIdVal}`} className="w-full"><h3 className="w-fit text-md md:text-lg font-bold text-left hover:underline text-neutral-dark dark:text-neutral-lighter">{uName}</h3></Link>
+                <Link to={`/${getPostUserName()}`} className="w-full"><h3 className="w-fit text-md md:text-lg font-bold text-left hover:underline text-neutral-dark dark:text-neutral-lighter">{uName}</h3></Link>
                 <span className="w-full text-start text-[0.6rem] lg:text-xs  text-neutral-400">{moment(datetime).format("Do MMM, YYYY . HH:MM a")}</span>
               </div>
               {userId && postUserId && <button className={followed === false ? "flex gap-1 justify-center items-center text-xs px-2 py-2 text-primary border-[1px] border-primary rounded-full hover:text-black hover:border-black" : "group flex gap-1 justify-center items-center text-xs px-2 py-2 text-white bg-primary rounded-full hover:bg-neutral hover:border-neutral border-[1px] border-primary transition-all duration-300"} onClick={toggleFollow}>{following ? <span className={`loading loading-ring loading-sm ${followed ? "text-white" : "text-primary"}`}></span> : (!following && followed === false) ? <><i className="bi bi-plus-lg"></i> Follow</> : <>

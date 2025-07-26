@@ -4,13 +4,22 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 /* eslint-disable react/prop-types */
-const PostCard = ({userId, postId, liking, bookmarking, deleting, postUserId, postUserIdVal, uImg, uName, toggleFollow, followed, postContent, comments, openComment, liked, likes, likePost, bookmarked, bookmarks, bookmarkPost, deletePost, datetime}) => {
+const PostCard = ({users, userId, postId, liking, bookmarking, deleting, postUserId, postUserIdVal, uImg, uName, toggleFollow, followed, postContent, comments, openComment, liked, likes, likePost, bookmarked, bookmarks, bookmarkPost, deletePost, datetime}) => {
 
   const [showDelete, setShowDelete] = useState(false)
   const [expandPost, setExpandPost] = useState(false)
 
 //  moment("2024-09-27T12:58:43.57827+00:00").format('Do MMM,YYYY hh:mm a')
   // document.querySelector('.content').appendChild(newLinkElem)
+
+  const getPostUserName = () => {
+    if(postUserIdVal) {
+      const findUser = users?.find(user => user.u_id === postUserIdVal);
+      if(findUser) {
+        return findUser.u_name;
+      }
+    }
+  }
 
 
   
@@ -55,13 +64,13 @@ const PostCard = ({userId, postId, liking, bookmarking, deleting, postUserId, po
           <div className="pt-4 w-full col-span-6">
               <div className="w-full flex">
                 <div className="w-14 h-14">
-                  <Link to={userId && `/${postUserIdVal}`}><img src={uImg} alt="" className="relative z-20 w-10 h-10 object-cover object-center rounded-full  shadow-sm cursor-default" width={80} height={80} loading="lazy"/></Link>
+                  <Link to={userId && `/${getPostUserName()}`}><img src={uImg} alt="" className="relative z-20 w-10 h-10 object-cover object-center rounded-full  shadow-sm cursor-default" width={80} height={80} loading="lazy"/></Link>
                 </div>
                 
                 <div className="w-full flex flex-col">
                   <div className="w-full flex justify-between items-center mb-2">
                     <div className="w-fit flex flex-col">
-                      <Link to={userId && `/${postUserIdVal}`} className="w-fit relative z-20 "><h3 className="w-fit font-bold text-left hover:underline text-neutral-dark dark:text-neutral-lighter cursor-default">{uName}</h3></Link>
+                      <Link to={userId && `/${getPostUserName()}`} className="w-fit relative z-20 "><h3 className="w-fit font-bold text-left hover:underline text-neutral-dark dark:text-neutral-lighter cursor-default">{uName}</h3></Link>
                       <span className="w-full text-start text-[0.5rem] text-neutral-400">{moment(datetime).format("Do MMM, YYYY hh:mm a") + ' . ' + moment(datetime).fromNow()}</span>
                     </div>
                   </div>

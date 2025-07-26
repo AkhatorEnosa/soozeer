@@ -364,6 +364,7 @@ const Post = () => {
       return (
         <ViewPostCard 
           key={currentPost.id}
+          users={otherUsers && [...otherUsers, loggedUser]}
           userId={loggedUser?.u_id}
           postUserId={currentPost.u_id !== loggedUser?.u_id}
           postUserIdVal={currentPost.u_id}
@@ -419,6 +420,7 @@ const Post = () => {
       return comments.map(comment => (
         <PostCard 
           key={comment.id}
+          users={otherUsers && [...otherUsers, loggedUser]}
           userId={loggedUser?.u_id}
           postUserId={comment.u_id === loggedUser?.u_id}
           postUserIdVal={comment.u_id}

@@ -65,7 +65,7 @@ export const register = createAsyncThunk('app/register', async (userInput) => {
         }
 
         if (existingUser.length > 0) {
-            showErrorToast("Please select a username unique to you.");
+            showErrorToast(`${userInput.u_name} has been taken. Please select a username unique to you.`);
             return null;
         }
 

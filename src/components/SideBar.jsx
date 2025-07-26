@@ -11,7 +11,7 @@ import LogoutModal from "./LogoutModal"
 // import supabase from "../config/supabaseClient.config"
 
 /* eslint-disable react/prop-types */
-const SideBar = ({uid, page, paramsId, toggleSearchBar}) => {
+const SideBar = ({uid, uName, page, paramsId, toggleSearchBar}) => {
   const body = document.body
 
   const {loggedUser, notifications, exiting} = useSelector((state) => state.app)
@@ -107,7 +107,7 @@ const SideBar = ({uid, page, paramsId, toggleSearchBar}) => {
               <Link to={'/'} className="w-full text-neutral-dark dark:text-dark-accent rounded-full">
                   <p className={page === 'home' ? "text-primary flex font-semibold dark:text-white bg-primary/5 rounded-full gap-4 px-10 py-5 cursor-pointer" : "hover:bg-primary/5 dark:hover:bg-primary/15 rounded-full flex gap-4 px-10 py-5  cursor-pointer"}><i className={page === 'home' ? "bi bi-house-door-fill" : "bi bi-house-door"}></i> Home</p>
               </Link>
-              <Link to={`/${uid}`} className="w-full text-neutral-dark dark:text-dark-accent rounded-full">
+              <Link to={`/${uName}`} className="w-full text-neutral-dark dark:text-dark-accent rounded-full">
                   <p className={page === 'profile' && paramsId === uid ? "text-primary flex font-semibold dark:text-white bg-primary/5 rounded-full gap-4 px-10 py-5 cursor-pointer" : "hover:bg-primary/5 dark:hover:bg-primary/15 flex gap-4 px-10 py-5 cursor-pointer dark:text-dark-accent rounded-full"}><i className={page === 'profile' && paramsId === uid ? "bi bi-person-fill" : "bi bi-person"}></i> Profile</p>
               </Link>
               <Link to={`/messages/conversations`} className="w-full text-neutral-dark dark:text-dark-accent rounded-full">
