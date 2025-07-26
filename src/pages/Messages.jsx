@@ -120,6 +120,7 @@ const Messages = () => {
             <div className="sticky w-full lg:grid text-neutral-dark dark:text-dark-accent lg:grid-cols-8 px-2 md:px-20 pb-10 md:pb-28 md:gap-2 lg:mb-0 lg:pb-0">
               {loggedUser && <SideBar
               uid={loggedUser !== null ? loggedUser.u_id : null} 
+              uName={loggedUser?.u_name || ''}
               page={'messages'} 
               toggleSearchBar={handleShowSearch}
               />}
@@ -158,11 +159,13 @@ const Messages = () => {
               search={search}
               handleChange={(e)=> setSearch(e.target.value)}
             />
-  
+
             <Footer 
-              uid={loggedUser !== null && loggedUser?.u_id} 
-              page={'messages'} 
-              toggleSearchBar={handleShowSearch}/>
+              uid={loggedUser?.u_id || null} 
+              uName={loggedUser?.u_name || ''} 
+              page="messages" 
+              toggleSearchBar={handleShowSearch} 
+            />
         </div>
       )
     }

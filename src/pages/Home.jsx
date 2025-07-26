@@ -622,7 +622,12 @@ const Home = () => {
           </div>
         </div>
         <SearchModal handleSearch={handleSearch} search={search} handleChange={(e) => setSearch(e.target.value)} />
-        <Footer uid={loggedUser?.u_id || null} page="home" toggleSearchBar={handleShowSearch} />
+        <Footer 
+          uid={loggedUser?.u_id || null} 
+          uName={loggedUser?.u_name || ''} 
+          page="home" 
+          toggleSearchBar={handleShowSearch} 
+        />
         <NotLoggedInModal uid={loggedUser?.u_id} />
       </div>
     );

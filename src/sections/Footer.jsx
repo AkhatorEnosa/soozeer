@@ -7,7 +7,7 @@ import { getMessages } from "../features/messageSlice"
 // import supabase from "../config/supabaseClient.config"
 
 /* eslint-disable react/prop-types */
-const Footer = ({uid, page, paramsId, toggleSearchBar}) => {
+const Footer = ({uid, uName, page, paramsId, toggleSearchBar}) => {
   // const [triggerLogout, setTriggerLogout] = useState(false)
 
   const {loggedUser, notifications} = useSelector((state) => state.app)
@@ -91,7 +91,7 @@ const Footer = ({uid, page, paramsId, toggleSearchBar}) => {
             <Link to={'/'} className=" text-neutral dark:text-dark-accent">
                 <li className={page === 'home' ? "text-primary backdrop-blur-none border-b-2 border-primary h-full flex flex-col justify-center items-center cursor-pointer" : "hover:text-primary hover hover:border-b-2 hover:border-primary h-full flex flex-col justify-center items-center cursor-pointer"}><i className={page === 'home' ? "bi-house-door-fill" : "bi-house-door"}></i></li>
             </Link>
-            <Link to={`/${uid}`} className=" text-neutral dark:text-dark-accent">
+            <Link to={`/${uName}`} className=" text-neutral dark:text-dark-accent">
                 <li className={page === 'profile' && paramsId === uid ?  "text-primary border-b-2 border-primary h-full flex flex-col justify-center items-center cursor-pointer" : "hover:text-primary hover hover:border-b-2 hover:border-primary h-full flex flex-col justify-center items-center cursor-pointer"}><i className={page === 'profile' && paramsId === uid ? "bi bi-person-fill" : "bi bi-person"}></i></li>
             </Link>
             <Link to={`/messages/conversations`} className=" text-neutral dark:text-dark-accent">

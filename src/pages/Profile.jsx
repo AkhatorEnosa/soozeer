@@ -116,6 +116,11 @@ const Profile = () => {
   const getFollowings = () => follows?.filter((follow) => follow.follower_id === profileId) || [];
   const getFollowers = () => follows?.filter((follow) => follow.followed_id === profileId) || [];
 
+  // Toggle Search Bar 
+  const handleShowSearch = () => {
+    document.getElementById('my_modal_2').showModal()
+  }
+
   // Interaction handlers
   const handleFollowToggle = (user) => {
     const verifyFollow = follows.find((follow) => follow.followed_id === user.u_id && follow.follower_id === loggedUser?.u_id);
@@ -521,6 +526,7 @@ const Profile = () => {
       {loggedUser && (
         <SideBar
           uid={loggedUser.u_id}
+          uName={loggedUser?.u_name || ''}
           page="profile"
           paramsId={profileId}
           toggleSearchBar={() => document.getElementById("my_modal_2").showModal()}
@@ -766,7 +772,13 @@ const Profile = () => {
       )}
     </div>
       <SearchModal handleSearch={handleSearch} search={search} handleChange={(e) => setSearch(e.target.value)} />
-      <Footer uid={loggedUser?.u_id} page="profile" paramsId={profileId} toggleSearchBar={() => document.getElementById("my_modal_2").showModal()} />
+      <Footer
+        uid={loggedUser?.u_id || null} 
+        uName={loggedUser?.u_name || null}
+        page="profile" 
+        paramsId={profileId}
+        toggleSearchBar={handleShowSearch} 
+      />
       <NotLoggedInModal uid={loggedUser?.u_id} />
     </div>
   );

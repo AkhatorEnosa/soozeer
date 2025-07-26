@@ -512,6 +512,7 @@ const Post = () => {
         {loggedUser && (
           <SideBar
             uid={loggedUser.u_id}
+            uName={loggedUser?.u_name || ''}
             toggleSearchBar={handleShowSearch}
           />
         )}
@@ -551,10 +552,11 @@ const Post = () => {
         search={search}
         handleChange={(e) => setSearch(e.target.value)}
       />
-
+      
       <Footer 
-        uid={loggedUser?.u_id} 
-        toggleSearchBar={handleShowSearch}
+        uid={loggedUser?.u_id || null} 
+        uName={loggedUser?.u_name || ''} 
+        toggleSearchBar={handleShowSearch} 
       />
 
       <NotLoggedInModal uid={loggedUser?.u_id}/>

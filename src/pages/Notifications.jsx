@@ -191,6 +191,7 @@ let content;
             <div className="w-full lg:grid lg:grid-cols-8 px-2 md:px-20 mt-2 md:mt-0 pb-20 md:pb-28 lg:pb-0 gap-2 mb-7 md:mb-14 lg:mb-0">
               <SideBar
               uid={loggedUser !== null ? loggedUser.u_id : null} 
+              uName={loggedUser?.u_name || ''}
               page={'notification'} 
               toggleSearchBar={handleShowSearch}/>
 
@@ -218,11 +219,13 @@ let content;
               search={search}
               handleChange={(e)=>setSearch(e.target.value)}
             />
-
+            
             <Footer 
-              uid={loggedUser !== null && loggedUser?.u_id} 
-              page={'notification'} 
-              toggleSearchBar={handleShowSearch}/>
+              uid={loggedUser?.u_id || null} 
+              uName={loggedUser?.u_name || ''} 
+              page="notification" 
+              toggleSearchBar={handleShowSearch} 
+            />
         </div>
       )
     }
