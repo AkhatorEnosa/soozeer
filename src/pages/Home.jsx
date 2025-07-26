@@ -225,7 +225,7 @@ const Home = () => {
     return (
       <PostCard
         key={post.id}
-        users={otherUsers && [...otherUsers, loggedUser]}
+        users={allUsers && [...allUsers]}
         userId={loggedUser?.u_id}
         postUserId={post.u_id === loggedUser?.u_id}
         postUserIdVal={post.u_id}
