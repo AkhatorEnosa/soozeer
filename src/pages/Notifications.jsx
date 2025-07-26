@@ -13,22 +13,26 @@ import SideBar from "../components/SideBar"
 // import BackBtn from "../components/BackBtn"
 import SearchModal from "../components/SearchModal"
 import { AppContext } from "../context/AppContext"
+import useGetUsers from "../hooks/useGetUsers"
 // import Navbar from "../components/Navbar"
 
 const Notifications = () => {
   const [search, setSearch] = useState('')
 
-  const {error, notifications, loggedUser, otherUsers, isLoading, isLoadingNotifications, isLoadingOtherUsers} = useSelector((state) => state.app)
-  const { renderLoadingState, renderErrorState } = useContext(AppContext)
-  const {mutate} = useNotifications()
-  const dispatch = useDispatch()
-
-  const navigate = useNavigate()
-
+  const {error, notifications, allUsers, loggedUser, otherUsers, isLoading, isLoadingNotifications, isLoadingOtherUsers} = useSelector((state) => state.app)
   const { follows, isLoadingFollows } = useSelector((state) => state.follows)
+
+  const { renderLoadingState, renderErrorState } = useContext(AppContext)
+
+  const dispatch = useDispatch()
+  
+  const navigate = useNavigate()
+  
+  const {mutate} = useNotifications()
+  useGetUsers();
   useFollows()
   useOtherUsers({ loggedId: loggedUser?.u_id, currentId: loggedUser?.u_id });
-
+  
   const getNotifications = async(uid) => {
     if(loggedUser?.u_id !== null && uid !== undefined) {
       mutate({uid})
@@ -151,7 +155,7 @@ let content;
             content = sortNotifications.map(x => (
                <NotificationCard 
                 key={x.id}
-                users={otherUsers && [...otherUsers, loggedUser]}
+                users={allUsers && [...allUsers]}
                 action={x.for}
                 name={x.creator_name}
                 postId={x.post_id}

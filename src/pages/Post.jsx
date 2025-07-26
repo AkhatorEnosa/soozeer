@@ -38,6 +38,7 @@ import {
 
 // Context
 import { AppContext } from "../context/AppContext";
+import useGetUsers from "../hooks/useGetUsers";
 
 const Post = () => {
   // State
@@ -54,6 +55,7 @@ const Post = () => {
   const { 
     error, 
     loggedUser, 
+    allUsers,
     otherUsers, 
     isLoading, 
     isLoadingOtherUsers 
@@ -89,6 +91,7 @@ const Post = () => {
   const { renderErrorState, renderLoadingState } = useContext(AppContext);
 
   // Custom hooks
+  useGetUsers();
   usePosts();
   const { mutate: addComment } = useAddComment();
   const { mutate: currPostComments } = useComments();
@@ -364,7 +367,7 @@ const Post = () => {
       return (
         <ViewPostCard 
           key={currentPost.id}
-          users={otherUsers && [...otherUsers, loggedUser]}
+          users={allUsers && [...allUsers]}
           userId={loggedUser?.u_id}
           postUserId={currentPost.u_id !== loggedUser?.u_id}
           postUserIdVal={currentPost.u_id}
@@ -420,7 +423,7 @@ const Post = () => {
       return comments.map(comment => (
         <PostCard 
           key={comment.id}
-          users={otherUsers && [...otherUsers, loggedUser]}
+          users={allUsers && [...allUsers]}
           userId={loggedUser?.u_id}
           postUserId={comment.u_id === loggedUser?.u_id}
           postUserIdVal={comment.u_id}

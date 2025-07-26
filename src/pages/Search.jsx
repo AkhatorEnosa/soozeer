@@ -23,6 +23,7 @@ import useSearchQuery from "../hooks/useSearchQuery";
 // Redux actions
 import { bookmarkPost, likePost, unBookmark, unlike } from "../features/postSlice";
 import { followUser, unfollow } from "../features/followSlice";
+import useGetUsers from "../hooks/useGetUsers";
 
 const Search = () => {
   // State
@@ -34,6 +35,7 @@ const Search = () => {
   // Selectors
   const { 
     error, 
+    allUsers,
     loggedUser, 
     otherUsers, 
     searchedUsers, 
@@ -60,6 +62,7 @@ const Search = () => {
   const { renderLoadingState, renderErrorState } = useContext(AppContext);
 
   // Custom hooks
+  useGetUsers();
   usePosts();
   useAddPost();
   const { mutate: del } = useDeletePost();
@@ -243,7 +246,7 @@ const Search = () => {
                 post.type === 'journal' ? (
                   <JournalCard
                     key={post.id}
-                    users={otherUsers && [...otherUsers, loggedUser]}
+                    users={allUsers && [...allUsers]}
                     postUserId={post.u_id === loggedUser?.u_id}
                     postUserIdVal={post.u_id}
                     uImg={post.u_img} 
@@ -263,7 +266,7 @@ const Search = () => {
                 ) : (
                   <PostCard 
                     key={post.id}
-                    users={otherUsers && [...otherUsers, loggedUser]}
+                    users={allUsers && [...allUsers]}
                     userId={loggedUser.u_id}
                     postUserId={post.u_id === loggedUser.u_id}
                     postUserIdVal={post.u_id}

@@ -142,7 +142,7 @@ export const getUsers = createAsyncThunk('app/getUsers', async () => {
     try {
       const { data, error } = await supabase
         .from('profiles')
-        .select()
+        .select('u_id, u_name')
         .order(randomizeSortFilter(), { ascending: false });
       if (error) {
         console.error('Error fetching users:', error);
@@ -188,7 +188,7 @@ export const getOtherUsers = createAsyncThunk('app/getOtherUsers', async (uid) =
 
         const { data, error } = await supabase
             .from('profiles')
-            .select()
+            .select('u_name, u_id, name, u_img')
             .neq('u_name', 'Pussey')
             .neq('u_id', uid.currentId)
             .neq('u_id', uid.loggedId)

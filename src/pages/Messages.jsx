@@ -9,7 +9,8 @@ import Conversation from "../components/Conversation";
 import supabase from "../config/supabaseClient.config";
 import SearchModal from "../components/SearchModal";
 import { AppContext } from "../context/AppContext";
-import useOtherUsers from "../hooks/useOtherUsers";
+import useGetUsers from "../hooks/useGetUsers";
+// import useOtherUsers from "../hooks/useOtherUsers";
 
 const Messages = () => {
   const [search, setSearch] = useState('')
@@ -17,12 +18,13 @@ const Messages = () => {
      // react router dom navigation and params 
   const navigate = useNavigate();
   const {id: paramsId} = useParams()
-  const { error, loggedUser, otherUsers, isLoading } = useSelector((state) => state.app)
+  const { error, loggedUser,  allUsers, isLoading } = useSelector((state) => state.app)
   const { messages, isLoadingMessages, isDeleting, errorMessages } = useSelector((state) => state.message)
   const { renderLoadingState, renderErrorState } = useContext(AppContext)
   const dispatch = useDispatch()
-  useOtherUsers({ loggedId: loggedUser?.u_id, currentId: loggedUser?.u_id });
+  // useOtherUsers({ loggedId: loggedUser?.u_id, currentId: loggedUser?.u_id });
 
+  useGetUsers();
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       if(!loggedUser?.u_id) {
@@ -142,7 +144,7 @@ const Messages = () => {
                   </div>
                   
                   <Conversation 
-                    users={otherUsers && [...otherUsers, loggedUser]}
+                    users={allUsers && [...allUsers]}
                     messageId = {paramsId}
                     messages={messages}
                     userId={loggedUser?.u_id}

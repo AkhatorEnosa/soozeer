@@ -24,6 +24,7 @@ import JournalCard from "../components/JournalCard"
 import { AppContext } from "../context/AppContext"
 import logo1 from '../assets/logo-grayscale.png'
 import logo2 from '../assets/logo-grayscale-white.png'
+import useGetUsers from "../hooks/useGetUsers"
 
 
 const Home = () => {
@@ -41,10 +42,12 @@ const Home = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { error, loggedUser, otherUsers, isLoading, isLoadingOtherUsers } = useSelector((state) => state.app);
+  const { error, allUsers, loggedUser, otherUsers, isLoading, isLoadingOtherUsers } = useSelector((state) => state.app);
   const { posts, likes, bookmarks, postComments, posted, isAddingPost, isLoadingPosts, isDeletingPost, isBookmarking, isLiking } = useSelector((state) => state.posts);
   const { follows, isLoadingFollows } = useSelector((state) => state.follows);
 
+
+  useGetUsers();
   usePosts();
   const { mutate } = useAddPost();
   const { mutate: del } = useDeletePost();
@@ -270,7 +273,7 @@ const Home = () => {
     return (
       <JournalCard
         key={post.id}
-        users={otherUsers && [...otherUsers, loggedUser]}
+        users={allUsers && [...allUsers]}
         postUserId={post.u_id === loggedUser?.u_id}
         postUserIdVal={post.u_id}
         uImg={post.u_img}
