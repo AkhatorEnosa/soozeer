@@ -22,8 +22,8 @@ import NotLoggedInModal from "../components/NotLoggedInModal"
 import supabase from "../config/supabaseClient.config"
 import JournalCard from "../components/JournalCard"
 import { AppContext } from "../context/AppContext"
-import logo1 from '../assets/logo-grayscale.png'
-import logo2 from '../assets/logo-grayscale-white.png'
+// import logo1 from '../assets/logo-grayscale.png'
+// import logo2 from '../assets/logo-grayscale-white.png'
 import useGetUsers from "../hooks/useGetUsers"
 
 
@@ -345,7 +345,7 @@ const Home = () => {
   const userList = useMemo(() => {
     if (!otherUsers?.length && !isLoading && !isLoadingOtherUsers) {return (
       <div className="w-full py-10 flex flex-col text-neutral-dark dark:text-dark-accent gap-4">
-        userListEmptyState()
+        {userListEmptyState()}
       </div>
     ) } else {
       return otherUsers?.slice(0, 4).map((user) => (
@@ -377,21 +377,23 @@ const Home = () => {
       ));
     }
 
-  }, [otherUsers, loggedUser, userListEmptyState, follows, isLoadingFollows, dispatch, followed, removeFollow]);
+  }, [otherUsers, isLoading, isLoadingOtherUsers, userListEmptyState, followed, isLoadingFollows, follows, dispatch, removeFollow]);
 
   // Content rendering
   const renderContent = useMemo(() => {
     // if (!posts) return null;
 
-    // if(isLoadingPosts) {
+    // if(isLoading || isLoadingPosts) {
     //   return ( 
-    //     <span className="loading loading-spinner loading-sm text-primary"></span>
+    //     <div className="w-full flex flex-col gap-4 bg-red-300 p-5">
+    //       loading.....
+    //     </div>
     //   );
     // } else {
       if (tab === 'forYou') {
         const allPosts = posts?.filter((post) => post.type === 'post');
 
-        return allPosts.length > 0 ? (
+        return allPosts?.length > 0 ? (
           allPosts.map((post) => (
             <PostCardWrapper
               key={post.id}
@@ -486,7 +488,7 @@ const Home = () => {
       }
     // }
 
-  }, [tab, posts, loggedUser, follows, likes, bookmarks, countBookmarks, renderEmptyState, isLoadingPosts, isLiking, isBookmarking, isDeletingPost, navigate, dispatch, removeLike, removeBookmark, removeFollow, countComments, countLikes, likedPost, bookmarkedPost, followed, deletePost]);
+  }, [isLoading, isLoadingPosts, tab, posts, renderEmptyState, loggedUser, follows, likes, bookmarks, isLiking, isBookmarking, isDeletingPost, navigate, dispatch, removeLike, removeBookmark, removeFollow, countComments, countLikes, likedPost, bookmarkedPost, countBookmarks, followed, deletePost]);
 
   const closePostFormModal = useCallback(() => {
     setShowPostInModal(false);
@@ -508,20 +510,11 @@ const Home = () => {
     }
   };
 
-  if(isLoading && !error) {
-    return (
-      <div className="w-full h-screen flex flex-col gap-10 justify-center items-center">
-        <div className="flex py-4 px-10">
-            <Link to='/' className="cursor-pointer"> <img src={logo1} alt="logo" className="dark:hidden w-48 md:w-56 lg:w-72"/>  </Link>
-            <Link to='/' className="cursor-pointer"> <img src={logo2} alt="logo" className="hidden dark:flex w-48 md:w-56 lg:w-72"/> </Link>
-        </div>
-        <span className="loading loading-spinner loading-lg text-neutral-dark dark:text-bg"></span>
-      </div>
-    );
-  }
-  else if (!isLoading && error) {
+  if (!isLoading && error) {
     return (renderErrorState('Network or server error occurred. Please try again later.'));
-  } else if (!isLoading && !error) {
+  } 
+  
+  if (!error) {
     return (
       <div className="w-full h-screen flex flex-col items-center px-2 md:p-0 md:m-0">
         {loggedUser && (
@@ -552,44 +545,47 @@ const Home = () => {
               page="home" 
               toggleSearchBar={handleShowSearch} />
           }
-  
-          <div className={loggedUser?.u_id ? 'w-full flex flex-col col-span-6 xl:col-span-4 border-r-[1px] border-l-[1px] mt-5 border-black/5 dark:border-dark-accent/20' : 'w-full flex flex-col col-span-6 border-r-[1px] border-l-[1px] border-black/5 dark:border-dark-accent/20 justify-center items-center'}>
-            {loggedUser?.u_id && (
-              <div className="sticky top-0 grid grid-cols-3 justify-evenly text-center text-neutral-dark w-full bg-bg/90 dark:bg-black/90 backdrop-blur-md overflow-scroll no-scrollbar text-xs md:text-sm md:text-neutral-dark dark:text-dark-accent font-semibold z-40">
-                <button className={`w-full ${tab === 'forYou' ? 'bg-primary/5 font-bold border-b-2 border-primary' : ''} py-3 px-4 md:px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('forYou')}>
-                  For you
-                </button>
-                <button className={`w-full ${tab === 'following' ? 'bg-primary/5 font-bold border-b-[1px] border-primary' : ''} py-3 px-4 md:px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('following')}>
-                  Following
-                </button>
-                <button className={`w-full ${tab === 'journal' ? 'bg-accent/5 font-bold border-b-[1px] border-accent' : ''} py-3 px-10 hover:bg-accent/5 cursor-pointer`} onClick={() => setTab('journal')}>
-                  Journal
-                </button>
+
+          {
+            isLoading || isLoadingPosts ? (
+              <div className={loggedUser?.u_id ? 'w-full flex flex-col col-span-6 xl:col-span-4 border-r-[1px] border-l-[1px] mt-5 border-black/5 dark:border-dark-accent/20' : 'w-full flex flex-col col-span-6 border-r-[1px] border-l-[1px] border-black/5 dark:border-dark-accent/20 justify-center items-center'}>
+               {renderLoadingState("h-40")}
               </div>
-            )}
-            <div className="relative flex flex-col">
-              {isLoading || isLoadingPosts ? (
-                <div className="w-full flex flex-col gap-4 p-5">
-                  {renderLoadingState('h-40')}
-                </div>
-              ) : (
-                <div className="relative w-full text-neutral-dark dark:text-dark-accent divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
-                  {loggedUser && (
-                    <div className="w-full flex justify-end lg:justify-start items-center px-4 my-5 text-sm dark:text-dark-accent fixed bottom-20 left-0 lg:sticky lg:top-12 py-2 lg:bg-bg/90 dark:lg:dark:bg-black/90 lg:backdrop-blur-sm z-[110]">
-                      <button
-                        className={`w-fit flex gap-2 justify-center items-center border-[1px] border-black bg-bg dark:bg-black dark:border-dark-accent font-semibold ${tab === 'journal' ? 'hover:bg-accent/5 hover:border-accent dark:hover:border-accent hover:text-accent dark-hover:text-inherit' : 'hover:bg-primary/5 hover:border-primary dark:hover:border-primary hover:text-primary'} px-4 py-2 rounded-full shadow-md lg:shadow-none`}
-                        onClick={() => setShowPostInModal(!showPostInModal)}
-                      >
-                        <i className="bi bi-pencil"></i>{tab === 'journal' ? 'Write Journal' : 'Write Post'}
-                      </button>
-                    </div>
-                  )}
-                  {renderContent}
-                  <p className="py-8 flex justify-center text-primary">.</p>
+            ) : ( 
+            <div className={loggedUser?.u_id ? 'w-full flex flex-col col-span-6 xl:col-span-4 border-r-[1px] border-l-[1px] mt-5 border-black/5 dark:border-dark-accent/20' : 'w-full flex flex-col col-span-6 border-r-[1px] border-l-[1px] border-black/5 dark:border-dark-accent/20 justify-center items-center'}>
+              {loggedUser?.u_id && (
+                <div className="sticky top-0 grid grid-cols-3 justify-evenly text-center text-neutral-dark w-full bg-bg/90 dark:bg-black/90 backdrop-blur-md overflow-scroll no-scrollbar text-xs md:text-sm md:text-neutral-dark dark:text-dark-accent font-semibold z-40">
+                  <button className={`w-full ${tab === 'forYou' ? 'bg-primary/5 font-bold border-b-2 border-primary' : ''} py-3 px-4 md:px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('forYou')}>
+                    For you
+                  </button>
+                  <button className={`w-full ${tab === 'following' ? 'bg-primary/5 font-bold border-b-[1px] border-primary' : ''} py-3 px-4 md:px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('following')}>
+                    Following
+                  </button>
+                  <button className={`w-full ${tab === 'journal' ? 'bg-accent/5 font-bold border-b-[1px] border-accent' : ''} py-3 px-10 hover:bg-accent/5 cursor-pointer`} onClick={() => setTab('journal')}>
+                    Journal
+                  </button>
                 </div>
               )}
+              <div className="relative flex flex-col">
+                  <div className="relative w-full text-neutral-dark dark:text-dark-accent divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
+                    {loggedUser && (
+                      <div className="w-full flex justify-end lg:justify-start items-center px-4 my-5 text-sm dark:text-dark-accent fixed bottom-20 left-0 lg:sticky lg:top-12 py-2 lg:bg-bg/90 dark:lg:dark:bg-black/90 lg:backdrop-blur-sm z-[110]">
+                        <button
+                          className={`w-fit flex gap-2 justify-center items-center border-[1px] border-black bg-bg dark:bg-black dark:border-dark-accent font-semibold ${tab === 'journal' ? 'hover:bg-accent/5 hover:border-accent dark:hover:border-accent hover:text-accent dark-hover:text-inherit' : 'hover:bg-primary/5 hover:border-primary dark:hover:border-primary hover:text-primary'} px-4 py-2 rounded-full shadow-md lg:shadow-none`}
+                          onClick={() => setShowPostInModal(!showPostInModal)}
+                        >
+                          <i className="bi bi-pencil"></i>{tab === 'journal' ? 'Write Journal' : 'Write Post'}
+                        </button>
+                      </div>
+                    )}
+                    {renderContent}
+                    <p className="py-8 flex justify-center text-primary">.</p>
+                  </div>
+              </div>
             </div>
-          </div>
+            )
+          }
+  
           <div className="hidden sticky top-0 xl:flex flex-col gap-5 h-fit col-span-2 py-3 z-0">
             {loggedUser?.u_id || isLoading ? (
               <>
@@ -640,3 +636,16 @@ const Home = () => {
 };
 
 export default Home;
+
+
+// if(isLoading && !error) {
+//   return (
+//     <div className="w-full h-screen flex flex-col gap-10 justify-center items-center">
+//       <div className="flex py-4 px-10">
+//           <Link to='/' className="cursor-pointer"> <img src={logo1} alt="logo" className="dark:hidden w-48 md:w-56 lg:w-72"/>  </Link>
+//           <Link to='/' className="cursor-pointer"> <img src={logo2} alt="logo" className="hidden dark:flex w-48 md:w-56 lg:w-72"/> </Link>
+//       </div>
+//       <span className="loading loading-spinner loading-lg text-neutral-dark dark:text-bg"></span>
+//     </div>
+//   );
+// }
