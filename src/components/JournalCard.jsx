@@ -1,17 +1,22 @@
 import Linkify from "linkify-react"
 import moment from "moment"
 import { useEffect, useState } from "react"
+import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 
 /* eslint-disable react/prop-types */
-const JournalCard = ({users, privacy, postUserIdVal, postUserId, title, journal, uImg, uName, liked, likes, likePost, deletePost, liking, deleting, deleted, datetime}) => {
+const JournalCard = ({users, privacy, postUserIdVal, postUserId, title, journal, uImg, uName, liked, likes, likePost, deletePost, liking, deleting, datetime}) => {
+  
+  const { deleted } = useSelector((state) => state.posts)
 
   const [showDelete, setShowDelete] = useState(false)
   const [expandPost, setExpandPost] = useState(false)
   const body = document.body
 
   useEffect(() => {
-    deleted && setShowDelete(false)
+    if(deleted) {
+      setShowDelete(false)
+    }
     // Set body styles based on showDelete state
     if(showDelete) {
       body.style.height = '100vh'
@@ -20,7 +25,7 @@ const JournalCard = ({users, privacy, postUserIdVal, postUserId, title, journal,
       body.style.height = '100vh'
       body.style.overflowY = 'scroll'
     }
-  }, [body.style, deleted, showDelete])
+  }, [deleted, showDelete])
 
   const validateSize = (text) => {
     const strLength = text.length
@@ -58,7 +63,7 @@ const JournalCard = ({users, privacy, postUserIdVal, postUserId, title, journal,
         <div className="w-full p-2 shadow-sm">
             <div className="flex justify-center items-center">
                 <div className="w-full flex flex-col gap-0">
-                    <h1 className="text-xl lg:text-lg font-semibold dark:text-white">{title}</h1>
+                    <h1 className="md:text-xl lg:text-lg font-semibold dark:text-white">{title}</h1>
                     <div className="w-fit flex gap-2 items-center">
                       <i className="text-[10px] not-italic text-neutral-400">{moment(datetime).format("Do MMM, YYYY hh:mm a") + ' . ' + moment(datetime).fromNow()}</i>
                       <span className="flex gap-1 justify-center items-center text-[8px] px-2 border-[1px] border-accent text-accent bg-accent/10 font-semibold rounded-full"><i className="bi bi-person-fill-lock"></i>{privacy}</span>
@@ -70,7 +75,7 @@ const JournalCard = ({users, privacy, postUserIdVal, postUserId, title, journal,
                     <span title="Delete" className="flex justify-center items-center transition-all duration-150 gap-1 rounded-full bg-neutral-100 dark:bg-neutral-500/30 hover:text-red-700 size-10  p-2 hover:bg-red-400/10 cursor-pointer"  onClick={() => setShowDelete(!showDelete)} disabled={deleting}><i className="bi bi-x-lg"></i></span>
                 </div>}
             </div>
-            <blockquote className="text-sm text-justify break-words whitespace-pre-wrap">{expandPost === false && journal?.length > 500 ? <>{validateSize(journal)} <a className="relative z-20 text-xs text-primary cursor-pointer" onClick={togglePost}>See more</a></> : expandPost === true && journal.length > 100 ? <><Linkify options={{ render: renderLink }}>{journal}</Linkify> <a className="relative z-20 text-xs text-primary cursor-pointer" onClick={togglePost}>See Less</a></>: <Linkify options={{ render: renderLink }}>{journal}</Linkify>}</blockquote>
+            <blockquote className="text-xs md:text-sm text-justify break-words whitespace-pre-wrap">{expandPost === false && journal?.length > 500 ? <>{validateSize(journal)} <a className="relative z-20 text-xs text-primary cursor-pointer" onClick={togglePost}>See more</a></> : expandPost === true && journal.length > 100 ? <><Linkify options={{ render: renderLink }}>{journal}</Linkify> <a className="relative z-20 text-xs text-primary cursor-pointer" onClick={togglePost}>See Less</a></>: <Linkify options={{ render: renderLink }}>{journal}</Linkify>}</blockquote>
 
             <div className="w-full flex justify-between items-center text-sm font-medium mt-2">
                 <div className={`w-fit p-2 rounded-full flex px-2 py-0 ${liked ? "bg-[#FFD700]/10 text-accent" : "bg-neutral-100 dark:bg-neutral-500/30"} hover:text-accent hover:bg-accent/10 cursor-pointer`} title="Star this journal" onClick={likePost} disabled={liking}>
@@ -84,8 +89,9 @@ const JournalCard = ({users, privacy, postUserIdVal, postUserId, title, journal,
         </div>
 
          
-        {showDelete && <div className="fixed w-screen h-screen flex justify-center px-10 bg-base-100/90 dark:bg-black/90 items-center top-0 left-0 cursor-default z-[1000]">
-              <div className="w-[85%] md:w-[50%] bg-base-100 dark:bg-black dark:text-[#cbc9c9] p-5 rounded-[1rem] flex flex-col gap-2 border-[1px] border-black/10 dark:border-[#CBC9C9]/20 shadow-md dark:shadow-[#cbc9c9]/20">
+        {showDelete && <div className="fixed w-screen h-screen flex justify-center px-10 bg-bg/80 dark:bg-black/80 items-center top-0 left-0 cursor-default z-[1000]">
+              <div className="w-[85%] md:w-[50%] bg-bg dark:bg-black p-5 rounded-[1rem] flex flex-col gap-2 border-[1px] border-black/10 dark:border-dark-accent/20 shadow-md dark:shadow-dark-accent/20
+">
                 {!deleting ?
                   <>
                     <h1 className="text-2xl lg:text-3xl font-semibold">Delete Journal?</h1>

@@ -289,6 +289,7 @@ const Profile = () => {
       <PostCard 
         key={post.id} 
         users={allUsers}
+        type={post.type}
         {...getCommonPostProps(post)} 
         {...getPostInteractionHandlers(post)} />
     ));
@@ -307,6 +308,7 @@ const Profile = () => {
         <PostCard 
           key={post.id} 
           users={allUsers}
+          type={post.type}
           {...getCommonPostProps(post)} 
           {...getPostInteractionHandlers(post)} />
       ) : (
@@ -327,6 +329,7 @@ const Profile = () => {
       <PostCard 
         key={reply.id} 
         users={allUsers}
+        type={reply.type}
         {...getCommonPostProps(reply)} 
         {...getPostInteractionHandlers(reply)} />
     ));
@@ -360,6 +363,7 @@ const Profile = () => {
       <PostCard 
         key={post.id} 
         users={allUsers}
+        type={post.type}
         {...getCommonPostProps(post)} 
         {...getPostInteractionHandlers(post)} />
     ));

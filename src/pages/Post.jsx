@@ -394,6 +394,7 @@ const Post = () => {
           bookmarked={bookmarkedPost(currentPost.id)}
           likePost={() => handleLikePost(currentPost)}
           bookmarkPost={() => handleBookmarkPost(currentPost)}
+          type={currentPost.type}
           deletePost={() => deletePost(currentPost.id)}
         />
       );
@@ -449,6 +450,7 @@ const Post = () => {
           bookmarked={bookmarkedPost(comment.id)}
           likePost={() => handleLikePost(comment)}
           bookmarkPost={() => handleBookmarkPost(comment)}
+          type={comment.type}
           deletePost={() => deleteComment(comment.id)}
         />
       ));

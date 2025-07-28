@@ -1,11 +1,14 @@
 import Linkify from "linkify-react";
 import moment from "moment";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 /* eslint-disable react/prop-types */
-const ViewPostCard = ({users,userId, deleting, liking, bookmarking, following, postUserId, postUserIdVal, uImg, uName, toggleFollow, followed, postContent, commentsCount, liked, likes, likePost, bookmarked, bookmarks, bookmarkPost, deletePost, datetime, focusInput}) => {
+const ViewPostCard = ({users,userId, deleting, liking, bookmarking, following, postUserId, postUserIdVal, uImg, uName, toggleFollow, followed, postContent, commentsCount, liked, likes, likePost, bookmarked, bookmarks, bookmarkPost, type, deletePost, datetime, focusInput}) => {
 
+  
+  const { deleted } = useSelector((state) => state.posts)
   const [showDelete, setShowDelete] = useState(false)
 
   const getPostUserName = () => {
@@ -19,6 +22,9 @@ const ViewPostCard = ({users,userId, deleting, liking, bookmarking, following, p
 
   const body = document.body
   useEffect(() => {
+    if(deleted) {
+      setShowDelete(false)
+    }
     if(showDelete) {
       body.style.height = '100vh'
       body.style.overflowY = 'hidden'
@@ -26,7 +32,7 @@ const ViewPostCard = ({users,userId, deleting, liking, bookmarking, following, p
       body.style.height = '100vh'
       body.style.overflowY = 'scroll'
     }
-  }, [showDelete])
+  }, [deleted, showDelete])
 
   const renderLink = ({ attributes, content }) => {
     const { href, ...props } = attributes;
@@ -82,7 +88,7 @@ const ViewPostCard = ({users,userId, deleting, liking, bookmarking, following, p
                 <div className="w-[85%] md:w-[50%] bg-bg dark:bg-black p-5 rounded-[1rem] flex flex-col gap-2 border-[1px] border-black/10 dark:border-dark-accent/20 shadow-md dark:shadow-dark-accent/20">
                 {!deleting ?
                   <>
-                    <h1 className="text-2xl lg:text-3xl font-semibold">Delete Post?</h1>
+                    <h1 className="text-2xl lg:text-3xl font-semibold">Delete {type === "comment" ? "Comment" : "Post"}?</h1>
                     <p>You are about to delete. Do you want to proceed?</p>
                     <div className="w-full flex gap-2 mt-10 font-bold justify-end">
                         <button className="w-fit px-4 py-2 rounded-full bg-error text-white lg:hover:shadow-md" onClick={deletePost}>Delete</button>

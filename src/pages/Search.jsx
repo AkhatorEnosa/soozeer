@@ -293,6 +293,7 @@ const Search = () => {
                     })}
                     likePost={() => handleLike(post)}
                     bookmarkPost={() => handleBookmark(post)}
+                    type={post.type}
                     deletePost={() => deletePost(post.id)}
                   />
                 )

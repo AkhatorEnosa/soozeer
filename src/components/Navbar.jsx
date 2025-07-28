@@ -2,7 +2,7 @@ import { Link} from "react-router-dom"
 import { useContext, useEffect } from "react"
 import logo1 from '../assets/logo-grayscale.png'
 import logo2 from '../assets/logo-grayscale-white.png'
-import {  useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 import useGetUser from "../hooks/useGetUser"
 import ThemeToggleButton from "./ThemeToggleButton"
 import LogoutModal from "./LogoutModal"
@@ -12,6 +12,7 @@ const Navbar = () => {
   const {loggedUser, isLoading, exiting} = useSelector((state) => state.app)
     const { triggerLogout, setTriggerLogout, showSubMenu, setShowSubMenu} = useContext(AppContext)
   const body = document.body
+
   useGetUser();
 
   useEffect(() => {
@@ -25,8 +26,8 @@ const Navbar = () => {
   }, [triggerLogout, showSubMenu])
 
     // useEffect(() => {
-    //       dispatch(getUser())
-    //  }, [])
+    //     dispatch(getUser())
+    //  }, [loggedUser])
 
   // if(loggedUser) {
     return (

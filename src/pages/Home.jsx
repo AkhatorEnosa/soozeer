@@ -39,7 +39,7 @@ const Home = () => {
   const navigate = useNavigate()
 
   const { loggedUser, allUsers, otherUsers, isLoading, isLoadingOtherUsers } = useSelector((state) => state.app)
-  const { posts, likes, bookmarks, postComments, posted, isAddingPost, isDeletingPost, isBookmarking, isLiking, deleted } = useSelector((state) => state.posts)
+  const { posts, likes, bookmarks, postComments, posted, isAddingPost, isDeletingPost, isBookmarking, isLiking } = useSelector((state) => state.posts)
   const { follows, isLoadingFollows } = useSelector((state) => state.follows)
   const { renderEmptyState, renderLoadingState, userListEmptyState } = useContext(AppContext);
   const dispatch = useDispatch()
@@ -86,7 +86,6 @@ const Home = () => {
   }, [])
 
   useEffect(() => {
-    
     dispatch(getPostComments())
   }, [loggedUser, loggedUser?.u_id])
 
@@ -257,8 +256,8 @@ const Home = () => {
       // render form input based on tab
       newPostForm = loggedUser !== null && 
 
-        <dialog className={`w-screen h-screen ${showPostInModal ? "flex" : "hidden"} flex-col justify-center items-center fixed top-0 left-0 bg-base-100/90 dark:bg-black/90 dark:text-[#cbc9c9] shadow-lg mb-4 z-[220]`}>
-          <div className="flex flex-col justify-center items-center bg-base-100 dark:bg-black p-5 gap-5 rounded-lg w-[80%] md:w-[60%] lg:w-[40%] border-[1px] border-black/10 dark:border-[#CBC9C9]/20 shadow-md dark:shadow-[#cbc9c9]/20">
+        <dialog className={`w-screen h-screen ${showPostInModal ? 'flex' : 'hidden'} flex-col justify-center items-center fixed top-0 left-0 bg-bg/90 dark:bg-black/90 text-neutral-dark dark:text-dark-accent shadow-lg mb-4 z-[220]`}>
+          <div className="flex flex-col justify-center items-center bg-bg dark:bg-black p-5 gap-5 rounded-lg w-[80%] md:w-[60%] lg:w-[40%] border-[1px] border-black/10 dark:border-dark-text-dark-accent/20 shadow-md dark:shadow-dark-text-dark-accent/20">
             <div className="w-full flex justify-between items-center">
               <div className="flex gap-2 items-center">
                 <img src={loggedUser?.u_img} alt="" className="relative z-20 w-10 h-10 object-cover object-center rounded-full  shadow-sm cursor-default" width={80} height={80} loading="lazy"/>
@@ -266,11 +265,11 @@ const Home = () => {
               </div>
 
               {/* closePostFormModal button */}
-              <span className="size-10 flex justify-center items-center p-2 hover:bg-black/5 rounded-full" onClick={() => closePostFormModal()}><i className="bi bi-x-lg cursor-pointer"></i></span>
+              <button className="size-10 flex justify-center items-center p-2 hover:bg-black/5 rounded-full" onClick={() => closePostFormModal()}><i className="bi bi-x-lg cursor-pointer"></i></button>
             </div>
             
             <div className="w-full flex flex-col gap-4">
-              <textarea name="body" id="body" ref={textAreaRef} className={`text-md z-20 w-full flex flex-col min-h-8 dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 outline-none resize-none`} value={postValue} placeholder="What are you thinking?" onChange={(e) => setPostValue(e.target.value)} readOnly={isAddingPost} autoFocus={showPostInModal}></textarea>
+              <textarea name="body" id="body" ref={textAreaRef} className={`bg-bg dark:border-dark-accent/40 text-neutral-dark dark:text-dark-accent text-md w-full min-h-8 dark:bg-black dark:placeholder:text-dark-accent/60 outline-none resize-none`} value={postValue} placeholder="What are you thinking?" onChange={(e) => setPostValue(e.target.value)} readOnly={isAddingPost} autoFocus={showPostInModal}></textarea>
 
               <button className={postValue.trim() !== '' && !isAddingPost ? "px-6 py-2 bg-primary font-semibold text-white rounded-full scale-100" : "px-6 py-2 bg-primary/30 font-semibold text-white rounded-full transition-all duration-150 cursor-not-allowed"} onClick={handleSubmit} disabled={postValue.trim() == '' || isAddingPost && "disabled"}>{isAddingPost ?  'Posting...' : 'Post'}</button>
             </div>
@@ -298,7 +297,6 @@ const Home = () => {
                       liking={isLiking}
                       bookmarking={isBookmarking}
                       deleting={isDeletingPost}
-                      deleted={deleted}
                       toggleFollow={() => {
                               const verifyFollow = follows.find(x => ((x.followed_id == post.u_id) && (x.follower_id == loggedUser?.u_id)))
                                 // console.log(verifyFollow)
@@ -339,21 +337,22 @@ const Home = () => {
                                 }
                           }}
                       bookmarkPost={() => {
-                              const verifyBookmark = bookmarks.find(x => ((x.post_id == post.id) && (x.u_id == loggedUser.u_id)))
-                                // console.log(verifyBookmark)
-                                if(verifyBookmark == undefined) {
-                                    dispatch(bookmarkPost({
-                                      postId: post.id, 
-                                      creatorUid: loggedUser.u_id,
-                                      creatorName: loggedUser.name,
-                                      creatorImg: loggedUser.u_img,
-                                      postUid: post.u_id,
-                                      postBody: post.body,
-                                    }))
-                                } else {
-                                    removeBookmark(verifyBookmark.id)
-                                }
-                          }}
+                          const verifyBookmark = bookmarks.find(x => ((x.post_id == post.id) && (x.u_id == loggedUser.u_id)))
+                            // console.log(verifyBookmark)
+                            if(verifyBookmark == undefined) {
+                                dispatch(bookmarkPost({
+                                  postId: post.id, 
+                                  creatorUid: loggedUser.u_id,
+                                  creatorName: loggedUser.name,
+                                  creatorImg: loggedUser.u_img,
+                                  postUid: post.u_id,
+                                  postBody: post.body,
+                                }))
+                            } else {
+                                removeBookmark(verifyBookmark.id)
+                            }
+                      }}
+                      type={post.type}
                       deletePost={()=> deletePost(post.id)}
                     />
                     ))
@@ -371,8 +370,8 @@ const Home = () => {
         // render form input based on tab
         newPostForm = loggedUser !== null && 
 
-          <div className={`w-screen h-screen ${showPostInModal ? "flex" : "hidden"} flex-col justify-center items-center fixed top-0 left-0 bg-base-100/90 dark:bg-black/90 dark:text-[#cbc9c9] shadow-lg mb-4 z-[120]`}>
-            <div className="flex flex-col justify-center items-center bg-base-100 dark:bg-black p-5 gap-5 rounded-lg w-[80%] md:w-[60%] lg:w-[40%] border-[1px] border-black/10 dark:border-[#CBC9C9]/20 shadow-md dark:shadow-[#cbc9c9]/20">
+          <div className={`w-screen h-screen ${showPostInModal ? 'flex' : 'hidden'} flex-col justify-center items-center fixed top-0 left-0 bg-bg/90 dark:bg-black/90 text-neutral-dark dark:text-dark-accent shadow-lg mb-4 z-[220]`}>
+            <div className="flex flex-col justify-center items-center bg-bg dark:bg-black p-5 gap-5 rounded-lg w-[80%] md:w-[60%] lg:w-[40%] border-[1px] border-black/10 dark:border-dark-text-dark-accent/20 shadow-md dark:shadow-dark-text-dark-accent/20">
               <div className="w-full flex justify-between items-center">
                 <div className="flex gap-2 items-center">
                   <img src={loggedUser?.u_img} alt="" className="relative z-20 w-10 h-10 object-cover object-center rounded-full  shadow-sm cursor-default" width={80} height={80} loading="lazy"/>
@@ -380,11 +379,11 @@ const Home = () => {
                 </div>
 
                 {/* closePostFormModal button */}
-                <span className="size-10 flex justify-center items-center p-2 hover:bg-black/5 rounded-full" onClick={() => closePostFormModal()}><i className="bi bi-x-lg cursor-pointer"></i></span>
+                <button className="size-10 flex justify-center items-center p-2 hover:bg-black/5 rounded-full" onClick={() => closePostFormModal()}><i className="bi bi-x-lg cursor-pointer"></i></button>
               </div>
               
               <div className="w-full flex flex-col gap-4">
-                <textarea name="body" id="body" ref={textAreaRef} className={`text-md z-20 w-full flex flex-col h-auto min-h-8 box-border dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 outline-none resize-none`} value={postValue} placeholder="What are you thinking?" onChange={(e) => setPostValue(e.target.value).trim()} readOnly={isAddingPost && true}></textarea>
+                <textarea name="body" id="body" ref={textAreaRef} className={`bg-bg dark:border-dark-accent/40 text-neutral-dark dark:text-dark-accent text-md w-full min-h-8 dark:bg-black dark:placeholder:text-dark-accent/60 outline-none resize-none`} value={postValue} placeholder="What are you thinking?" onChange={(e) => setPostValue(e.target.value).trim()} readOnly={isAddingPost && true}></textarea>
                 <button className={postValue.trim() !== '' && !isAddingPost ? "px-6 py-2 bg-primary font-semibold text-white rounded-full scale-100" : "px-6 py-2 bg-primary/30 font-semibold text-white rounded-full transition-all duration-150 cursor-not-allowed"} onClick={handleSubmit} disabled={postValue.trim() == '' || isAddingPost && "disabled"}>{isAddingPost ?  'Posting...' : 'Post'}</button>
               </div>
             </div>
@@ -418,7 +417,6 @@ const Home = () => {
                         liking={isLiking}
                         bookmarking={isBookmarking}
                         deleting={isDeletingPost}
-                        deleted={deleted}
                         toggleFollow={() => {
                                 const verifyFollow = follows.find(x => ((x.followed_id == post.u_id) && (x.follower_id == loggedUser?.u_id)))
                                   // console.log(verifyFollow)
@@ -474,6 +472,7 @@ const Home = () => {
                                       removeBookmark(verifyBookmark.id)
                                   }
                             }}
+                        type={post.type}
                         deletePost={()=> deletePost(post.id)}
                       />
                       ))
@@ -496,8 +495,8 @@ const Home = () => {
         }
         // render form input based on tab
         newPostForm = loggedUser !== null && 
-        <div className={`w-screen h-screen ${showPostInModal ? "flex" : "hidden"} flex-col justify-center items-center fixed top-0 left-0 bg-base-100/90 dark:bg-black/90 dark:text-[#cbc9c9] mb-4 z-[120]`}>
-          <div className="flex flex-col justify-center items-center bg-base-100 dark:bg-black p-5 gap-5 rounded-lg w-[80%] md:w-[60%] lg:w-[40%] border-[1px] border-black/10 dark:border-[#CBC9C9]/20 shadow-md dark:shadow-[#cbc9c9]/20">
+        <dialog className={`w-screen h-screen ${showPostInModal ? 'flex' : 'hidden'} flex-col justify-center items-center fixed top-0 left-0 bg-bg/90 dark:bg-black/90 text-neutral-dark dark:text-dark-accent shadow-lg mb-4 z-[220]`}>
+          <div className="flex flex-col justify-center items-center bg-bg dark:bg-black p-5 gap-5 rounded-lg w-[80%] md:w-[60%] lg:w-[40%] border-[1px] border-black/10 dark:border-dark-text-dark-accent/20 shadow-md dark:shadow-dark-text-dark-accent/20">
             <div className="w-full flex justify-between items-center">
               <div className="flex gap-2 items-center">
                 <img src={loggedUser?.u_img} alt="" className="relative z-20 w-10 h-10 object-cover object-center rounded-full  shadow-sm cursor-default" width={80} height={80} loading="lazy"/>
@@ -505,15 +504,15 @@ const Home = () => {
               </div>
 
               {/* closePostFormModal button */}
-              <span className="size-10 flex justify-center items-center p-2 hover:bg-black/5 rounded-full" onClick={() => closePostFormModal()}><i className="bi bi-x-lg cursor-pointer"></i></span>
+              <button className="size-10 flex justify-center items-center p-2 hover:bg-black/5 rounded-full" onClick={() => closePostFormModal()}><i className="bi bi-x-lg cursor-pointer"></i></button>
             </div>
             <div className="w-full flex flex-col gap-4">
-              <input type="text" className={`text-md z-20 w-full flex flex-col min-h-8 dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 outline-none`} value={title} placeholder="Title" onChange={(e) => setTitle(e.target.value)}/>
+              <input type="text" className={`bg-bg dark:border-dark-accent/40 text-neutral-dark dark:text-dark-accent text-md w-full min-h-8 dark:bg-black dark:placeholder:text-dark-accent/60 outline-none resize-none`} value={title} placeholder="Title" onChange={(e) => setTitle(e.target.value)}/>
 
-              <textarea name="body" id="body" ref={textAreaRef} className={`text-md z-20 w-full flex flex-col min-h-8 dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 outline-none resize-none`} value={journalText} placeholder="Body" onChange={(e) => setJournalText(e.target.value)}></textarea>
+              <textarea name="body" id="body" ref={textAreaRef} className={`bg-bg dark:border-dark-accent/40 text-neutral-dark dark:text-dark-accent text-md w-full min-h-8 dark:bg-black dark:placeholder:text-dark-accent/60 outline-none resize-none`} value={journalText} placeholder="Body" onChange={(e) => setJournalText(e.target.value)}></textarea>
               
               <div className={`w-full flex justify-between transition-all duration-150 mt-4`}>
-                <select className="bg-accent/5 border-[1px] border-black/20 dark:border-[#CBC9C9]/20 w-full max-w-fit rounded-full text-xs font-semibold px-2 py-0 outline-none" onChange={(e) => setPrivacy(e.target.value)} defaultValue={"Change Privacy?"}>
+                <select className="bg-accent/5 border-[1px] border-black/20 dark:border-dark-text-dark-accent/20 w-full max-w-fit rounded-full text-xs font-semibold px-2 py-0 outline-none" onChange={(e) => setPrivacy(e.target.value)} defaultValue={"Change Privacy?"}>
                   <option disabled>Change Privacy?</option>
                   <option>For me</option>
                   <option>Everyone</option>
@@ -522,7 +521,7 @@ const Home = () => {
               </div>
             </div>
           </div>
-        </div> 
+        </dialog> 
         
         const allJournals = posts.filter((post) => post.type == 'journal').map(post => (post.privacy == 'Everyone' || post.u_id == loggedUser?.u_id) && post)
         const filterJournals = allJournals.filter(post => post !== false)
@@ -544,7 +543,7 @@ const Home = () => {
                         liking={isLiking}
                         bookmarking={isBookmarking}
                         deleting={isDeletingPost}
-                        deleted={deleted}
+                        
                         likes={countLikes(post.id)}
                         liked={likedPost(post.id)}
                         likePost={() => {
@@ -605,19 +604,25 @@ const Home = () => {
           {/* main section  */}
           <div className={loggedUser?.u_id ? 'w-full flex flex-col col-span-6 xl:col-span-4 border-r-[1px] border-l-[1px] mt-5 border-black/5 dark:border-dark-accent/20' : 'w-full flex flex-col col-span-6 border-r-[1px] border-l-[1px] border-black/5 dark:border-dark-accent/20 justify-center items-center'}>
 
-            {loggedUser?.u_id && <div className="sticky top-0 flex justify-evenly text-center dark:text-[#CBC9C9] w-full bg-base-100/90 dark:bg-black/90 backdrop-blur-md overflow-scroll no-scrollbar text-sm md:text-base font-medium z-40">
-              <button className={`w-full ${tab === 'forYou' && "bg-primary/5 font-bold border-b-2 border-primary"} py-3 px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('forYou')}>For you</button>
-              <button className={`w-full ${tab === 'following' && "bg-primary/5 font-bold border-b-[1px] border-primary"} py-3 px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('following')}>Following</button>
-              <button className={`w-full ${tab === 'journal' && "bg-accent/5 font-bold border-b-[1px] border-accent"} py-3 px-10 hover:bg-accent/5 cursor-pointer`} onClick={() => setTab('journal')}>Journal</button>
+            {loggedUser?.u_id && <div className="sticky top-0 grid grid-cols-3 justify-evenly text-center text-neutral-dark w-full bg-bg/90 dark:bg-black/90 backdrop-blur-md overflow-scroll no-scrollbar text-xs md:text-sm md:text-neutral-dark dark:text-dark-accent font-semibold z-40">
+              <button className={`w-full ${tab === 'forYou' ? 'bg-primary/5 font-bold border-b-2 border-primary' : ''} py-3 px-4 md:px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('forYou')}>
+                For you
+              </button>
+              <button className={`w-full ${tab === 'following' ? 'bg-primary/5 font-bold border-b-[1px] border-primary' : ''} py-3 px-4 md:px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('following')}>
+                Following
+              </button>
+              <button className={`w-full ${tab === 'journal' ? 'bg-accent/5 font-bold border-b-[1px] border-accent' : ''} py-3 px-10 hover:bg-accent/5 cursor-pointer`} onClick={() => setTab('journal')}>
+                Journal
+              </button>
             </div>}
 
 
             
             <div className="w-full relative flex flex-col">
               {isLoading ? renderLoadingState('h-40') : 
-                <div className="relative w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
-                  {loggedUser && <div className="w-full flex justify-end lg:justify-start items-center px-4 my-5 text-sm dark:text-[#cbc9c9] fixed bottom-20 left-0 lg:sticky lg:top-12 py-2 lg:bg-base-100/90 dark:lg:dark:bg-black/90 lg:backdrop-blur-sm z-[110]"> 
-                    <button className={`w-fit flex gap-2 justify-center items-center border-[1px] border-black bg-base-100 dark:bg-black dark:border-[#CBC9C9] font-semibold ${tab == 'journal' ? "hover:bg-accent/5 hover:border-accent hover:text-accent dark-hover:text-inherit" : "hover:bg-primary/5 hover:border-primary hover:text-primary "}  px-4 py-2 rounded-full shadow-md lg:shadow-none`} onClick={()=> setShowPostInModal(!showPostInModal)}><i className="bi bi-pencil"></i>{tab == 'journal' ? "Write Journal" : "Write Post"}</button>
+                <div className="relative w-full text-neutral-dark dark:text-dark-accent divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
+                  {loggedUser && <div className="w-full flex justify-end lg:justify-start items-center px-4 my-5 text-sm dark:text-dark-accent fixed bottom-20 left-0 lg:sticky lg:top-12 py-2 lg:bg-bg/90 dark:lg:dark:bg-black/90 lg:backdrop-blur-sm z-[110]"> 
+                    <button className={`w-fit flex gap-2 justify-center items-center border-[1px] border-black bg-bg dark:bg-black dark:border-dark-text-dark-accent font-semibold ${tab == 'journal' ? "hover:bg-accent/5 hover:border-accent hover:text-accent dark-hover:text-inherit" : "hover:bg-primary/5 hover:border-primary hover:text-primary "}  px-4 py-2 rounded-full shadow-md lg:shadow-none`} onClick={()=> setShowPostInModal(!showPostInModal)}><i className="bi bi-pencil"></i>{tab == 'journal' ? "Write Journal" : "Write Post"}</button>
                   </div>}
                   {content}
                   <p className="py-8 flex justify-center text-primary">.</p>
@@ -629,14 +634,18 @@ const Home = () => {
           <div className="hidden sticky top-0 xl:flex flex-col gap-5 h-fit col-span-2 py-3 z-0">
             {loggedUser?.u_id || isLoadingOtherUsers ? <>
               {/* search  */}
-              <form onSubmit={handleSearch} className="flex flex-col gap-5 py-2 bg-base-100 dark:bg-black dark:text-[#cbc9c9] z-50">
-                  <input type="text" name="search" id="search" value={search} placeholder="Search..." className="w-full px-4 py-2  border-[1px] dark:border-[#CBC9C9]/40 placeholder:text-inherit outline-none dark:bg-black dark:focus-within:bg-black/50 rounded-full" onChange={(e)=> setSearch(e.target.value).trim()}/>
+              <form onSubmit={handleSearch} className="flex flex-col gap-5 py-2 bg-bg dark:bg-black dark:text-dark-accent z-50">
+                  <input type="text" name="search" id="search" value={search} placeholder="Search..." className="w-full px-4 py-2 border-[1px] bg-bg dark:border-dark-accent/40 text-neutral-dark dark:text-dark-accent text-sm placeholder:text-inherit outline-none dark:bg-black dark:focus-within:bg-black/50 rounded-full" onChange={(e)=> setSearch(e.target.value).trim()}/>
               </form>
-              <div className="py-3 border-t-[1px] border-[1px] border-black/5  dark:border-[#CBC9C9]/20 rounded-md">
-                <h2 className="font-bold text-xl px-5 pb-4 dark:text-[#CBC9C9]">Suggested</h2>
-                {isLoadingOtherUsers ? renderLoadingState("h-10") : <div className="w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
-                  {userList}
-                </div>}
+              <div className="py-3 border-t-[1px] border-[1px] text-neutral-dark border-black/5 dark:border-dark-accent/20 rounded-md">
+                <h2 className="font-bold text-xl px-5 pb-4 dark:text-dark-accent">Suggested For You</h2>
+                {
+                  isLoadingOtherUsers || isLoading 
+                    ? 
+                  renderLoadingState('h-10') 
+                    : 
+                  <div className="w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">{userList}</div>
+                }
               </div>
             </> 
             : 
@@ -644,8 +653,8 @@ const Home = () => {
                 <p>Join Us to</p>
                 <h1 className="font-bold text-4xl">Explore</h1>
                 <ul className="flex mt-10 gap-4">
-                  <Link to={'/login'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral dark:border-slate-200 dark:text-[#CBC9C9]   hover:bg-black hover:text-base-100 dark:hover:bg-slate-200">Login</li></Link>
-                  <Link to={'/register'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral dark:border-slate-200 dark:text-[#CBC9C9]   hover:bg-black hover:text-base-100 dark:hover:bg-slate-200">Register</li></Link>
+                  <Link to={'/login'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral dark:border-slate-200 dark:text-dark-accent   hover:bg-black hover:text-bg dark:hover:bg-slate-200">Login</li></Link>
+                  <Link to={'/register'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral dark:border-slate-200 dark:text-dark-accent   hover:bg-black hover:text-bg dark:hover:bg-slate-200">Register</li></Link>
                 </ul>
             </div>
             }
@@ -654,7 +663,7 @@ const Home = () => {
         </div>
          
          {/* Posted modal 
-        {posted && postDetails.u_id && <div className="fixed w-screen h-screen flex justify-center px-10 bg-base-100/80 items-center top-0 left-0 cursor-default z-[1000]">
+        {posted && postDetails.u_id && <div className="fixed w-screen h-screen flex justify-center px-10 bg-bg/80 items-center top-0 left-0 cursor-default z-[1000]">
             <p>Posted!</p>
             <Link to={window.location.origin+"/post/"+postDetails?.id}>View Post</Link>
         </div>} */}

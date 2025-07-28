@@ -1,10 +1,14 @@
 import Linkify from "linkify-react";
 import moment from "moment";
 import { useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 /* eslint-disable react/prop-types */
-const PostCard = ({users, userId, postId, liking, bookmarking, deleting, deleted, postUserId, postUserIdVal, uImg, uName, toggleFollow, followed, postContent, comments, openComment, liked, likes, likePost, bookmarked, bookmarks, bookmarkPost, deletePost, datetime}) => {
+const PostCard = ({users, userId, postId, liking, bookmarking, deleting, postUserId, postUserIdVal, uImg, uName, toggleFollow, followed, postContent, comments, openComment, liked, likes, likePost, type, bookmarked, bookmarks, bookmarkPost, deletePost, datetime}) => {
+
+  
+  const { deleted } = useSelector((state) => state.posts)
 
   const [showDelete, setShowDelete] = useState(false)
   const [expandPost, setExpandPost] = useState(false)
@@ -25,7 +29,12 @@ const PostCard = ({users, userId, postId, liking, bookmarking, deleting, deleted
   
   const body = document.body
   useMemo(() => {
-    deleted && setShowDelete(false)
+    if(deleted) {
+      setShowDelete(false)
+      
+    }
+
+    console.log('deleted', deleted)
     if(showDelete) {
       body.style.height = '100vh'
       body.style.overflowY = 'hidden'
@@ -33,9 +42,7 @@ const PostCard = ({users, userId, postId, liking, bookmarking, deleting, deleted
       body.style.height = '100vh'
       body.style.overflowY = 'scroll'
     }
-
-    console.log(body.style.overflowY)
-  }, [body.style, deleted, showDelete])
+  }, [showDelete, deleted])
 
   const validateSize = (text) => {
     const strLength = text.length
@@ -100,7 +107,7 @@ const PostCard = ({users, userId, postId, liking, bookmarking, deleting, deleted
               <button className={`relative z-20 flex justify-center items-center gap-1 px-2 ${bookmarked ? "bg-[#05a9f5]/10 text-[#05a9f5]" : "bg-neutral-100 dark:bg-neutral-500/30"} hover:bg-[#05a9f5]/10 rounded-full hover:text-[#05a9f5] cursor-pointer`} onClick={bookmarkPost} disabled={bookmarking}><i className={bookmarked == false ? "bi bi-bookmark text-xs md:text-base" : "bi bi-bookmark-fill text-[#05a9f5] text-xs md:text-base"}></i>{bookmarks} </button>
             </div>
 
-            {postUserId ? <button className={`relative z-20 flex justify-center items-center gap-1 rounded-full bg-neutral-100 dark:bg-neutral-500/30 hover:text-red-700 size-10  p-2 hover:bg-red-400/10 cursor-pointer`} onClick={() => setShowDelete(!showDelete)} disabled={deleting}><i className="bi bi-x-lg text-sm md:text-base"></i> </button> : '' }
+            {postUserId ? <button className={`relative z-20 flex justify-center items-center gap-1 rounded-full bg-neutral-100 dark:bg-neutral-500/30 hover:text-red-700 size-10  p-2 hover:bg-red-400/10 cursor-pointer`} onClick={() => setShowDelete(true)} disabled={deleting}><i className="bi bi-x-lg text-sm md:text-base"></i> </button> : '' }
 
           </div> : <div className="w-full border-t-[1px] border-black/5 px-5 py-4 gap-2 justify-between items-center text-[10px] md:text-xs pt-2 grid grid-cols-7 text-xs">
           <div className="w-full flex gap-20 col-span-6">
@@ -115,11 +122,11 @@ const PostCard = ({users, userId, postId, liking, bookmarking, deleting, deleted
         }
 
         {/* Delete modal  */}
-        {showDelete && <div className="fixed w-screen h-screen flex justify-center px-10 bg-base-100/80 dark:bg-black/80 items-center top-0 left-0 cursor-default z-[1000]">
-              <div className="w-[85%] md:w-[50%] bg-base-100 dark:bg-black dark:text-dark-accent p-5 rounded-[1rem] flex flex-col gap-2 border-[1px] border-black/10 dark:border-dark-accent/20 shadow-md dark:shadow-dark-accent/20">
+        {showDelete && <div className="fixed w-screen h-screen flex justify-center px-10 bg-bg/80 dark:bg-black/80 items-center top-0 left-0 cursor-default z-[1000]">
+              <div className="w-[85%] md:w-[50%] bg-bg dark:bg-black p-5 rounded-[1rem] flex flex-col gap-2 border-[1px] border-black/10 dark:border-dark-accent/20 shadow-md dark:shadow-dark-accent/20">
                 {!deleting ?
                   <>
-                    <h1 className="text-2xl lg:text-3xl font-semibold">Delete Post?</h1>
+                    <h1 className="text-2xl lg:text-3xl font-semibold">Delete {type === "comment" ? "Comment" : "Post"}?</h1>
                     <p>You are about to delete. Do you want to proceed?</p>
                     <div className="w-full flex gap-2 mt-10 font-bold justify-end">
                         <button className="w-fit px-4 py-2 rounded-full bg-error text-white lg:hover:shadow-md" onClick={deletePost}>Delete</button>

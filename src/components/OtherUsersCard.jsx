@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom"
 
 /* eslint-disable react/prop-types */
-const OtherUsersCard = ({uid, userIdVal, userImg, name, uName, followed, following, toggleFollow}) => {
+const OtherUsersCard = ({uid, userIdVal, key, userImg, name, uName, followed, following, toggleFollow}) => {
   return (
-    <div className="w-full py-3 px-3 flex flex-col items-start border-y-[1px] border-black/5 dark:border-neutral-300/10 hover:bg-primary/5 duration-200 transition-all">
+    <div key={key} className="w-full py-3 px-3 flex flex-col items-start border-y-[1px] border-black/5 dark:border-neutral-300/10 hover:bg-primary/5 duration-200 transition-all">
         <div className="w-full flex justify-between items-center gap-2">
 
           <div className="w-full flex gap-2 text-xs">

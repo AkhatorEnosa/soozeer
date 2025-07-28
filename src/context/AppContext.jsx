@@ -22,7 +22,7 @@ export function AppProvider({ children }) {
     const renderLoadingState = (height) => (
       <div className="w-full flex flex-col gap-4">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className={`skeleton bg-neutral-dark/20 dark:bg-slate-600 ${height} w-full opacity-40`}></div>
+          <span key={i} className={`skeleton bg-neutral-dark/20 dark:bg-slate-600 ${height} w-full opacity-40`}></span>
         ))}
       </div>
     );
