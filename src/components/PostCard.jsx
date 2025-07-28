@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 /* eslint-disable react/prop-types */
-const PostCard = ({users, userId, postId, liking, bookmarking, deleting, postUserId, postUserIdVal, uImg, uName, toggleFollow, followed, postContent, comments, openComment, liked, likes, likePost, bookmarked, bookmarks, bookmarkPost, deletePost, datetime}) => {
+const PostCard = ({users, userId, postId, liking, bookmarking, deleting, deleted, postUserId, postUserIdVal, uImg, uName, toggleFollow, followed, postContent, comments, openComment, liked, likes, likePost, bookmarked, bookmarks, bookmarkPost, deletePost, datetime}) => {
 
   const [showDelete, setShowDelete] = useState(false)
   const [expandPost, setExpandPost] = useState(false)
@@ -25,6 +25,7 @@ const PostCard = ({users, userId, postId, liking, bookmarking, deleting, postUse
   
   const body = document.body
   useMemo(() => {
+    deleted && setShowDelete(false)
     if(showDelete) {
       body.style.height = '100vh'
       body.style.overflowY = 'hidden'
@@ -32,7 +33,9 @@ const PostCard = ({users, userId, postId, liking, bookmarking, deleting, postUse
       body.style.height = '100vh'
       body.style.overflowY = 'scroll'
     }
-  }, [showDelete])
+
+    console.log(body.style.overflowY)
+  }, [body.style, deleted, showDelete])
 
   const validateSize = (text) => {
     const strLength = text.length

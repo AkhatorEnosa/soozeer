@@ -17,6 +17,7 @@ const initialState = {
     postDetails: null,
     isLoadingPosts: true,
     isDeletingPost: false,
+    deleted: false,
     isLiking: false,
     isBookmarking: false,
     errorPost: false,
@@ -421,10 +422,12 @@ const postSlice = createSlice({
             .addCase(deletePost.fulfilled, (state, action) => {
                 state.posts = state.posts.filter(x => x.id !== action.payload.id),
                 state.isDeletingPost = false
+                state.deleted = true
             })
             .addCase(deletePost.rejected, (state, action) => {
                 state.errorPost = action.error.message
                 state.isDeletingPost = false
+                state.deleted = true
             })
             .addCase(getLikes.pending, (state) => {
                 state.isLoadingPosts = true;

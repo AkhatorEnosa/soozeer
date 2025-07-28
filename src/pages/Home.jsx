@@ -1,7 +1,7 @@
-/* eslint-disable react/prop-types */
+// /* eslint-disable react-hooks/exhaustive-deps */
 
 // import Navbar from "../components/Navbar"
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import PostCard from "../components/PostCard"
 import Footer from "../sections/Footer"
 import { Link, useNavigate, useParams } from "react-router-dom"
@@ -21,631 +21,661 @@ import SearchModal from "../components/SearchModal"
 import NotLoggedInModal from "../components/NotLoggedInModal"
 import supabase from "../config/supabaseClient.config"
 import JournalCard from "../components/JournalCard"
-import { AppContext } from "../context/AppContext"
-// import logo1 from '../assets/logo-grayscale.png'
-// import logo2 from '../assets/logo-grayscale-white.png'
 import useGetUsers from "../hooks/useGetUsers"
-
+import { AppContext } from "../context/AppContext"
 
 const Home = () => {
-  const [tab, setTab] = useState('forYou');
-  const [search, setSearch] = useState('');
-  const [postValue, setPostValue] = useState('');
-  const [title, setTitle] = useState('');
-  const [journalText, setJournalText] = useState('');
-  const [privacy, setPrivacy] = useState(null);
-  const [showPostInModal, setShowPostInModal] = useState(false);
+
+  const [tab, setTab] = useState("forYou")
+  const [search, setSearch] = useState("")
+  const [postValue, setPostValue] = useState("")
+  const [title, setTitle] = useState('')
+  const [journalText, setJournalText] = useState('')
+  const [privacy, setPrivacy] = useState(null)
   const textAreaRef = useRef(null);
+  const [showPostInModal, setShowPostInModal] = useState(false)
 
-  const { renderErrorState, renderEmptyState, renderLoadingState, userListEmptyState } = useContext(AppContext);
-  const { id: paramsId } = useParams();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const {id: paramsId} = useParams()
+  const navigate = useNavigate()
 
-  const { error, allUsers, loggedUser, otherUsers, isLoading, isLoadingOtherUsers } = useSelector((state) => state.app);
-  const { posts, likes, bookmarks, postComments, posted, isAddingPost, isLoadingPosts, isDeletingPost, isBookmarking, isLiking } = useSelector((state) => state.posts);
-  const { follows, isLoadingFollows } = useSelector((state) => state.follows);
+  const { loggedUser, allUsers, otherUsers, isLoading, isLoadingOtherUsers } = useSelector((state) => state.app)
+  const { posts, likes, bookmarks, postComments, posted, isAddingPost, isDeletingPost, isBookmarking, isLiking, deleted } = useSelector((state) => state.posts)
+  const { follows, isLoadingFollows } = useSelector((state) => state.follows)
+  const { renderEmptyState, renderLoadingState, userListEmptyState } = useContext(AppContext);
+  const dispatch = useDispatch()
 
-
-  useGetUsers();
-  usePosts();
-  const { mutate } = useAddPost();
-  const { mutate: del } = useDeletePost();
-  useLikes();
-  useBookmarks();
-  useFollows();
-  useOtherUsers({ loggedId: loggedUser?.u_id, currentId: loggedUser?.u_id });
-
-  // Handle body scroll locking
+  useGetUsers()
+  usePosts()
+  const {mutate} = useAddPost()
+  const {mutate:del} = useDeletePost()
+  useLikes()
+  useBookmarks()
+  useFollows()
+  useOtherUsers({ loggedId: loggedUser?.u_id, currentId: loggedUser?.u_id })
+  
+  const body = document.body
   useEffect(() => {
-    document.body.style.height = showPostInModal ? '100vh' : 'auto';
-    document.body.style.overflowY = showPostInModal ? 'hidden' : 'scroll';
-  }, [showPostInModal]);
+    if(showPostInModal) {
+      body.style.height = '100vh'
+      body.style.overflowY = 'hidden'
+    } else {
+      body.style.height = '100vh'
+      body.style.overflowY = 'scroll'
+    }
+  }, [showPostInModal])
 
-  // Supabase real-time subscription
   useEffect(() => {
-    const channel = supabase
+      supabase
       .channel('schema-db-changes')
-      .on('postgres_changes', { event: '*', schema: 'public' }, () => {
-        setTimeout(() => {
-          dispatch(getPosts());
-          dispatch(getLikes());
-          dispatch(getBookmarks());
-        }, 10000);
-      })
-      .subscribe();
-    return () => channel.unsubscribe();
-  }, [dispatch]);
+      .on(
+          'postgres_changes',
+          {
+          event: '*',
+          schema: 'public',
+          },
+          () => {
+              // console.log(payload)
+              setTimeout(() => {
+                dispatch(getPosts())
+                dispatch(getLikes())
+                dispatch(getBookmarks())
+              }, 10000);
+          }
+      )
+      .subscribe()
+  }, [])
 
   useEffect(() => {
-    dispatch(getPostComments());
-  }, [dispatch]);
+    
+    dispatch(getPostComments())
+  }, [loggedUser, loggedUser?.u_id])
 
 
-  const PostFormModal = ({ isOpen, onClose, isJournal, loggedUser, textAreaRef, postValue, setPostValue, title, setTitle, journalText, setJournalText, privacy, setPrivacy, handleSubmit, isAddingPost }) => (
-    <dialog
-      open={isOpen}
-      className={`w-screen h-screen ${isOpen ? 'flex' : 'hidden'} flex-col justify-center items-center fixed top-0 left-0 bg-bg/90 dark:bg-black/90 dark:text-dark-accent shadow-lg mb-4 z-[220]`}
-    >
-      <div className="flex flex-col justify-center items-center bg-bg dark:bg-black p-5 gap-5 rounded-lg w-[80%] md:w-[60%] lg:w-[40%] border-[1px] border-black/10 dark:border-dark-accent/20 shadow-md dark:shadow-dark-accent/20">
-        <div className="w-full flex justify-between items-center">
-          <div className="flex gap-2 items-center">
-            <img
-              src={loggedUser?.u_img || ''}
-              alt={loggedUser?.name || 'User avatar'}
-              className="w-10 h-10 object-cover rounded-full shadow-sm cursor-default"
-              width={80}
-              height={80}
-              loading="lazy"
-            />
-            <h1 className="font-semibold text-lg lg:text-2xl">{isJournal ? 'Write a Journal' : 'Write a Post'}</h1>
-          </div>
-          <button
-            aria-label="Close modal"
-            className="size-10 flex justify-center items-center p-2 hover:bg-black/5 rounded-full"
-            onClick={onClose}
-          >
-            <i className="bi bi-x-lg cursor-pointer"></i>
-          </button>
-        </div>
-        <div className="w-full flex flex-col gap-4">
-          {isJournal && (
-            <input
-              type="text"
-              className="text-md w-full dark:text-dark-accent dark:bg-black dark:placeholder:text-dark-accent/60 outline-none"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Title"
-              aria-label="Journal title"
-            />
-          )}
-          <textarea
-            name="body"
-            id="body"
-            ref={textAreaRef}
-            className="text-md w-full min-h-8 dark:text-dark-accent dark:bg-black dark:placeholder:text-dark-accent/60 outline-none resize-none"
-            value={isJournal ? journalText : postValue}
-            onChange={(e) => (isJournal ? setJournalText(e.target.value) : setPostValue(e.target.value))}
-            placeholder={isJournal ? 'Body' : 'What are you thinking?'}
-            readOnly={isAddingPost}
-            aria-label={isJournal ? 'Journal body' : 'Post body'}
-          />
-          {isJournal && (
-            <div className="w-full flex justify-between mt-4">
-              <select
-                className="bg-accent/5 border-[1px] border-black/20 dark:border-dark-accent/20 w-full max-w-fit rounded-full text-xs font-semibold px-2 py-0 outline-none"
-                onChange={(e) => setPrivacy(e.target.value)}
-                value={privacy || 'Change Privacy?'}
-                aria-label="Privacy setting"
-              >
-                <option disabled value="Change Privacy?">Change Privacy?</option>
-                <option value="For me">For me</option>
-                <option value="Everyone">Everyone</option>
-              </select>
-              <button
-                className={
-                  title.trim() && journalText.trim() && privacy && !isAddingPost
-                    ? 'px-6 py-2 bg-accent font-semibold text-white rounded-full scale-100'
-                    : 'px-6 py-2 bg-accent/30 font-semibold text-white rounded-full cursor-not-allowed'
-                }
-                onClick={handleSubmit}
-                disabled={isAddingPost || !title.trim() || !journalText.trim() || !privacy}
-              >
-                {isAddingPost ? 'Posting...' : 'Post'}
-              </button>
-            </div>
-          )}
-          {!isJournal && (
-            <button
-              className={
-                postValue.trim() && !isAddingPost
-                  ? 'px-6 py-2 bg-primary font-semibold text-white rounded-full scale-100'
-                  : 'px-6 py-2 bg-primary/30 font-semibold text-white rounded-full cursor-not-allowed'
-              }
-              onClick={handleSubmit}
-              disabled={isAddingPost || !postValue.trim()}
-            >
-              {isAddingPost ? 'Posting...' : 'Post'}
-            </button>
-          )}
-        </div>
-      </div>
-    </dialog>
-  );
-  
-  const PostCardWrapper = ({ post, loggedUser, follows, likes, bookmarks, isLiking, isBookmarking, isDeletingPost, navigate, dispatch, removeLike, removeBookmark, removeFollow, countComments, countBookmarks, countLikes, likedPost, bookmarkedPost, followed, deletePost }) => {
-    const toggleFollow = useCallback(() => {
-      const verifyFollow = follows.find((x) => x.followed_id === post.u_id && x.follower_id === loggedUser?.u_id);
-      if (!verifyFollow) {
-        dispatch(followUser({
-          uid: loggedUser.u_id,
-          creatorName: loggedUser.name,
-          creatorImg: loggedUser.u_img,
-          receiverUid: post.u_id,
-          receiverName: post.u_name,
-          receiverImg: post.u_img,
-        }));
-      } else {
-        removeFollow(verifyFollow.id);
-      }
-    }, [dispatch, follows, loggedUser, post, removeFollow]);
-  
-    const toggleLike = useCallback(() => {
-      const verifyLike = likes.find((x) => x.post_id === post.id && x.u_id === loggedUser?.u_id);
-      if (!verifyLike) {
-        dispatch(likePost({
-          postId: post.id,
-          creatorUid: loggedUser.u_id,
-          creatorName: loggedUser.name,
-          creatorImg: loggedUser.u_img,
-          postUid: post.u_id,
-          postBody: post.body,
-        }));
-      } else {
-        removeLike(verifyLike.id);
-      }
-    }, [dispatch, likes, loggedUser, post, removeLike]);
-  
-    const toggleBookmark = useCallback(() => {
-      const verifyBookmark = bookmarks.find((x) => x.post_id === post.id && x.u_id === loggedUser?.u_id);
-      if (!verifyBookmark) {
-        dispatch(bookmarkPost({
-          postId: post.id,
-          creatorUid: loggedUser.u_id,
-          creatorName: loggedUser.name,
-          creatorImg: loggedUser.u_img,
-          postUid: post.u_id,
-          postBody: post.body,
-        }));
-      } else {
-        removeBookmark(verifyBookmark.id);
-      }
-    }, [dispatch, bookmarks, loggedUser, post, removeBookmark]);
-  
-    return (
-      <PostCard
-        key={post.id}
-        users={allUsers && [...allUsers]}
-        userId={loggedUser?.u_id}
-        postUserId={post.u_id === loggedUser?.u_id}
-        postUserIdVal={post.u_id}
-        uImg={post.u_img}
-        openComment={() => navigate(`/post/${post.id}`)}
-        uName={post.u_name}
-        postContent={post.body}
-        datetime={post.created_at}
-        postId={post.id}
-        liking={isLiking}
-        bookmarking={isBookmarking}
-        deleting={isDeletingPost}
-        toggleFollow={toggleFollow}
-        followed={followed(post.u_id)}
-        comments={countComments(post.id)}
-        likes={countLikes(post.id)}
-        liked={likedPost(post.id)}
-        bookmarks={countBookmarks(post.id)}
-        bookmarked={bookmarkedPost(post.id)}
-        likePost={toggleLike}
-        bookmarkPost={toggleBookmark}
-        deletePost={() => deletePost(post.id)}
-      />
-    );
-  };
-  
-  const JournalCardWrapper = ({ post, loggedUser, likes, isLiking, isDeletingPost, dispatch, removeLike, countLikes, likedPost, deletePost }) => {
-    const toggleLike = useCallback(() => {
-      const verifyLike = likes.find((x) => x.post_id === post.id && x.u_id === loggedUser?.u_id);
-      if (!verifyLike) {
-        dispatch(likePost({
-          postId: post.id,
-          creatorUid: loggedUser.u_id,
-          creatorName: loggedUser.name,
-          creatorImg: loggedUser.u_img,
-          postUid: post.u_id,
-          postBody: post.journal,
-          for: post.type,
-        }));
-      } else {
-        removeLike(verifyLike.id);
-      }
-    }, [dispatch, likes, loggedUser, post, removeLike]);
-  
-    return (
-      <JournalCard
-        key={post.id}
-        users={allUsers && [...allUsers]}
-        postUserId={post.u_id === loggedUser?.u_id}
-        postUserIdVal={post.u_id}
-        uImg={post.u_img}
-        uName={post.u_name}
-        title={post.title}
-        journal={post.journal}
-        privacy={post.privacy}
-        datetime={post.created_at}
-        liking={isLiking}
-        // bookmarking={isBookmarking}
-        deleting={isDeletingPost}
-        likes={countLikes(post.id)}
-        liked={likedPost(post.id)}
-        likePost={toggleLike}
-        deletePost={() => deletePost(post.id)}
-      />
-    );
-  };
+  const deletePost = (id) => {
+    del({id})
+  }
 
-  // Handle post submission
-  const handleSubmit = useCallback(() => {
-    if (postValue.trim()) {
-      mutate({ type: 'post', body: postValue.trim(), name: loggedUser.name, u_id: loggedUser.u_id, u_img: loggedUser.u_img, paramsId });
+  const removeLike =(id) => {
+    dispatch(unlike(id))
+  }
+
+  const removeBookmark = (id) => {
+      dispatch(unBookmark(id))
+  }
+
+  const removeFollow = (id) => {
+      dispatch(unfollow(id))
+  }
+
+  const countLikes = (id) => {
+    if(likes !== null) {
+      const filterLikes = likes?.filter(like => like.post_id === id)
+      if(filterLikes) {
+        return filterLikes.length
+      }
     }
-  }, [postValue, loggedUser, mutate, paramsId]);
+  }
 
-  const handleSubmitJournal = useCallback(() => {
-    if (title.trim() && journalText.trim() && privacy) {
-      mutate({ type: 'journal', journal: journalText.trim(), title: title.trim(), privacy, name: loggedUser.name, u_id: loggedUser.u_id, u_img: loggedUser.u_img, paramsId });
+  const likedPost = (id) => {
+    if(likes !== null) {
+      const findLiked = likes.find(like => (like.post_id == id) && (like.u_id == loggedUser?.u_id))
+      if(findLiked) {
+        return true
+      } else {
+        return false
+      }
     }
-  }, [title, journalText, privacy, loggedUser, mutate, paramsId]);
+  }
 
-  // Reset form after posting
-  useEffect(() => {
-    if (posted) {
-      setShowPostInModal(false);
-      setPostValue('');
-      setJournalText('');
-      setTitle('');
-      setPrivacy(null);
-      if (textAreaRef.current) textAreaRef.current.textContent = '';
+  const countBookmarks = (id) => {
+    if(bookmarks !== null) {
+      const filterBookmarks = bookmarks?.filter(bookmark => bookmark.post_id === id)
+      if(filterBookmarks) {
+        return filterBookmarks.length
+      }
     }
-  }, [posted]);
+  }
 
-  // Auto-resize textarea and focus
+  const bookmarkedPost = (id) => {
+    if(bookmarks !== null) {
+      const findBookmarked = bookmarks.find(bookmark => (bookmark.post_id == id) && (bookmark.u_id == loggedUser?.u_id))
+      if(findBookmarked) {
+        return true
+      } else {
+        return false
+      }
+    }
+  }
+
+  const countComments = (id) => {
+    if(postComments !== null) {
+      const filterComments = postComments.filter(comment => comment.post_id == id)
+      if(filterComments) {
+        return filterComments.length
+      }
+    }
+  }
+
+  const followed = (id) => {
+    if(follows !== null) {
+      const findFollowed = follows.find(follow => (follow.followed_id == id) && (follow.follower_id == loggedUser?.u_id))
+      if(findFollowed) {
+        return true
+      } else {
+        return false
+      }
+    }
+  }
+
+  //Add New Post
+  const handleSubmit = () => {
+    if(postValue.trim() !== '') {
+        mutate({type: 'post', body: postValue.trim(), name: loggedUser.name, u_id: loggedUser.u_id,  u_img: loggedUser.u_img, paramsId: paramsId})
+    }
+  }
+
+  //Add New Post
+  const handleSubmitJournal = () => {
+    if(title.trim() !== '' && journalText.trim() !== '' && privacy !== null) {
+        mutate({type: 'journal', journal: journalText.trim(), title: title.trim(), privacy: privacy, name: loggedUser.name, u_id: loggedUser.u_id,  u_img: loggedUser.u_img, paramsId: paramsId})
+        // console.log(title, journalText, privacy)
+    }
+  }
+
   useEffect(() => {
     if (showPostInModal && textAreaRef.current) {
       textAreaRef.current.focus();
       textAreaRef.current.style.height = 'auto';
-      const scrollHeight = textAreaRef.current.scrollHeight;
-      textAreaRef.current.style.height = scrollHeight <= 450 ? `${scrollHeight}px` : '450px';
-    }
-  }, [showPostInModal, postValue, journalText]);
-
-  // Utility functions
-  const deletePost = useCallback((id) => del({ id }), [del]);
-  const removeLike = useCallback((id) => dispatch(unlike(id)), [dispatch]);
-  const removeBookmark = useCallback((id) => dispatch(unBookmark(id)), [dispatch]);
-  const removeFollow = useCallback((id) => dispatch(unfollow(id)), [dispatch]);
-
-  const countLikes = useCallback((id) => likes?.filter((like) => like.post_id === id).length || 0, [likes]);
-  const likedPost = useCallback((id) => !!likes?.find((like) => like.post_id === id && like.u_id === loggedUser?.u_id), [likes, loggedUser]);
-  const countBookmarks = useCallback((id) => bookmarks?.filter((bookmark) => bookmark.post_id === id).length || 0, [bookmarks]);
-  const bookmarkedPost = useCallback((id) => !!bookmarks?.find((bookmark) => bookmark.post_id === id && bookmark.u_id === loggedUser?.u_id), [bookmarks, loggedUser]);
-  const countComments = useCallback((id) => postComments?.filter((comment) => comment.post_id === id).length || 0, [postComments]);
-  const followed = useCallback((id) => !!follows?.find((follow) => follow.followed_id === id && follow.follower_id === loggedUser?.u_id), [follows, loggedUser]);
-
-  // User list
-  const userList = useMemo(() => {
-    if (!otherUsers?.length && !isLoading && !isLoadingOtherUsers) {return (
-      <div className="w-full py-10 flex flex-col text-neutral-dark dark:text-dark-accent gap-4">
-        {userListEmptyState()}
-      </div>
-    ) } else {
-      return otherUsers?.slice(0, 4).map((user) => (
-        <OtherUsersCard
-          key={user.id}
-          userImg={user.u_img}
-          name={user.name}
-          uName={user.u_name}
-          uid={user.u_id === loggedUser?.u_id}
-          userIdVal={user.u_id}
-          followed={followed(user.u_id)}
-          following={isLoadingFollows}
-          toggleFollow={() => {
-            const verifyFollow = follows.find((follow) => follow.followed_id === user.u_id && follow.follower_id === loggedUser?.u_id);
-            if (!verifyFollow) {
-              dispatch(followUser({
-                uid: loggedUser.u_id,
-                creatorName: loggedUser.name,
-                creatorImg: loggedUser.u_img,
-                receiverUid: user.u_id,
-                receiverName: user.name,
-                receiverImg: user.u_img,
-              }));
-            } else {
-              removeFollow(verifyFollow.id);
-            }
-          }}
-        />
-      ));
-    }
-
-  }, [otherUsers, isLoading, isLoadingOtherUsers, userListEmptyState, followed, isLoadingFollows, follows, dispatch, removeFollow]);
-
-  // Content rendering
-  const renderContent = useMemo(() => {
-    // if (!posts) return null;
-
-    // if(isLoading || isLoadingPosts) {
-    //   return ( 
-    //     <div className="w-full flex flex-col gap-4 bg-red-300 p-5">
-    //       loading.....
-    //     </div>
-    //   );
-    // } else {
-      if (tab === 'forYou') {
-        const allPosts = posts?.filter((post) => post.type === 'post');
-
-        return allPosts?.length > 0 ? (
-          allPosts.map((post) => (
-            <PostCardWrapper
-              key={post.id}
-              post={post}
-              loggedUser={loggedUser}
-              follows={follows}
-              likes={likes}
-              bookmarks={bookmarks}
-              isLiking={isLiking}
-              isBookmarking={isBookmarking}
-              isDeletingPost={isDeletingPost}
-              navigate={navigate}
-              dispatch={dispatch}
-              removeLike={removeLike}
-              removeBookmark={removeBookmark}
-              removeFollow={removeFollow}
-              countComments={countComments}
-              countLikes={countLikes}
-              likedPost={likedPost}
-              bookmarkedPost={bookmarkedPost}
-              countBookmarks={countBookmarks}
-              followed={followed}
-              deletePost={deletePost}
-            />
-          ))
-        ) : (
-          <div className="w-full flex flex-col justify-center items-center">
-            {renderEmptyState('bi bi-chat-left-text', 'No posts to see yet')}
-          </div>
-        );
-      } else if (tab === 'following') {
-        const followedIds = follows.filter((follow) => follow.follower_id === loggedUser?.u_id).map((x) => x.followed_id);
-        const followingPosts = posts.filter((post) => (post.u_id === loggedUser?.u_id || followedIds.includes(post.u_id)) && post.type === 'post');
-        return followingPosts.length > 0 ? (
-          followingPosts.map((post) => (
-            <PostCardWrapper
-              key={post.id}
-              post={post}
-              loggedUser={loggedUser}
-              follows={follows}
-              likes={likes}
-              bookmarks={bookmarks}
-              isLiking={isLiking}
-              isBookmarking={isBookmarking}
-              isDeletingPost={isDeletingPost}
-              navigate={navigate}
-              dispatch={dispatch}
-              removeLike={removeLike}
-              removeBookmark={removeBookmark}
-              removeFollow={removeFollow}
-              countComments={countComments}
-              countLikes={countLikes}
-              likedPost={likedPost}
-              bookmarkedPost={bookmarkedPost}
-              countBookmarks={countBookmarks}
-              followed={followed}
-              deletePost={deletePost}
-            />
-          ))
-        ) : (
-          <div className="w-full flex flex-col justify-center items-center">
-            {renderEmptyState('bi bi-chat-left-text', 'No posts to see yet')}
-          </div>
-        );
-      } else if (tab === 'journal') {
-        if (!loggedUser) {
-          setTab('forYou');
-          return null;
-        }
-        const filterJournals = posts.filter((post) => post.type === 'journal' && (post.privacy === 'Everyone' || post.u_id === loggedUser?.u_id));
-        return filterJournals.length > 0 ? (
-          filterJournals.map((post) => (
-            <JournalCardWrapper
-              key={post.id}
-              post={post}
-              loggedUser={loggedUser}
-              likes={likes}
-              isLiking={isLiking}
-              isDeletingPost={isDeletingPost}
-              dispatch={dispatch}
-              removeLike={removeLike}
-              countLikes={countLikes}
-              likedPost={likedPost}
-              deletePost={deletePost}
-            />
-          ))
-        ) : (
-          <div className="w-full flex flex-col justify-center items-center">
-            {renderEmptyState('bi bi-journal', 'No journals to see yet')}
-          </div>
-        );
+      if(textAreaRef.current.scrollHeight <= 450) {
+        textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`
+        // console.log(textAreaRef.current.style.height)
+      } else {
+        textAreaRef.current.style.height = "450px";
       }
-    // }
-
-  }, [isLoading, isLoadingPosts, tab, posts, renderEmptyState, loggedUser, follows, likes, bookmarks, isLiking, isBookmarking, isDeletingPost, navigate, dispatch, removeLike, removeBookmark, removeFollow, countComments, countLikes, likedPost, bookmarkedPost, countBookmarks, followed, deletePost]);
-
-  const closePostFormModal = useCallback(() => {
-    setShowPostInModal(false);
-    setPostValue('');
-    setTitle('');
-    setJournalText('');
-    setPrivacy(null);
-    if (textAreaRef.current) textAreaRef.current.textContent = '';
-  }, []);
-
-  const handleShowSearch = () => {
-    document.getElementById('my_modal_2').showModal();
-  };
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (search.trim()) {
-      navigate(`/search/${search.trim()}`);
     }
-  };
+  }, [showPostInModal, postValue, journalText])
 
-  if (!isLoading && error) {
-    return (renderErrorState('Network or server error occurred. Please try again later.'));
-  } 
+  useEffect(() => {
+    if(posted) {
+      setShowPostInModal(false)
+      setPostValue('')
+
+      setJournalText('')
+      setTitle('')
+      setPrivacy(null)
+    }
+  }, [posted])
+
+  let newPostForm;
+  let content;
+  let userList;
   
-  if (!error) {
-    return (
-      <div className="w-full h-screen flex flex-col items-center px-2 md:p-0 md:m-0">
-        {loggedUser && (
-          <PostFormModal
-            isOpen={showPostInModal}
-            onClose={closePostFormModal}
-            isJournal={tab === 'journal'}
-            loggedUser={loggedUser}
-            textAreaRef={textAreaRef}
-            postValue={postValue}
-            setPostValue={setPostValue}
-            title={title}
-            setTitle={setTitle}
-            journalText={journalText}
-            setJournalText={setJournalText}
-            privacy={privacy}
-            setPrivacy={setPrivacy}
-            handleSubmit={tab === 'journal' ? handleSubmitJournal : handleSubmit}
-            isAddingPost={isAddingPost}
+  if(posts !== null) {
+    
+    // verify id and other users availability 
+    if(otherUsers !== null) {
+      if(otherUsers?.length > 0) {
+        userList = otherUsers.slice(0,4).map(x => (
+          <OtherUsersCard 
+            key={x.id}
+            userImg={x.u_img}
+            name={x.name}
+            uName={x.u_name}
+            uid={x.u_id === loggedUser?.u_id ? true : false}
+            userIdVal = {x.u_id}
+            followed={followed(x.u_id)}
+            following={isLoadingFollows}
+            toggleFollow={() => {
+                    const verifyFollow = follows.find(follow => ((follow.followed_id == x.u_id) && (follow.follower_id == loggedUser.u_id)))
+                      if(verifyFollow == undefined) {
+                          dispatch(followUser({
+                            uid: loggedUser.u_id,
+                            creatorName: loggedUser.name,
+                            creatorImg: loggedUser.u_img,
+                            receiverUid: x.u_id,
+                            receiverName: x.name,
+                            receiverImg: x.u_img
+                          }))
+                      } else {
+                          removeFollow(verifyFollow.id)
+                      }
+                }}
           />
-        )}
-        <div className={`w-full lg:grid lg:grid-cols-8 px-2 md:px-20 mt-2 md:mt-0 pb-20 md:pb-28 lg:pb-0 md:gap-2 mb-7 md:mb-14 lg:mb-0`}>
-          {/* side bar */}
-          {loggedUser && 
-            <SideBar 
-              uid={loggedUser?.u_id || null} 
-              uName={loggedUser?.u_name || ''}
-              page="home" 
-              toggleSearchBar={handleShowSearch} />
-          }
+        ))
+      } else {
+        userList = userListEmptyState()
+      }
+    }
 
-          {
-            isLoading || isLoadingPosts ? (
-              <div className={loggedUser?.u_id ? 'w-full flex flex-col col-span-6 xl:col-span-4 border-r-[1px] border-l-[1px] mt-5 border-black/5 dark:border-dark-accent/20' : 'w-full flex flex-col col-span-6 border-r-[1px] border-l-[1px] border-black/5 dark:border-dark-accent/20 justify-center items-center'}>
-               {renderLoadingState("h-40")}
+    if(tab === 'forYou') { 
+        const closePostFormModal = () => {
+          setShowPostInModal(false)
+          setPostValue('')
+          textAreaRef.current.textContent = ''
+        }
+
+      // render form input based on tab
+      newPostForm = loggedUser !== null && 
+
+        <dialog className={`w-screen h-screen ${showPostInModal ? "flex" : "hidden"} flex-col justify-center items-center fixed top-0 left-0 bg-base-100/90 dark:bg-black/90 dark:text-[#cbc9c9] shadow-lg mb-4 z-[220]`}>
+          <div className="flex flex-col justify-center items-center bg-base-100 dark:bg-black p-5 gap-5 rounded-lg w-[80%] md:w-[60%] lg:w-[40%] border-[1px] border-black/10 dark:border-[#CBC9C9]/20 shadow-md dark:shadow-[#cbc9c9]/20">
+            <div className="w-full flex justify-between items-center">
+              <div className="flex gap-2 items-center">
+                <img src={loggedUser?.u_img} alt="" className="relative z-20 w-10 h-10 object-cover object-center rounded-full  shadow-sm cursor-default" width={80} height={80} loading="lazy"/>
+                <h1 className="font-semibold text-lg lg:text-2xl">Write a Post</h1>
               </div>
-            ) : ( 
-            <div className={loggedUser?.u_id ? 'w-full flex flex-col col-span-6 xl:col-span-4 border-r-[1px] border-l-[1px] mt-5 border-black/5 dark:border-dark-accent/20' : 'w-full flex flex-col col-span-6 border-r-[1px] border-l-[1px] border-black/5 dark:border-dark-accent/20 justify-center items-center'}>
-              {loggedUser?.u_id && (
-                <div className="sticky top-0 grid grid-cols-3 justify-evenly text-center text-neutral-dark w-full bg-bg/90 dark:bg-black/90 backdrop-blur-md overflow-scroll no-scrollbar text-xs md:text-sm md:text-neutral-dark dark:text-dark-accent font-semibold z-40">
-                  <button className={`w-full ${tab === 'forYou' ? 'bg-primary/5 font-bold border-b-2 border-primary' : ''} py-3 px-4 md:px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('forYou')}>
-                    For you
-                  </button>
-                  <button className={`w-full ${tab === 'following' ? 'bg-primary/5 font-bold border-b-[1px] border-primary' : ''} py-3 px-4 md:px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('following')}>
-                    Following
-                  </button>
-                  <button className={`w-full ${tab === 'journal' ? 'bg-accent/5 font-bold border-b-[1px] border-accent' : ''} py-3 px-10 hover:bg-accent/5 cursor-pointer`} onClick={() => setTab('journal')}>
-                    Journal
-                  </button>
+
+              {/* closePostFormModal button */}
+              <span className="size-10 flex justify-center items-center p-2 hover:bg-black/5 rounded-full" onClick={() => closePostFormModal()}><i className="bi bi-x-lg cursor-pointer"></i></span>
+            </div>
+            
+            <div className="w-full flex flex-col gap-4">
+              <textarea name="body" id="body" ref={textAreaRef} className={`text-md z-20 w-full flex flex-col min-h-8 dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 outline-none resize-none`} value={postValue} placeholder="What are you thinking?" onChange={(e) => setPostValue(e.target.value)} readOnly={isAddingPost} autoFocus={showPostInModal}></textarea>
+
+              <button className={postValue.trim() !== '' && !isAddingPost ? "px-6 py-2 bg-primary font-semibold text-white rounded-full scale-100" : "px-6 py-2 bg-primary/30 font-semibold text-white rounded-full transition-all duration-150 cursor-not-allowed"} onClick={handleSubmit} disabled={postValue.trim() == '' || isAddingPost && "disabled"}>{isAddingPost ?  'Posting...' : 'Post'}</button>
+            </div>
+          </div>
+        </dialog> 
+        
+      const allPosts = posts.filter((post) => post.type == 'post')
+      if(allPosts?.length > 0){
+        // get all posts 
+        content = allPosts.map(post => (
+                    <PostCard 
+                      key={post.id}
+                      userId={loggedUser?.u_id}
+                      users={allUsers && [...allUsers]}
+                      postUserId={post.u_id === loggedUser?.u_id ? true : false}
+                      postUserIdVal = {post.u_id}
+                      uImg={post.u_img} 
+                      openComment={() => {
+                        navigate(`/post/${post.id}`)
+                      }}
+                      uName={post.u_name} 
+                      postContent={post.body}
+                      datetime={post.created_at}
+                      postId={post.id}
+                      liking={isLiking}
+                      bookmarking={isBookmarking}
+                      deleting={isDeletingPost}
+                      deleted={deleted}
+                      toggleFollow={() => {
+                              const verifyFollow = follows.find(x => ((x.followed_id == post.u_id) && (x.follower_id == loggedUser?.u_id)))
+                                // console.log(verifyFollow)
+                                if(verifyFollow == undefined) {
+                                  // console.log(follows)
+                                  dispatch(followUser({
+                                    uid: loggedUser.u_id,
+                                    creatorName: loggedUser.name,
+                                    creatorImg: loggedUser.u_img,
+                                    receiverUid: post.u_id,
+                                    receiverName: post.u_name,
+                                    receiverImg: post.u_img
+                                  }))
+                                } else {
+                                    removeFollow(verifyFollow.id)
+                                }
+                          }}
+                      followed={followed(post.u_id)}
+                      comments={countComments(post.id)}
+                      likes={countLikes(post.id)}
+                      liked={likedPost(post.id)}
+                      bookmarks={countBookmarks(post.id)}
+                      bookmarked={bookmarkedPost(post.id)}
+                      likePost={() => {
+                              const verifyLike = likes.find(x => ((x.post_id == post.id) && (x.u_id == loggedUser.u_id)))
+                                // console.log(verifyLike)
+                                if(verifyLike == undefined) {
+                                  dispatch(likePost({
+                                    postId: post.id, 
+                                    creatorUid: loggedUser.u_id,
+                                    creatorName: loggedUser.name,
+                                    creatorImg: loggedUser.u_img,
+                                    postUid: post.u_id,
+                                    postBody: post.body,
+                                    }))
+                                } else {
+                                    removeLike(verifyLike.id)
+                                }
+                          }}
+                      bookmarkPost={() => {
+                              const verifyBookmark = bookmarks.find(x => ((x.post_id == post.id) && (x.u_id == loggedUser.u_id)))
+                                // console.log(verifyBookmark)
+                                if(verifyBookmark == undefined) {
+                                    dispatch(bookmarkPost({
+                                      postId: post.id, 
+                                      creatorUid: loggedUser.u_id,
+                                      creatorName: loggedUser.name,
+                                      creatorImg: loggedUser.u_img,
+                                      postUid: post.u_id,
+                                      postBody: post.body,
+                                    }))
+                                } else {
+                                    removeBookmark(verifyBookmark.id)
+                                }
+                          }}
+                      deletePost={()=> deletePost(post.id)}
+                    />
+                    ))
+      }
+      if(allPosts.length === 0){
+        content = renderEmptyState()
+      }
+    } else if (tab === 'following') {
+        const closePostFormModal = () => {
+          setShowPostInModal(false)
+          setPostValue('')
+          textAreaRef.current.textContent = ''
+        }
+
+        // render form input based on tab
+        newPostForm = loggedUser !== null && 
+
+          <div className={`w-screen h-screen ${showPostInModal ? "flex" : "hidden"} flex-col justify-center items-center fixed top-0 left-0 bg-base-100/90 dark:bg-black/90 dark:text-[#cbc9c9] shadow-lg mb-4 z-[120]`}>
+            <div className="flex flex-col justify-center items-center bg-base-100 dark:bg-black p-5 gap-5 rounded-lg w-[80%] md:w-[60%] lg:w-[40%] border-[1px] border-black/10 dark:border-[#CBC9C9]/20 shadow-md dark:shadow-[#cbc9c9]/20">
+              <div className="w-full flex justify-between items-center">
+                <div className="flex gap-2 items-center">
+                  <img src={loggedUser?.u_img} alt="" className="relative z-20 w-10 h-10 object-cover object-center rounded-full  shadow-sm cursor-default" width={80} height={80} loading="lazy"/>
+                  <h1 className="font-semibold text-lg lg:text-2xl">Write a Post</h1>
                 </div>
-              )}
-              <div className="relative flex flex-col">
-                  <div className="relative w-full text-neutral-dark dark:text-dark-accent divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
-                    {loggedUser && (
-                      <div className="w-full flex justify-end lg:justify-start items-center px-4 my-5 text-sm dark:text-dark-accent fixed bottom-20 left-0 lg:sticky lg:top-12 py-2 lg:bg-bg/90 dark:lg:dark:bg-black/90 lg:backdrop-blur-sm z-[110]">
-                        <button
-                          className={`w-fit flex gap-2 justify-center items-center border-[1px] border-black bg-bg dark:bg-black dark:border-dark-accent font-semibold ${tab === 'journal' ? 'hover:bg-accent/5 hover:border-accent dark:hover:border-accent hover:text-accent dark-hover:text-inherit' : 'hover:bg-primary/5 hover:border-primary dark:hover:border-primary hover:text-primary'} px-4 py-2 rounded-full shadow-md lg:shadow-none`}
-                          onClick={() => setShowPostInModal(!showPostInModal)}
-                        >
-                          <i className="bi bi-pencil"></i>{tab === 'journal' ? 'Write Journal' : 'Write Post'}
-                        </button>
-                      </div>
-                    )}
-                    {renderContent}
-                    <p className="py-8 flex justify-center text-primary">.</p>
-                  </div>
+
+                {/* closePostFormModal button */}
+                <span className="size-10 flex justify-center items-center p-2 hover:bg-black/5 rounded-full" onClick={() => closePostFormModal()}><i className="bi bi-x-lg cursor-pointer"></i></span>
+              </div>
+              
+              <div className="w-full flex flex-col gap-4">
+                <textarea name="body" id="body" ref={textAreaRef} className={`text-md z-20 w-full flex flex-col h-auto min-h-8 box-border dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 outline-none resize-none`} value={postValue} placeholder="What are you thinking?" onChange={(e) => setPostValue(e.target.value).trim()} readOnly={isAddingPost && true}></textarea>
+                <button className={postValue.trim() !== '' && !isAddingPost ? "px-6 py-2 bg-primary font-semibold text-white rounded-full scale-100" : "px-6 py-2 bg-primary/30 font-semibold text-white rounded-full transition-all duration-150 cursor-not-allowed"} onClick={handleSubmit} disabled={postValue.trim() == '' || isAddingPost && "disabled"}>{isAddingPost ?  'Posting...' : 'Post'}</button>
               </div>
             </div>
-            )
-          }
-  
+          </div> 
+
+        // filter follows
+        const filterFollow = follows.filter(follow => follow.follower_id == loggedUser?.u_id)
+        const getFollowedId = filterFollow.map(x => x.followed_id) //then map to get followed id 
+        // console.log(getFollowedId)
+        // const allPosts = posts.filter((post) => post.type == 'post')
+
+        // filter posts based on if post user id is included in getFollowedId result array 
+        const followingPosts = posts.filter((post) => (post.u_id == loggedUser?.u_id || getFollowedId.includes(post.u_id)) && post.type == 'post')
+        if(followingPosts?.length > 0){
+          // get all posts 
+          content = followingPosts.map(post => (
+                      <PostCard 
+                        key={post.id}
+                        userId={loggedUser?.u_id}
+                        users={allUsers && [...allUsers]}
+                        postUserId={post.u_id === loggedUser?.u_id ? true : false}
+                        postUserIdVal = {post.u_id}
+                        uImg={post.u_img} 
+                        openComment={() => {
+                          navigate(`/post/${post.id}`)
+                        }}
+                        uName={post.u_name} 
+                        postContent={post.body}
+                        datetime={post.created_at}
+                        postId={post.id}
+                        liking={isLiking}
+                        bookmarking={isBookmarking}
+                        deleting={isDeletingPost}
+                        deleted={deleted}
+                        toggleFollow={() => {
+                                const verifyFollow = follows.find(x => ((x.followed_id == post.u_id) && (x.follower_id == loggedUser?.u_id)))
+                                  // console.log(verifyFollow)
+                                  if(verifyFollow == undefined) {
+                                    // console.log(follows)
+                                    dispatch(followUser({
+                                    uid: loggedUser.u_id,
+                                    creatorName: loggedUser.name,
+                                    creatorImg: loggedUser.u_img,
+                                    receiverUid: post.u_id,
+                                    receiverName: post.u_name,
+                                    receiverImg: post.u_img
+                                  }))
+                                  } else {
+                                      removeFollow(verifyFollow.id)
+                                  }
+                            }}
+                        followed={followed(post.u_id)}
+                        comments={countComments(post.id)}
+                        likes={countLikes(post.id)}
+                        liked={likedPost(post.id)}
+                        bookmarks={countBookmarks(post.id)}
+                        bookmarked={bookmarkedPost(post.id)}
+                        likePost={() => {
+                                const verifyLike = likes.find(x => ((x.post_id == post.id) && (x.u_id == loggedUser.u_id)))
+                                  // console.log(verifyLike)
+                                  if(verifyLike == undefined) {
+                                    dispatch(likePost({
+                                      postId: post.id, 
+                                      creatorUid: loggedUser.u_id,
+                                      creatorName: loggedUser.name,
+                                      creatorImg: loggedUser.u_img,
+                                      postUid: post.u_id,
+                                      postBody: post.body,
+                                      }))
+                                  } else {
+                                      removeLike(verifyLike.id)
+                                  }
+                            }}
+                        bookmarkPost={() => {
+                                const verifyBookmark = bookmarks.find(x => ((x.post_id == post.id) && (x.u_id == loggedUser.u_id)))
+                                  // console.log(verifyBookmark)
+                                  if(verifyBookmark == undefined) {
+                                      dispatch(bookmarkPost({
+                                        postId: post.id, 
+                                        creatorUid: loggedUser.u_id,
+                                        creatorName: loggedUser.name,
+                                        creatorImg: loggedUser.u_img,
+                                        postUid: post.u_id,
+                                        postBody: post.body,
+                                      }))
+                                  } else {
+                                      removeBookmark(verifyBookmark.id)
+                                  }
+                            }}
+                        deletePost={()=> deletePost(post.id)}
+                      />
+                      ))
+        }
+        if(followingPosts.length === 0){
+          content = <div className="w-full h-56 flex flex-col justify-center items-center">Nothing to see</div>
+        }
+    } else if (tab === 'journal') {
+
+        // switch to forYou tab post list on log out or if user is not logged in 
+        if(loggedUser == null ) {
+          setTab('forYou')
+        }
+
+        const closePostFormModal = () => {
+          setShowPostInModal(false)
+          setTitle('')
+          setJournalText('')
+          setPrivacy(null)
+        }
+        // render form input based on tab
+        newPostForm = loggedUser !== null && 
+        <div className={`w-screen h-screen ${showPostInModal ? "flex" : "hidden"} flex-col justify-center items-center fixed top-0 left-0 bg-base-100/90 dark:bg-black/90 dark:text-[#cbc9c9] mb-4 z-[120]`}>
+          <div className="flex flex-col justify-center items-center bg-base-100 dark:bg-black p-5 gap-5 rounded-lg w-[80%] md:w-[60%] lg:w-[40%] border-[1px] border-black/10 dark:border-[#CBC9C9]/20 shadow-md dark:shadow-[#cbc9c9]/20">
+            <div className="w-full flex justify-between items-center">
+              <div className="flex gap-2 items-center">
+                <img src={loggedUser?.u_img} alt="" className="relative z-20 w-10 h-10 object-cover object-center rounded-full  shadow-sm cursor-default" width={80} height={80} loading="lazy"/>
+                <h1 className="font-semibold text-lg lg:text-2xl">Write a Journal</h1>
+              </div>
+
+              {/* closePostFormModal button */}
+              <span className="size-10 flex justify-center items-center p-2 hover:bg-black/5 rounded-full" onClick={() => closePostFormModal()}><i className="bi bi-x-lg cursor-pointer"></i></span>
+            </div>
+            <div className="w-full flex flex-col gap-4">
+              <input type="text" className={`text-md z-20 w-full flex flex-col min-h-8 dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 outline-none`} value={title} placeholder="Title" onChange={(e) => setTitle(e.target.value)}/>
+
+              <textarea name="body" id="body" ref={textAreaRef} className={`text-md z-20 w-full flex flex-col min-h-8 dark:text-[#CBC9C9] dark:bg-black dark:placeholder:text-[#cbc9c9]/60 outline-none resize-none`} value={journalText} placeholder="Body" onChange={(e) => setJournalText(e.target.value)}></textarea>
+              
+              <div className={`w-full flex justify-between transition-all duration-150 mt-4`}>
+                <select className="bg-accent/5 border-[1px] border-black/20 dark:border-[#CBC9C9]/20 w-full max-w-fit rounded-full text-xs font-semibold px-2 py-0 outline-none" onChange={(e) => setPrivacy(e.target.value)} defaultValue={"Change Privacy?"}>
+                  <option disabled>Change Privacy?</option>
+                  <option>For me</option>
+                  <option>Everyone</option>
+                </select>
+                <button className={title !== '' && journalText.trim() !== '' && !isAddingPost && privacy !== null ? "px-6 py-2 bg-accent font-semibold text-white rounded-full scale-100" : "px-6 py-2 bg-accent/30 font-semibold text-white rounded-full transition-all duration-150 cursor-not-allowed"} onClick={handleSubmitJournal} disabled={isAddingPost && "disabled"}>{isAddingPost ?  'Posting...' : 'Post'}</button>
+              </div>
+            </div>
+          </div>
+        </div> 
+        
+        const allJournals = posts.filter((post) => post.type == 'journal').map(post => (post.privacy == 'Everyone' || post.u_id == loggedUser?.u_id) && post)
+        const filterJournals = allJournals.filter(post => post !== false)
+        // console.log(filterJournals)
+        if(filterJournals?.length > 0){
+          // get all posts 
+          content = filterJournals.map(post => (
+                      <JournalCard 
+                        key={post.id}
+                        users={allUsers && [...allUsers]}
+                        postUserId={post.u_id === loggedUser?.u_id ? true : false}
+                        postUserIdVal={post.u_id}
+                        uImg={post.u_img} 
+                        uName={post.u_name}
+                        title={post.title}
+                        journal={post.journal}
+                        privacy={post.privacy}
+                        datetime={post.created_at}
+                        liking={isLiking}
+                        bookmarking={isBookmarking}
+                        deleting={isDeletingPost}
+                        deleted={deleted}
+                        likes={countLikes(post.id)}
+                        liked={likedPost(post.id)}
+                        likePost={() => {
+                                const verifyLike = likes.find(x => ((x.post_id == post.id) && (x.u_id == loggedUser.u_id)))
+                                  // console.log(verifyLike)
+                                  if(verifyLike == undefined) {
+                                    dispatch(likePost({
+                                      postId: post.id, 
+                                      creatorUid: loggedUser.u_id,
+                                      creatorName: loggedUser.name,
+                                      creatorImg: loggedUser.u_img,
+                                      postUid: post.u_id,
+                                      postBody: post.journal,
+                                      for: post.type
+                                      }))
+                                  } else {
+                                      removeLike(verifyLike.id)
+                                  }
+                            }}
+                        deletePost={()=> deletePost(post.id)}
+                      />
+                      ))
+        }
+        if(filterJournals.length < 1){
+          content = <div className="w-full h-56 flex flex-col justify-center items-center">No Journals to see yet</div>
+        }
+    }
+      
+  }
+
+  const handleShowSearch = () => {
+    document.getElementById('my_modal_2').showModal()
+  }
+
+  const handleSearch = (e) => {
+    e.preventDefault()
+    if(search.trim() !== '') {
+      navigate(`/search/${search}`)
+    }
+  }
+
+
+  return (
+    <div className="w-full h-screen flex flex-col items-center px-2 md:p-0 md:m-0 dark:text-inherit">
+        {/* <Navbar /> */}
+        {newPostForm}
+
+        <div className="w-full lg:grid lg:grid-cols-8 px-2 md:px-20 mt-2 md:mt-4 lg:mt-0 pb-28 lg:pb-0 md:gap-2 mb-14 lg:mb-0">
+          {loggedUser && (
+            <SideBar
+              uid={loggedUser.u_id}
+              uName={loggedUser?.u_name || ''}
+              page={'home'}
+              toggleSearchBar={handleShowSearch}
+            />
+          )}
+
+          {/* main section  */}
+          <div className={loggedUser?.u_id ? 'w-full flex flex-col col-span-6 xl:col-span-4 border-r-[1px] border-l-[1px] mt-5 border-black/5 dark:border-dark-accent/20' : 'w-full flex flex-col col-span-6 border-r-[1px] border-l-[1px] border-black/5 dark:border-dark-accent/20 justify-center items-center'}>
+
+            {loggedUser?.u_id && <div className="sticky top-0 flex justify-evenly text-center dark:text-[#CBC9C9] w-full bg-base-100/90 dark:bg-black/90 backdrop-blur-md overflow-scroll no-scrollbar text-sm md:text-base font-medium z-40">
+              <button className={`w-full ${tab === 'forYou' && "bg-primary/5 font-bold border-b-2 border-primary"} py-3 px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('forYou')}>For you</button>
+              <button className={`w-full ${tab === 'following' && "bg-primary/5 font-bold border-b-[1px] border-primary"} py-3 px-10 hover:bg-primary/5 cursor-pointer`} onClick={() => setTab('following')}>Following</button>
+              <button className={`w-full ${tab === 'journal' && "bg-accent/5 font-bold border-b-[1px] border-accent"} py-3 px-10 hover:bg-accent/5 cursor-pointer`} onClick={() => setTab('journal')}>Journal</button>
+            </div>}
+
+
+            
+            <div className="w-full relative flex flex-col">
+              {isLoading ? renderLoadingState('h-40') : 
+                <div className="relative w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
+                  {loggedUser && <div className="w-full flex justify-end lg:justify-start items-center px-4 my-5 text-sm dark:text-[#cbc9c9] fixed bottom-20 left-0 lg:sticky lg:top-12 py-2 lg:bg-base-100/90 dark:lg:dark:bg-black/90 lg:backdrop-blur-sm z-[110]"> 
+                    <button className={`w-fit flex gap-2 justify-center items-center border-[1px] border-black bg-base-100 dark:bg-black dark:border-[#CBC9C9] font-semibold ${tab == 'journal' ? "hover:bg-accent/5 hover:border-accent hover:text-accent dark-hover:text-inherit" : "hover:bg-primary/5 hover:border-primary hover:text-primary "}  px-4 py-2 rounded-full shadow-md lg:shadow-none`} onClick={()=> setShowPostInModal(!showPostInModal)}><i className="bi bi-pencil"></i>{tab == 'journal' ? "Write Journal" : "Write Post"}</button>
+                  </div>}
+                  {content}
+                  <p className="py-8 flex justify-center text-primary">.</p>
+                </div>}
+            </div>
+          </div>
+
+          {/* right side bar */}
           <div className="hidden sticky top-0 xl:flex flex-col gap-5 h-fit col-span-2 py-3 z-0">
-            {loggedUser?.u_id || isLoading ? (
-              <>
-                <form onSubmit={handleSearch} className="flex flex-col gap-5 py-2 bg-bg dark:bg-black dark:text-dark-accent z-50">
-                  <input
-                    type="text"
-                    name="search"
-                    id="search"
-                    value={search}
-                    placeholder="Search..."
-                    className="w-full px-4 py-2 border-[1px] bg-bg dark:border-dark-accent/40 text-neutral-dark dark:text-dark-accent text-sm placeholder:text-inherit outline-none dark:bg-black dark:focus-within:bg-black/50 rounded-full"
-                    onChange={(e) => setSearch(e.target.value)}
-                  />
-                </form>
-                <div className="py-3 border-t-[1px] border-[1px] text-neutral-dark border-black/5 dark:border-dark-accent/20 rounded-md">
-                  <h2 className="font-bold text-xl px-5 pb-4 dark:text-dark-accent">Suggested For You</h2>
-                  {isLoadingOtherUsers || isLoading ? renderLoadingState('h-10') : <div className="w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">{userList}</div>}
-                </div>
-              </>
-            ) : (
-              <div className="w-full h-fit flex flex-col py-32 justify-center items-center text-neutral-dark dark:text-dark-accent">
-                <p>Join Us To</p>
+            {loggedUser?.u_id || isLoadingOtherUsers ? <>
+              {/* search  */}
+              <form onSubmit={handleSearch} className="flex flex-col gap-5 py-2 bg-base-100 dark:bg-black dark:text-[#cbc9c9] z-50">
+                  <input type="text" name="search" id="search" value={search} placeholder="Search..." className="w-full px-4 py-2  border-[1px] dark:border-[#CBC9C9]/40 placeholder:text-inherit outline-none dark:bg-black dark:focus-within:bg-black/50 rounded-full" onChange={(e)=> setSearch(e.target.value).trim()}/>
+              </form>
+              <div className="py-3 border-t-[1px] border-[1px] border-black/5  dark:border-[#CBC9C9]/20 rounded-md">
+                <h2 className="font-bold text-xl px-5 pb-4 dark:text-[#CBC9C9]">Suggested</h2>
+                {isLoadingOtherUsers ? renderLoadingState("h-10") : <div className="w-full divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
+                  {userList}
+                </div>}
+              </div>
+            </> 
+            : 
+            <div className="w-full h-fit flex flex-col py-32 justify-center items-center">
+                <p>Join Us to</p>
                 <h1 className="font-bold text-4xl">Explore</h1>
                 <ul className="flex mt-10 gap-4">
-                  <Link to="/login">
-                    <li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:text-neutral-dark dark:hover:bg-bg">Login</li>
-                  </Link>
-                  <Link to="/register">
-                    <li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:text-neutral-dark dark:hover:bg-bg">Register</li>
-                  </Link>
+                  <Link to={'/login'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral dark:border-slate-200 dark:text-[#CBC9C9]   hover:bg-black hover:text-base-100 dark:hover:bg-slate-200">Login</li></Link>
+                  <Link to={'/register'}><li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral dark:border-slate-200 dark:text-[#CBC9C9]   hover:bg-black hover:text-base-100 dark:hover:bg-slate-200">Register</li></Link>
                 </ul>
-              </div>
-            )}
+            </div>
+            }
           </div>
+          
         </div>
-        <SearchModal handleSearch={handleSearch} search={search} handleChange={(e) => setSearch(e.target.value)} />
+         
+         {/* Posted modal 
+        {posted && postDetails.u_id && <div className="fixed w-screen h-screen flex justify-center px-10 bg-base-100/80 items-center top-0 left-0 cursor-default z-[1000]">
+            <p>Posted!</p>
+            <Link to={window.location.origin+"/post/"+postDetails?.id}>View Post</Link>
+        </div>} */}
+
+        {/* search modal  */}
+        <SearchModal 
+          handleSearch={handleSearch}
+          search={search}
+          handleChange={(e)=>setSearch(e.target.value)}
+        />
+
         <Footer 
           uid={loggedUser?.u_id || null} 
           uName={loggedUser?.u_name || ''} 
           page="home" 
           toggleSearchBar={handleShowSearch} 
         />
-        <NotLoggedInModal uid={loggedUser?.u_id} />
-      </div>
-    );
-  }
 
-};
+        <NotLoggedInModal uid={loggedUser?.u_id}/>
+    </div>
+  )
+}
 
-export default Home;
-
-
-// if(isLoading && !error) {
-//   return (
-//     <div className="w-full h-screen flex flex-col gap-10 justify-center items-center">
-//       <div className="flex py-4 px-10">
-//           <Link to='/' className="cursor-pointer"> <img src={logo1} alt="logo" className="dark:hidden w-48 md:w-56 lg:w-72"/>  </Link>
-//           <Link to='/' className="cursor-pointer"> <img src={logo2} alt="logo" className="hidden dark:flex w-48 md:w-56 lg:w-72"/> </Link>
-//       </div>
-//       <span className="loading loading-spinner loading-lg text-neutral-dark dark:text-bg"></span>
-//     </div>
-//   );
-// }
+export default Home

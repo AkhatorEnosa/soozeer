@@ -4,13 +4,15 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 
 /* eslint-disable react/prop-types */
-const JournalCard = ({users, privacy, postUserIdVal, postUserId, title, journal, uImg, uName, liked, likes, likePost, deletePost, liking, deleting, datetime}) => {
+const JournalCard = ({users, privacy, postUserIdVal, postUserId, title, journal, uImg, uName, liked, likes, likePost, deletePost, liking, deleting, deleted, datetime}) => {
 
   const [showDelete, setShowDelete] = useState(false)
   const [expandPost, setExpandPost] = useState(false)
   const body = document.body
 
   useEffect(() => {
+    deleted && setShowDelete(false)
+    // Set body styles based on showDelete state
     if(showDelete) {
       body.style.height = '100vh'
       body.style.overflowY = 'hidden'
@@ -18,7 +20,7 @@ const JournalCard = ({users, privacy, postUserIdVal, postUserId, title, journal,
       body.style.height = '100vh'
       body.style.overflowY = 'scroll'
     }
-  }, [showDelete])
+  }, [body.style, deleted, showDelete])
 
   const validateSize = (text) => {
     const strLength = text.length
