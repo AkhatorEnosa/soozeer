@@ -15,16 +15,18 @@ const JournalCard = ({users, privacy, postUserIdVal, postUserId, title, journal,
 
   useEffect(() => {
     if(deleted) {
-      setShowDelete(false)
-    }
-    // Set body styles based on showDelete state
-    if(showDelete) {
-      body.style.height = '100vh'
-      body.style.overflowY = 'hidden'
-    } else {
       body.style.height = '100vh'
       body.style.overflowY = 'scroll'
+    } else {
+      if(showDelete) {
+        body.style.height = '100vh'
+        body.style.overflowY = 'hidden'
+      } else {
+        body.style.height = '100vh'
+        body.style.overflowY = 'scroll'
+      }
     }
+    // Set body styles based on showDelete state
   }, [deleted, showDelete])
 
   const validateSize = (text) => {

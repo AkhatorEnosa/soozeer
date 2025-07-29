@@ -30,18 +30,18 @@ const PostCard = ({users, userId, postId, liking, bookmarking, deleting, postUse
   const body = document.body
   useMemo(() => {
     if(deleted) {
-      setShowDelete(false)
-      
-    }
-
-    console.log('deleted', deleted)
-    if(showDelete) {
-      body.style.height = '100vh'
-      body.style.overflowY = 'hidden'
-    } else {
       body.style.height = '100vh'
       body.style.overflowY = 'scroll'
+    } else {
+      if(showDelete) {
+        body.style.height = '100vh'
+        body.style.overflowY = 'hidden'
+      } else {
+        body.style.height = '100vh'
+        body.style.overflowY = 'scroll'
+      }
     }
+
   }, [showDelete, deleted])
 
   const validateSize = (text) => {

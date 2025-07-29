@@ -23,14 +23,16 @@ const ViewPostCard = ({users,userId, deleting, liking, bookmarking, following, p
   const body = document.body
   useEffect(() => {
     if(deleted) {
-      setShowDelete(false)
-    }
-    if(showDelete) {
-      body.style.height = '100vh'
-      body.style.overflowY = 'hidden'
-    } else {
       body.style.height = '100vh'
       body.style.overflowY = 'scroll'
+    } else {
+      if(showDelete) {
+        body.style.height = '100vh'
+        body.style.overflowY = 'hidden'
+      } else {
+        body.style.height = '100vh'
+        body.style.overflowY = 'scroll'
+      }
     }
   }, [deleted, showDelete])
 

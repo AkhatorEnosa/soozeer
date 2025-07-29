@@ -47,7 +47,7 @@ const Home = () => {
   useGetUsers()
   usePosts()
   const {mutate} = useAddPost()
-  const {mutate:del} = useDeletePost()
+  const {mutate:del } = useDeletePost()
   useLikes()
   useBookmarks()
   useFollows()

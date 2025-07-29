@@ -13,5 +13,5 @@ export const store = configureStore({
         singlePost: singlePostReducer,
         message: messageReducer
     },
-  devTools: false
+  devTools: true
 })
