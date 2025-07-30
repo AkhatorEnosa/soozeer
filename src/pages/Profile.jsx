@@ -655,7 +655,7 @@ const Profile = () => {
             )}
           </div>
           <div className="tabs divide-y-[1px] divide-black/5 dark:divide-slate-500/20 flex flex-col items-center">
-            <ul className={`grid ${loggedUser?.u_id === getProfileId() ? "w-full grid-cols-5" : "w-full grid-cols-3"} justify-between overflow-scroll no-scrollbar text-sm md:text-neutral-dark font-medium text-neutral-dark dark:text-dark-accent bg-bg/50 dark:bg-black/50 backdrop-blur-sm sticky top-10 z-[100]`} ref={tabsRef}>
+            <ul className={`grid ${loggedUser?.u_id === getProfileId() ? "w-full grid-cols-5" : "w-full grid-cols-3"} justify-between overflow-scroll no-scrollbar text-sm md:text-neutral-dark font-medium text-neutral-dark dark:text-dark-accent bg-bg/50 dark:bg-black/50`} ref={tabsRef}>
               {["posts", "replies", "journals", ...(loggedUser?.u_id === getProfileId() ? ["likes", "bookmarks"] : [])].map((tabName) => (
                 <li
                   key={tabName}

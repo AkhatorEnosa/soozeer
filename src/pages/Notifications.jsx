@@ -202,7 +202,7 @@ let content;
 
               {/* main section  */}
               <div className="main w-full flex flex-col col-span-6 xl:col-span-4 border-r-[1px] border-l-[1px] border-black/5 dark:border-neutral-300/10">
-                <h1 className="p-5 text-xl font-bold text-neutral-dark dark:text-dark-accent dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">Notifications</h1>
+                <h1 className="p-5 text-xl font-bold text-neutral-dark dark:text-dark-accent bg-bg/90 dark:bg-black/90 backdrop-blur-md sticky top-0 z-[100]">Notifications</h1>
                 <div className="divide-y-[1px] divide-black/5 dark:divide-neutral-300/10">{content}</div>
                 <p className="py-8 flex justify-center text-primary">.</p>
               </div>

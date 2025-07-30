@@ -485,7 +485,7 @@ const Home = () => {
           }
         >
           {loggedUser?.u_id && (
-            <div className="sticky top-0 grid grid-cols-3 justify-evenly text-center text-neutral-dark w-full bg-bg/90 dark:bg-black/90 backdrop-blur-md overflow-scroll no-scrollbar text-xs md:text-sm md:text-neutral-dark dark:text-dark-accent font-semibold z-40">
+            <div className="sticky top-0 grid grid-cols-3 justify-evenly text-center text-neutral-dark w-full bg-bg/90 dark:bg-black/90 backdrop-blur-sm overflow-scroll no-scrollbar text-xs md:text-sm md:text-neutral-dark dark:text-dark-accent font-semibold z-40">
               <button
                 className={`w-full ${
                   tab === "forYou" ? "bg-primary/5 font-bold border-b-2 border-primary" : ""

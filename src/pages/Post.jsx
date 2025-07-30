@@ -531,7 +531,7 @@ const Post = () => {
             <div className={`main w-full lg:h-screen flex flex-col ${
               loggedUser ? "col-span-6 xl:col-span-4" : "col-span-8 xl:col-span-6"
             } border-r-[1px] border-l-[1px] border-black/5 dark:border-slate-500/20 overflow-scroll no-scrollbar`}>
-              <div className="w-full flex justify-between px-3 bg-bg/50 dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">
+              <div className="w-full flex justify-between px-3 bg-bg/90 dark:bg-black/90 backdrop-blur-sm sticky top-0 z-[100]">
                 <BackBtn link={() => navigate(-1)} title={'Back'}/>
                 {currentPost?.post_id !== 0 && (
                   <BackBtn link={() => navigate(`/post/${currentPost.post_id}`)} title={'Jump to origin'}/>

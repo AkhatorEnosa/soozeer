@@ -320,7 +320,7 @@ const Search = () => {
         />
 
         <div className="main w-full flex flex-col col-span-6 xl:col-span-4 border-[1px] border-black/5 dark:border-neutral-300/10 py-4 lg:px-5 lg:py-7 gap-2 lg:gap-5 text-neutral-dark dark:text-dark-text rounded-md">
-          <div className="w-full flex px-3 bg-bg/50 dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">
+          <div className="w-full flex px-3 bg-bg/90 dark:bg-black/90 backdrop-blur-sm sticky top-0 z-[100]">
             <BackBtn link={() => navigate(-1)} title={'Back'}/>
           </div>
           
