@@ -237,11 +237,11 @@ const Search = () => {
         )}
 
         {searchedPosts?.length > 0 && (
-          <div className="w-full content text-neutral-dark dark:text-neutral-lighter">
+          <div className="w-full flex flex-col gap-4 content text-neutral-dark dark:text-neutral-lighter">
             <h1 className="text-lg mb-2 px-3 lg:px-0 lg:text-xl font-bold w-full flex gap-3 justify-between items-center">
               Posts/Comments/Replies/Journals <i className="bi bi-chat-square-text-fill"></i>
             </h1>
-            <div className="divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
+            <div className="w-full flex flex-col gap-5 divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
               {searchedPosts.map(post => (
                 post.type === 'journal' ? (
                   <JournalCard

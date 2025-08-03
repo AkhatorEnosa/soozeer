@@ -516,7 +516,7 @@ const Home = () => {
             {isLoading ? (
               renderLoadingState("h-40")
             ) : (
-              <div className="relative w-full text-neutral-dark dark:text-dark-accent divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
+              <div className="relative w-full justify-center text-neutral-dark dark:text-dark-accent divide-y-[1px] divide-black/5 dark:divide-slate-500/20">
                 {loggedUser && (
                   <div className="w-full flex justify-end lg:justify-start items-center px-4 my-5 text-sm dark:text-dark-accent fixed bottom-20 left-0 lg:sticky lg:top-12 py-2 lg:bg-bg/90 dark:lg:dark:bg-black/90 lg:backdrop-blur-sm z-[110]">
                     <button
@@ -532,7 +532,9 @@ const Home = () => {
                     </button>
                   </div>
                 )}
-                {renderContent()}
+                <div className="w-full flex flex-col gap-5 pt-20 lg:pt-0">
+                  {renderContent()}
+                </div>
                 <p className="py-8 flex justify-center text-primary">.</p>
               </div>
             )}

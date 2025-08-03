@@ -71,32 +71,32 @@ const PostCard = ({users, userId, postId, liking, bookmarking, deleting, postUse
         <Link to={`/post/${postId}`} className="absolute top-0 w-full h-full z-0"></Link>
       <div className="w-full h-full">
         <div className="flex w-full gap-3 px-3 ">
-          <div className="pt-4 w-full col-span-6">
-              <div className="w-full flex">
-                <div className="w-14 h-14">
-                  <Link to={userId && `/${getPostUserName()}`}><img src={uImg} alt="" className="relative z-20 w-10 h-10 object-cover object-center rounded-full  shadow-sm cursor-default" width={80} height={80} loading="lazy"/></Link>
-                </div>
-                
-                <div className="w-full flex flex-col">
-                  <div className="w-full flex justify-between items-center mb-2">
-                    <div className="w-fit flex flex-col">
-                      <Link to={userId && `/${getPostUserName()}`} className="w-fit relative z-20 "><h3 className="w-fit font-bold text-left hover:underline text-neutral-dark dark:text-neutral-lighter cursor-default">{uName}</h3></Link>
-                      <div className="w-full flex gap-2 items-center">
-                        <span className="w-full text-start text-[0.5rem] text-neutral-400">{moment(datetime).format("Do MMM, YYYY hh:mm a") + ' . ' + moment(datetime).fromNow()}</span>
-                        {type !== "post" && <span className="w-fit h-fit flex gap-1 px-1 justify-center items-center text-[0.5rem] text-primary bg-primary/10 font-semibold rounded-md">
-                          <i className="bi bi-reply-fill"></i> {type === "comment" ? "Comment" : "Reply"}
-                        </span>}
-                      </div>
-                    </div>
-                  </div>
-                  <div  className="w-fit text-xs md:text-sm cursor-pointer">
-                    <div className="break-words whitespace-pre-wrap font-sans"><p className="content text-start">{expandPost === false && postContent?.length > 500 ? <>{validateSize(postContent)} <a className="relative z-20 text-xs text-primary cursor-pointer" onClick={togglePost}>See more</a></> : expandPost === true && postContent.length > 100 ? <><Linkify options={{ render: renderLink }}>{postContent}</Linkify> <a className="relative z-20 text-xs text-primary cursor-pointer" onClick={togglePost}>See Less</a></>: <Linkify options={{ render: renderLink }}>{postContent}</Linkify>}</p></div>
+          {/* <div className="pt-4 w-full col-span-6"> */}
+          <div className="w-full flex">
+            <div className="w-14 h-14">
+              <Link to={userId && `/${getPostUserName()}`}><img src={uImg} alt="" className="relative z-20 w-10 h-10 object-cover object-center rounded-full  shadow-sm cursor-default" width={80} height={80} loading="lazy"/></Link>
+            </div>
+            
+            <div className="w-full flex flex-col">
+              <div className="w-full flex justify-between items-center mb-2">
+                <div className="w-fit flex flex-col">
+                  <Link to={userId && `/${getPostUserName()}`} className="w-fit relative z-20 "><h3 className="w-fit font-bold text-left hover:underline text-neutral-dark dark:text-neutral-lighter cursor-default">{uName}</h3></Link>
+                  <div className="w-full flex gap-2 items-center">
+                    <span className="w-full text-start text-[0.5rem] text-neutral-400">{moment(datetime).format("Do MMM, YYYY hh:mm a") + ' . ' + moment(datetime).fromNow()}</span>
+                    {type !== "post" && <span className="w-fit h-fit flex gap-1 px-1 justify-center items-center text-[0.5rem] text-primary bg-primary/10 font-semibold rounded-md">
+                      <i className="bi bi-reply-fill"></i> {type === "comment" ? "Comment" : "Reply"}
+                    </span>}
                   </div>
                 </div>
-              </div>  
-          </div>
-          <div className="relative z-20 flex flex-col justify-center items-center">
-            {userId && !postUserId && <button className={followed === false ? "flex w-fit h-fit gap-1 items-center text-xs px-2 py-2 text-primary border-[1px] border-primary rounded-lg md:rounded-full lg:hover:bg-primary lg:hover:text-white" : "group w-fit h-fit flex gap-1 justify-center items-center text-xs px-2 py-2 text-white bg-primary rounded-lg md:rounded-full lg:hover:bg-neutral lg:hover:text-white lg:hover:border-neutral border-[1px] border-primary transition-all duration-300"} onClick={toggleFollow}>{followed === false ? <><i className="bi bi-plus-lg"></i> <span className="hidden md:flex">Follow</span></> : <>
+              </div>
+              <div  className="w-fit text-xs md:text-sm cursor-pointer">
+                <div className="break-words whitespace-pre-wrap font-sans"><p className="content text-start">{expandPost === false && postContent?.length > 500 ? <>{validateSize(postContent)} <a className="relative z-20 text-xs text-primary cursor-pointer" onClick={togglePost}>See more</a></> : expandPost === true && postContent.length > 100 ? <><Linkify options={{ render: renderLink }}>{postContent}</Linkify> <a className="relative z-20 text-xs text-primary cursor-pointer" onClick={togglePost}>See Less</a></>: <Linkify options={{ render: renderLink }}>{postContent}</Linkify>}</p></div>
+              </div>
+            </div>
+          </div>  
+          {/* </div> */}
+          <div className="relative z-20 flex flex-col items-center">
+            {userId && !postUserId && <button className={followed === false ? "flex w-fit h-fit gap-1 items-center text-xs px-2 py-2 text-primary border-[1px] border-primary rounded-lg sm:rounded-full lg:hover:bg-primary lg:hover:text-white" : "group w-fit h-fit flex gap-1 justify-center items-center text-xs px-2 py-2 text-white bg-primary rounded-lg sm:rounded-full lg:hover:bg-neutral lg:hover:text-white lg:hover:border-neutral border-[1px] border-primary transition-all duration-300"} onClick={toggleFollow}>{followed === false ? <><i className="bi bi-plus-lg"></i> <span className="hidden sm:flex">Follow</span></> : <>
             <span className="followed group-hover:hidden flex gap-2 justify-center items-center"><i className="bi bi-patch-check-fill"></i> <span className="hidden md:flex">Following</span></span> <span className="hidden group-hover:flex gap-2 justify-center items-center"><i className="bi bi-x-circle-fill"></i> <span className="hidden md:flex">Unfollow</span></span></>}</button>}
           </div>
         </div>
