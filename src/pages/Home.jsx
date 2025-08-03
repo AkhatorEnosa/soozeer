@@ -468,7 +468,7 @@ const Home = () => {
   return (
     <div className="w-full h-screen flex flex-col items-center px-2 md:p-0 md:m-0 dark:text-inherit">
       {renderPostForm()}
-      <div className="w-full lg:grid lg:grid-cols-8 px-2 md:px-20 mt-2 md:mt-4 lg:mt-0 pb-28 lg:pb-0 md:gap-2 mb-14 lg:mb-0">
+      <div className="w-full lg:grid lg:grid-cols-8 px-2 md:px-20 mt-2 md:mt-4 lg:mt-0 pb-14 lg:pb-0 md:gap-2 mb-14 lg:mb-0">
         {loggedUser && (
           <SideBar
             uid={loggedUser.u_id}

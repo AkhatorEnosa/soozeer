@@ -565,8 +565,8 @@ const Profile = () => {
   if (error || profileUser === "error") return renderErrorState("Something went wrong. Please try again later.");
 
   return (
-    <div className="w-full h-screen flex flex-col items-center px-2 md:p-0 md:m-0">
-      <div className="w-full lg:grid lg:grid-cols-8 px-2 md:px-20 mt-2 md:mt-0 mb-24 lg:pb-0 md:gap-2">
+    <div className="relative w-full h-screen flex flex-col items-center px-2 md:p-0 md:m-0">
+      <div className="relative w-full lg:grid lg:grid-cols-8 px-2 md:px-20 mt-2 md:mt-0 mb-24  pb-14 lg:pb-0 md:gap-2">
       {loggedUser && (
         <SideBar
           uid={loggedUser.u_id}
@@ -576,7 +576,7 @@ const Profile = () => {
           toggleSearchBar={() => document.getElementById("my_modal_2").showModal()}
         />
       )}
-        <div className={`main w-full flex flex-col ${loggedUser ? "col-span-6 xl:col-span-4" : "col-span-8 xl:col-span-6"} border-r-[1px] border-l-[1px] border-black/5 dark:border-slate-500/20 overflow-scroll no-scrollbar`}>
+        <div className={`relative w-full flex flex-col ${loggedUser ? "col-span-6 xl:col-span-4" : "col-span-8 xl:col-span-6"} border-r-[1px] border-l-[1px] border-black/5 dark:border-slate-500/20 no-scrollbar`}>
           <div className="w-full flex px-3 bg-bg/50 dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">
             <BackBtn link={() => navigate(-1)} title="Back" />
           </div>
@@ -656,7 +656,7 @@ const Profile = () => {
           </div>
           <div className="tabs divide-y-[1px] divide-black/5 dark:divide-slate-500/20 flex flex-col items-center">
             <ul className={`grid ${loggedUser?.u_id === getProfileId() ? "w-full grid-cols-5" : "w-full grid-cols-3"} justify-between overflow-scroll no-scrollbar text-sm md:text-neutral-dark font-medium text-neutral-dark dark:text-dark-accent bg-bg/50 dark:bg-black/50`} ref={tabsRef}>
-              {["posts", "replies", "journals", ...(loggedUser?.u_id === getProfileId() ? ["likes", "bookmarks"] : [])].map((tabName) => (
+              {["posts", "replies", "journals", ...(loggedUser?.u_id === getProfileId() && ["likes", "bookmarks"])].map((tabName) => (
                 <li
                   key={tabName}
                   className={tab === tabName ? "w-full text-center border-b-2 border-primary dark:text-neutral-lightest py-3 px-0 cursor-pointer" : "w-full text-center hover:border-b-2 border-primary/30 hover:bg-primary/5 py-3 px-0 cursor-pointer"}

@@ -311,7 +311,7 @@ const Search = () => {
   }
 
   return (
-    <div className="w-full h-screen flex flex-col gap-5 items-center dark:text-inherit pb-28 lg:pb-0">
+    <div className="w-full h-screen flex flex-col gap-5 items-center dark:text-inherit pb-14 lg:pb-0">
       <div className="w-full lg:grid lg:grid-cols-8 px-2 md:px-20 mb:pb-0 md:gap-2 mb:mb-0 overflow-scroll no-scrollbar">
         <SideBar
           uid={loggedUser?.u_id || null} 

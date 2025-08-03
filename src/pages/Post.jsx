@@ -513,7 +513,7 @@ const Post = () => {
 
   return (
     <div className="w-full h-screen flex flex-col items-center px-2 md:p-0 md:m-0 dark:text-inherit">
-      <div className="w-full lg:grid lg:grid-cols-8 px-2 md:px-20 mt-2 md:mt-4 lg:mt-0 pb-28 lg:pb-0 md:gap-2 mb-14 lg:mb-0">
+      <div className="w-full lg:grid lg:grid-cols-8 px-2 md:px-20 mt-2 md:mt-4 lg:mt-0 pb-14 lg:pb-0 md:gap-2 mb-14 lg:mb-0">
         {loggedUser && (
           <SideBar
             uid={loggedUser.u_id}
@@ -530,7 +530,7 @@ const Post = () => {
           <>
             <div className={`main w-full lg:h-screen flex flex-col ${
               loggedUser ? "col-span-6 xl:col-span-4" : "col-span-8 xl:col-span-6"
-            } border-r-[1px] border-l-[1px] border-black/5 dark:border-slate-500/20 overflow-scroll no-scrollbar`}>
+            } border-r-[1px] border-l-[1px] border-black/5 dark:border-slate-500/20`}>
               <div className="w-full flex justify-between px-3 bg-bg/90 dark:bg-black/90 backdrop-blur-sm sticky top-0 z-[100]">
                 <BackBtn link={() => navigate(-1)} title={'Back'}/>
                 {currentPost?.post_id !== 0 && (
