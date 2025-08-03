@@ -81,7 +81,12 @@ const PostCard = ({users, userId, postId, liking, bookmarking, deleting, postUse
                   <div className="w-full flex justify-between items-center mb-2">
                     <div className="w-fit flex flex-col">
                       <Link to={userId && `/${getPostUserName()}`} className="w-fit relative z-20 "><h3 className="w-fit font-bold text-left hover:underline text-neutral-dark dark:text-neutral-lighter cursor-default">{uName}</h3></Link>
-                      <span className="w-full text-start text-[0.5rem] text-neutral-400">{moment(datetime).format("Do MMM, YYYY hh:mm a") + ' . ' + moment(datetime).fromNow()}</span>
+                      <div className="w-full flex gap-2 items-center">
+                        <span className="w-full text-start text-[0.5rem] text-neutral-400">{moment(datetime).format("Do MMM, YYYY hh:mm a") + ' . ' + moment(datetime).fromNow()}</span>
+                        {type !== "post" && <span className="w-fit h-fit flex gap-1 px-1 justify-center items-center text-[0.5rem] text-primary bg-primary/10 font-semibold rounded-md">
+                          <i className="bi bi-reply-fill"></i> {type === "comment" ? "Comment" : "Reply"}
+                        </span>}
+                      </div>
                     </div>
                   </div>
                   <div  className="w-fit text-xs md:text-sm cursor-pointer">
