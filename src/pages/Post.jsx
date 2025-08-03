@@ -39,6 +39,7 @@ import {
 // Context
 import { AppContext } from "../context/AppContext";
 import useGetUsers from "../hooks/useGetUsers";
+import OriginBtn from "../components/OriginBtn";
 
 const Post = () => {
   // State
@@ -123,11 +124,11 @@ const Post = () => {
     };
   }, [dispatch]);
 
-  useEffect(() => {
-    if (!isLoading && !loggedUser) {
-      navigate('/login');
-    }
-  }, [isLoading, loggedUser, navigate]);
+  // useEffect(() => {
+  //   if (!isLoading && !loggedUser) {
+  //     navigate('/login');
+  //   }
+  // }, [isLoading, loggedUser, navigate]);
 
   useEffect(() => {
     currPostComments(paramsId);
@@ -411,12 +412,8 @@ const Post = () => {
 
     if(isLoadingComments) {
       return (
-        <div className="w-full flex flex-col gap-4">
-          {Array.from({ length: 3 }).map((_, index) => (
-            <div key={index} className="flex items-center gap-4">
-              <div className="loading loading-spinner "></div>
-            </div>
-          ))}
+        <div className="w-full flex flex-col justify-center items-center gap-4">
+          <div className="loading loading-spinner text-primary"></div>
         </div>
       );
     } else {
@@ -534,15 +531,18 @@ const Post = () => {
               <div className="w-full flex justify-between px-3 bg-bg/90 dark:bg-black/90 backdrop-blur-sm sticky top-0 z-[100]">
                 <BackBtn link={() => navigate(-1)} title={'Back'}/>
                 {currentPost?.post_id !== 0 && (
-                  <BackBtn link={() => navigate(`/post/${currentPost.post_id}`)} title={'Jump to origin'}/>
+                  <OriginBtn link={() => navigate(`/post/${currentPost.post_id}`)} title={'Jump to origin'}/>
                 )}
               </div>
 
               <div>
-                {isLoadingPost || isLoading ? renderLoadingContent() : <>{renderPostContent()}  {renderNewCommentForm()}</>}
+                {
+                  isLoadingPost || isLoading ? 
+                    renderLoadingContent() : <>{renderPostContent()}  {renderNewCommentForm()}</>
+                }
               </div>
-              <div>
-                {!isLoading && renderComments()}
+              <div className="w-full flex flex-col gap-2 mt-4">
+                {(!isLoading || !isLoadingComments) && renderComments()}
                 <p className="py-8 flex justify-center text-primary">.</p>
               </div>
             </div>

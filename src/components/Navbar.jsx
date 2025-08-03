@@ -54,7 +54,7 @@ const Navbar = () => {
                   <div className={showSubMenu ? "absolute opacity-100 w-fit flex flex-col gap-2 top-11 right-0 transition-all duration-200 cursor-pointer" : "absolute w-fit flex flex-col gap-2 items-center opacity-0 -top-64 right-0 transition-all duration-200"}>
 
 
-                    <div className="w-[150px] grid grid-cols-3 items-center justify-center bg-bg-muted dark:bg-black rounded-full border-[1px] border-neutral-100 shadow-sm dark:shadow-primary/40 text-xs font-semibold dark:border-primary/40 bg-primary/5 overflow-hidden"
+                    <div className="w-[150px] grid grid-cols-3 items-center justify-center bg-[#f3f9ff] dark:bg-black rounded-full border-[1px] border-neutral-100 shadow-sm dark:shadow-primary/40 text-xs font-semibold dark:border-primary/40 bg-primary/5 overflow-hidden"
                       role="menuitem"
                       tabIndex={showSubMenu ? 0 : -1}
                     >
@@ -74,7 +74,7 @@ const Navbar = () => {
                         variant={"text-blue-500 dark:text-blue-500"}
                       />
                     </div>
-                    <p className="w-full flex gap-2 items-center justify-center bg-bg-muted dark:bg-black rounded-full border-[1px] border-neutral-100 shadow-sm dark:shadow-primary/40 text-xs font-semibold dark:border-primary/40 bg-primary/5 px-4 py-2 cursor-pointer" onClick={() => setTriggerLogout(true)}>
+                    <p className="w-full flex gap-2 items-center justify-center bg-[#f3f9ff] dark:bg-black rounded-full border-[1px] border-neutral-100 shadow-sm dark:shadow-primary/40 hover:bg-[#e8f3ff] dark:hover:bg-[#001f36] text-xs font-semibold dark:border-primary/40 px-4 py-2 cursor-pointer" onClick={() => setTriggerLogout(true)}>
                       <i className="bi bi-box-arrow-right"></i>
                       Logout
                     </p>

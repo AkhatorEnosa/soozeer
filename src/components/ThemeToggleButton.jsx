@@ -13,7 +13,7 @@ const ThemeToggleButton = ({currentTheme, icon, variant}) => {
   return (
     <Tooltip title={currentTheme} arrow placement="top">
       <button 
-        className={`flex justify-center items-center ${currentTheme === theme && "bg-primary/5 dark:bg-primary/15 font-semibold"} hover:bg-primary/5 dark:hover:bg-primary/15 px-5 py-2 lg:py-5 cursor-pointer`}
+        className={`flex justify-center items-center ${currentTheme === theme && "bg-primary/5 dark:bg-primary/15 font-semibold"} hover:bg-[#e8f3ff]dark:hover:bg-[#001f36] px-5 py-2 lg:py-5 cursor-pointer`}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();

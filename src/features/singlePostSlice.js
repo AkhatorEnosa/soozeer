@@ -11,7 +11,8 @@ const initialState = {
     commentBookmarks: [],
     isPosting: false,
     posted: false,
-    isLoadingComment: true,
+    isLoadingPost: true,
+    isLoadingComments: true,
     isLikingComment: false,
     isBookmarkingComment: false,
     isDeletingComment: false,
@@ -373,16 +374,16 @@ const singlePostSlice = createSlice({
                 state.isLoadingPost = false
             })
             .addCase(getComments.pending, (state) => {
-                state.isLoadingComment = true;
+                state.isLoadingComments = true;
             })
             .addCase(getComments.fulfilled, (state, action) => {
                 state.comments = action.payload,
-                state.isLoadingComment = false
+                state.isLoadingComments = false
             })
             .addCase(getComments.rejected, (state, action) => {
                 state.errorComment = action.error.message
                 state.comments = null,
-                state.isLoadingComment = false
+                state.isLoadingComments = false
             })
             .addCase(addComment.pending, (state) => {
                 state.isPosting = true
@@ -410,26 +411,26 @@ const singlePostSlice = createSlice({
                 state.isDeletingComment = false
             })
             .addCase(getCommentLikes.pending, (state) => {
-                state.isLoadingComment = true;
+                state.isLoadingComments = true;
             })
             .addCase(getCommentLikes.fulfilled, (state, action) => {
                 state.commentLikes = action.payload,
-                state.isLoadingComment = false
+                state.isLoadingComments = false
             })
             .addCase(getCommentLikes.rejected, (state, action) => {
                 state.errorPost = action.error.message
-                state.isLoadingComment = false
+                state.isLoadingComments = false
             })
             .addCase(commentBookmarks.pending, (state) => {
-                state.isLoadingComment = true;
+                state.isLoadingComments = true;
             })
             .addCase(commentBookmarks.fulfilled, (state, action) => {
                 state.commentBookmarks = action.payload,
-                state.isLoadingComment = false
+                state.isLoadingComments = false
             })
             .addCase(commentBookmarks.rejected, (state, action) => {
                 state.errorPost = action.error.message
-                state.isLoadingComment = false
+                state.isLoadingComments = false
             })
             .addCase(likeComment.pending, (state) => {
                 state.isLoadingPosts = false;
