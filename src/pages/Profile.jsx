@@ -577,7 +577,7 @@ const Profile = () => {
         />
       )}
         <div className={`relative w-full flex flex-col ${loggedUser ? "col-span-6 xl:col-span-4" : "col-span-8 xl:col-span-6"} border-r-[1px] border-l-[1px] border-black/5 dark:border-slate-500/20 no-scrollbar`}>
-          <div className="w-full flex px-3 bg-bg/50 dark:bg-black/50 backdrop-blur-sm sticky top-0 z-[100]">
+          <div className="w-full flex px-3  bg-bg/90 dark:bg-black/90 backdrop-blur-sm sticky top-0 z-[100]">
             <BackBtn link={() => navigate(-1)} title="Back" />
           </div>
           <div className="relative info w-full flex gap-2 md:gap-5 justify-between items-center py-5 md:py-8 overflow-hidden">
