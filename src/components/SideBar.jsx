@@ -97,7 +97,7 @@ const SideBar = ({uid, uName, page, paramsId, toggleSearchBar}) => {
     // <div className={`hidden h-fit lg:flex col-span-2 sticky left-0 top-0 text-lg md:text-xl rounded-md`}>
       <>
         { uid ?
-          <div className="w-full hidden h-screen sticky top-0 lg:flex col-span-2 text-lg md:text-xl rounded-md flex-col justify-between py-4 z-[200] font-base">
+          <div className="w-full hidden h-screen sticky top-0 lg:flex col-span-2 text-lg rounded-md flex-col justify-between py-4 z-[200] font-base">
             <div className="h-fit">
               <div className="flex py-4 mb-4 px-10">
                 <Link to='/' className="cursor-pointer"> <img src={logo1} alt="logo" className="dark:hidden w-32 md:w-36 lg:w-44"/>  </Link>
