@@ -120,6 +120,10 @@ const Home = () => {
   const countItems = (items, id, key = "post_id") =>
     items?.filter((item) => item[key] === id).length || 0;
 
+
+  const followed = (id) => 
+    follows?.some(follow => follow.followed_id === id && follow.follower_id === loggedUser?.u_id);
+
   const hasUserInteracted = (items, id, userId, key = "post_id") =>
     !!items?.find((item) => item[key] === id && item.u_id === userId);
 
@@ -340,7 +344,7 @@ const Home = () => {
           uName={user.u_name}
           uid={user.u_id === loggedUser?.u_id}
           userIdVal={user.u_id}
-          followed={hasUserInteracted(follows, user.u_id, loggedUser?.u_id, "followed_id")}
+          followed={followed(user.u_id)}
           following={isLoadingFollows}
           toggleFollow={() => handleFollowToggle(user)}
         />
@@ -372,7 +376,8 @@ const Home = () => {
             bookmarking={isBookmarking}
             deleting={isDeletingPost}
             toggleFollow={() => handleFollowToggle(post)}
-            followed={hasUserInteracted(follows, post.u_id, loggedUser?.u_id, "followed_id")}
+            followed={followed(post.u_id)}
+            following={isLoadingFollows}
             comments={countItems(postComments, post.id)}
             likes={countItems(likes, post.id)}
             liked={hasUserInteracted(likes, post.id, loggedUser?.u_id)}
@@ -541,7 +546,7 @@ const Home = () => {
           </div>
         </div>
         <div className="hidden sticky top-0 xl:flex flex-col gap-5 h-fit col-span-2 py-3 z-0">
-          {loggedUser?.u_id || isLoadingOtherUsers ? (
+          {loggedUser?.u_id ? (
             <>
               <form
                 onSubmit={handleSearch}
