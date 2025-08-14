@@ -537,7 +537,7 @@ const Home = () => {
                     </button>
                   </div>
                 )}
-                <div className="w-full flex flex-col gap-5 pt-20 lg:pt-0">
+                <div className={`w-full flex flex-col gap-5 ${loggedUser ? "pt-20 lg:pt-0" : "pt-10 pb-20"}`}>
                   {renderContent()}
                 </div>
                 <p className="py-8 flex justify-center text-primary">.</p>
@@ -545,7 +545,7 @@ const Home = () => {
             )}
           </div>
         </div>
-        <div className="hidden sticky top-0 xl:flex flex-col gap-5 h-fit col-span-2 py-3 z-0">
+        <div className={`hidden sticky top-0 ${loggedUser ? "xl:flex" : "lg:flex"} flex-col gap-5 h-fit col-span-2 py-3 z-0`}>
           {loggedUser?.u_id ? (
             <>
               <form

@@ -31,7 +31,7 @@ const Navbar = () => {
 
   // if(loggedUser) {
     return (
-      <header className='lg:hidden relative top-0 w-full flex justify-between items-center dark:bg-black px-2 md:px-10 lg:px-20 py-2 md:py-3 backdrop-blur-lg z-[120]'>
+      <header className={`${loggedUser && "lg:hidden"} relative top-0 w-full flex justify-between items-center dark:bg-black px-2 md:px-10 lg:px-20 py-2 md:py-3 backdrop-blur-lg z-[120]`}>
           <div className="flex h-full justify-center items-center">
             <Link to='/' className="lg:py-5 cursor-pointer"> <img src={logo1} alt="logo" className="dark:hidden w-32 md:w-36 lg:w-44"/>  </Link>
             <Link to='/' className="lg:py-5 cursor-pointer"> <img src={logo2} alt="logo" className="hidden dark:flex w-32 md:w-36 lg:w-44"/> </Link>
