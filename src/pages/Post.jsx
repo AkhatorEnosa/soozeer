@@ -521,7 +521,9 @@ const Post = () => {
 
         {currentPost === 'error' ? (
           <div className="main w-full flex flex-col justify-center items-center col-span-6 border-[1px] border-black/5">
-            <p>This page does not exist.</p>
+            <h1 className='text-[10rem] md:text-[15rem] font-extrabold'>404</h1>
+            <p className='text-3xl'>Oops, page not found</p>
+            <BackBtn link={() => navigate(-1)} title={"Back"}/>
           </div>
         ) : (
           <>

@@ -99,6 +99,11 @@ const Profile = () => {
       profile(profileId);
       profileLikedPosts(profileId);
       profileBookmarkedPosts(profileId);
+    } else {
+      // profile("error");
+      // profileLikedPosts("error");
+      // profileBookmarkedPosts("error");
+      navigate("/not-found");
     }
   }, [profile, profileId, profileLikedPosts, profileBookmarkedPosts]);
 

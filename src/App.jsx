@@ -14,6 +14,7 @@ const Notifications = lazy(() => import("./pages/Notifications"))
 const Messages = lazy(() => import("./pages/Messages"))
 const ResetPassword = lazy(() => import("./pages/account/ResetPassword"))
 const UpdatePassword = lazy(() => import("./pages/account/UpdatePassword"))
+const NotFound = lazy(() => import("./pages/NotFound"))
 
 const App = () => {
   return (
@@ -32,12 +33,20 @@ const App = () => {
             <Route path="/login" element={
               <Suspense>
                 <Login />
-              </Suspense>}/>
+              </Suspense>}
+            />
 
             <Route path="/register" element={
               <Suspense>
                 <Register />
-              </Suspense>}/>
+              </Suspense>}
+            />
+
+            <Route path="/not-found" element={
+              <Suspense>
+                <NotFound />
+              </Suspense>}
+            />
 
             <Route path="/account/reset-password" element={
               <Suspense>
