@@ -121,11 +121,17 @@ const Home = () => {
     items?.filter((item) => item[key] === id).length || 0;
 
 
-  const followed = (id) => 
-    follows?.some(follow => follow.followed_id === id && follow.follower_id === loggedUser?.u_id);
+  // const followed = (id) => 
+  //   follows?.some(follow => follow.followed_id === id && follow.follower_id === loggedUser?.u_id);
 
   const hasUserInteracted = (items, id, userId, key = "post_id") =>
     !!items?.find((item) => item[key] === id && item.u_id === userId);
+
+  const hasFollowed = (items, id, userId, key) =>
+    !!items?.some((item) => item[key] === id && item.follower_id === userId);
+
+  // followed={hasUserInteracted(follows, post.u_id, loggedUser?.u_id, "followed_id")}
+  // console.log(follows)
 
   const handleFollowToggle = (user) => {
     const follow = follows.find(
@@ -344,7 +350,8 @@ const Home = () => {
           uName={user.u_name}
           uid={user.u_id === loggedUser?.u_id}
           userIdVal={user.u_id}
-          followed={followed(user.u_id)}
+          // followed={followed(user.u_id)}
+          followed={hasFollowed(follows, user.u_id, loggedUser?.u_id, "followed_id")}
           following={isLoadingFollows}
           toggleFollow={() => handleFollowToggle(user)}
         />
@@ -376,8 +383,8 @@ const Home = () => {
             bookmarking={isBookmarking}
             deleting={isDeletingPost}
             toggleFollow={() => handleFollowToggle(post)}
-            followed={followed(post.u_id)}
             following={isLoadingFollows}
+            followed={hasFollowed(follows, post.u_id, loggedUser?.u_id, "followed_id")}
             comments={countItems(postComments, post.id)}
             likes={countItems(likes, post.id)}
             liked={hasUserInteracted(likes, post.id, loggedUser?.u_id)}
@@ -420,9 +427,9 @@ const Home = () => {
             bookmarking={isBookmarking}
             deleting={isDeletingPost}
             toggleFollow={() => handleFollowToggle(post)}
-            followed={followed(post.u_id)}
+            // followed={followed(post.u_id)}
             following={isLoadingFollows}
-            // followed={hasUserInteracted(follows, post.u_id, loggedUser?.u_id, "followed_id")}
+            followed={hasFollowed(follows, post.u_id, loggedUser?.u_id, "followed_id")}
             comments={countItems(postComments, post.id)}
             likes={countItems(likes, post.id)}
             liked={hasUserInteracted(likes, post.id, loggedUser?.u_id)}
