@@ -420,7 +420,9 @@ const Home = () => {
             bookmarking={isBookmarking}
             deleting={isDeletingPost}
             toggleFollow={() => handleFollowToggle(post)}
-            followed={hasUserInteracted(follows, post.u_id, loggedUser?.u_id, "followed_id")}
+            followed={followed(post.u_id)}
+            following={isLoadingFollows}
+            // followed={hasUserInteracted(follows, post.u_id, loggedUser?.u_id, "followed_id")}
             comments={countItems(postComments, post.id)}
             likes={countItems(likes, post.id)}
             liked={hasUserInteracted(likes, post.id, loggedUser?.u_id)}
@@ -525,10 +527,10 @@ const Home = () => {
                 {loggedUser && (
                   <div className="w-full flex justify-end lg:justify-start items-center px-4 my-5 text-sm dark:text-dark-accent fixed bottom-20 left-0 lg:sticky lg:top-12 py-2 lg:bg-bg/90 dark:lg:dark:bg-black/90 lg:backdrop-blur-sm z-[110]">
                     <button
-                      className={`w-fit flex gap-2 justify-center items-center border-[1px] border-black bg-bg dark:bg-black dark:border-dark-text-dark-accent font-semibold ${
+                      className={`w-fit flex gap-2 justify-center items-center border-[1px] border-black bg-bg dark:bg-black dark:border-dark-accent font-semibold ${
                         tab === "journal"
-                          ? "hover:bg-[#fdfbf5] hover:border-accent hover:text-accent dark-hover:text-inherit"
-                          : "hover:bg-[#f3f9ff] hover:border-primary hover:text-primary"
+                          ? "hover:bg-[#fdfbf5] dark:hover:bg-[#fdfbf5]/5 hover:border-accent hover:dark:border-accent hover:text-accent"
+                          : "hover:bg-[#f3f9ff] dark:hover:bg-[#f3f9ff]/5 hover:border-primary hover:dark:border-primary hover:text-primary"
                       } px-4 py-2 rounded-full shadow-md lg:shadow-none`}
                       onClick={() => setShowPostInModal(!showPostInModal)}
                     >
