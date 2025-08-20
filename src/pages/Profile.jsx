@@ -588,7 +588,7 @@ const Profile = () => {
             toggleSearchBar={() => document.getElementById("my_modal_2").showModal()}
           />
         )}
-        { getProfileId() === null ? notFound() :
+        { getProfileId() === null && !isLoading && !isLoadingProfile ? notFound() :
           <>
 
             <div className={`relative w-full flex flex-col ${loggedUser ? "col-span-6 xl:col-span-4" : "col-span-8 xl:col-span-6"} border-r-[1px] border-l-[1px] border-black/5 dark:border-slate-500/20 no-scrollbar`}>
