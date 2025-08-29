@@ -25,7 +25,7 @@ export default {
                     dark: '#0E1017',
                 },
                 bg: {
-                    DEFAULT: '#FFFFFF',
+                    DEFAULT: '#fffffc',
                     muted: '#F5F5F5',
                     card: '#E4E6EB',
                 },
