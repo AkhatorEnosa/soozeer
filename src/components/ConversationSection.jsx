@@ -17,7 +17,7 @@ const ConversationSection = ({users, toUId, toImg, toName, messagesRef, divRef, 
     }
 
   return (
-    <div className={`absolute top-0 left-0 w-full h-screen md:relative flex flex-col md:h-fit ${userId ? "col-span-3" : "col-span-2"} lg:border-[1px] border-black/5 dark:border-neutral-300/10 lg:px-1 py-4 rounded-t-lg rounded-b-3xl pb-24 md:pb-2 bg-bg dark:bg-black gap-2 justify-between lg:pt-5`}>
+    <div className={`absolute  border-[1px] border-black/5 dark:border-slate-500/20 top-0 left-0 w-full h-screen md:relative flex flex-col md:h-fit ${userId ? "col-span-3" : "col-span-2"} lg:border-[1px] border-black/5 dark:border-neutral-300/10 lg:px-1 py-4 rounded-t-lg rounded-b-3xl pb-24 md:pb-2 bg-bg dark:bg-black gap-2 justify-between lg:pt-5`}>
         <div className="flex flex-col w-full h-full gap-4">
             <div className="w-full flex flex-col px-4 bg-bg dark:bg-black lg:px-0 lg:justify-between items-center z-30">
                 {/* back button */}

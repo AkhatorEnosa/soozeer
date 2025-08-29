@@ -120,12 +120,15 @@ const Messages = () => {
         <div className="w-full flex flex-col items-center px-2 md:p-0 md:m-0">
   
             <div className="sticky w-full lg:grid text-neutral-dark dark:text-dark-accent lg:grid-cols-8 px-2 md:px-20 pb-10 md:pb-28 md:gap-2 lg:mb-0 lg:pb-0">
-              {loggedUser && <SideBar
-              uid={loggedUser !== null ? loggedUser.u_id : null} 
-              uName={loggedUser?.u_name || ''}
-              page={'messages'} 
-              toggleSearchBar={handleShowSearch}
-              />}
+              {
+                loggedUser &&
+                <SideBar
+                  uid={loggedUser !== null ? loggedUser.u_id : null} 
+                  uName={loggedUser?.u_name || ''}
+                  page={'messages'} 
+                  toggleSearchBar={handleShowSearch}
+                />
+              }
   
   
               {

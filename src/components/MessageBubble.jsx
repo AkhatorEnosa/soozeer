@@ -42,11 +42,13 @@ const MessageBubble = ({singleMessageId, userId, senderId, receiverId, createdAt
                         <span className="text-left font-bold z-50"><i className="bi bi-x"></i></span>
                     </div>}
                 </span>
-                <pre className="break-words whitespace-pre-wrap font-sans"><div className={`flex flex-col max-w-96 text-xs lg:text-sm px-2 py-2 mb-[1px] rounded-md ${receiverId == userId ? "bg-neutral-200" : "bg-primary text-white"}`}>
-                    <Linkify options={{ render: renderLink }}>
-                        {message}
-                    </Linkify>
-                </div></pre>
+                  <pre className="break-words whitespace-pre-wrap font-sans">
+                      <div className={`flex flex-col max-w-64 text-xs lg:text-sm px-2 py-2 mb-[1px] rounded-md ${receiverId == userId ? "bg-neutral-200" : "bg-primary text-white"}`}>
+                        <Linkify options={{ render: renderLink }}>
+                            {message}
+                        </Linkify>
+                      </div>
+                  </pre>
             </div>
             <div className={`w-full gap-3 flex ${senderId == userId ? "justify-end" : "justify-start"}`}>
                 <p className={`whitespace-nowrap text-neutral-600 dark:text-[#cbc9c9] text-[10px] lg:text-[8px] ${senderId == userId && 'text-right'}`}>
