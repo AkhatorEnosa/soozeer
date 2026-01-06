@@ -67,7 +67,7 @@ const PostCard = ({users, userId, postId, liking, bookmarking, deleting, postUse
   }
 
   return ( 
-    <div className={"relative w-full flex flex-col items-start text-sm border-y-[1px] text-neutral-dark border-black/5  dark:border-neutral-300/10 duration-200 transition-all dark:text-dark-accent"}>
+    <div className={"relative w-full flex flex-col items-start text-sm border-y-[1px] text-neutral-dark border-black/5 dark:border-neutral-300/10 duration-200 transition-all dark:text-dark-accent hover:bg-primary/5 pt-4"}>
         <Link to={`/post/${postId}`} className="absolute top-0 w-full h-full z-0"></Link>
       <div className="w-full h-full">
         <div className="flex w-full gap-3 px-3 ">

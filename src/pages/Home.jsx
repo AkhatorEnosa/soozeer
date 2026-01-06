@@ -546,7 +546,7 @@ const Home = () => {
                     </button>
                   </div>
                 )}
-                <div className={`w-full flex flex-col gap-5 ${loggedUser ? "pt-20 lg:pt-0" : "pt-10 pb-20"}`}>
+                <div className={`w-full flex flex-col gap-0 ${loggedUser ? "pt-20 lg:pt-0" : "pt-10 pb-20"}`}>
                   {renderContent()}
                 </div>
                 <p className="py-8 flex justify-center text-primary">.</p>
