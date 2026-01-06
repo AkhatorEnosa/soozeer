@@ -59,7 +59,7 @@ const PostCard = ({users, userId, postId, liking, bookmarking, deleting, postUse
 
   const renderLink = ({ attributes, content }) => {
     const { href, ...props } = attributes;
-    return <Link to={href} target="_blank" {...props} className="relative z-20 hover:underline">{content}</Link>;
+    return <Link to={href} target="_blank" {...props} className="break-words whitespace-break-spaces relative z-20 hover:underline">{content}</Link>;
   };
 
   const togglePost = () => {
@@ -73,7 +73,7 @@ const PostCard = ({users, userId, postId, liking, bookmarking, deleting, postUse
         <div className="flex w-full gap-3 px-3 ">
           {/* <div className="pt-4 w-full col-span-6"> */}
           <div className="w-[80%] flex">
-            <div className="w-14 h-14">
+            <div className="min-w-14 min-h-14">
               <Link to={userId && `/${getPostUserName()}`}><img src={uImg} alt="" className="relative z-20 w-10 h-10 object-cover object-center rounded-full  shadow-sm cursor-default" width={80} height={80} loading="lazy"/></Link>
             </div>
             
@@ -82,15 +82,19 @@ const PostCard = ({users, userId, postId, liking, bookmarking, deleting, postUse
                 <div className="w-fit flex flex-col">
                   <Link to={userId && `/${getPostUserName()}`} className="w-fit relative z-20 "><h3 className="w-fit font-bold text-left hover:underline text-neutral-dark dark:text-neutral-lighter cursor-default">{uName}</h3></Link>
                   <div className="w-full flex gap-2 items-center">
-                    <span className="w-full text-start text-[0.5rem] text-neutral-600 dark:text-[#cbc9c9]">{moment(datetime).format("Do MMM, YYYY hh:mm a") + ' . ' + moment(datetime).fromNow()}</span>
+                    <div className="w-full flex gap-2 text-start text-[0.5rem] text-neutral-600 dark:text-[#cbc9c9]">
+                      <span>{moment(datetime).fromNow()}</span><span>•</span> <span>{moment(datetime).format("Do MMM, YYYY hh:mm a")}</span>
+                    </div>
                     {type !== "post" && <span className="w-fit h-fit flex gap-1 px-1 justify-center items-center text-[0.5rem] text-primary bg-primary/10 font-semibold rounded-md">
                       <i className="bi bi-reply-fill"></i> {type === "comment" ? "Comment" : "Reply"}
                     </span>}
                   </div>
                 </div>
               </div>
-              <div  className="w-full text-xs md:text-sm cursor-pointer">
-                <div className="break-words whitespace-pre-wrap font-sans"><p className="content text-start">{expandPost === false && postContent?.length > 500 ? <>{validateSize(postContent)} <a className="relative z-20 text-xs text-primary cursor-pointer" onClick={togglePost}>See more</a></> : expandPost === true && postContent.length > 100 ? <><Linkify options={{ render: renderLink }}>{postContent}</Linkify> <a className="relative z-20 text-xs text-primary cursor-pointer" onClick={togglePost}>See Less</a></>: <Linkify options={{ render: renderLink }}>{postContent}</Linkify>}</p></div>
+              <div  className="w-full text-xs md:text-sm cursor-pointer overflow-hidden break-words whitespace-pre-wrap">
+                {/* <div className="w-full overflow-hidden bg-purple-300 break-words whitespace-pre-wrap"> */}
+                  <p className="content text-start">{expandPost === false && postContent?.length > 500 ? <>{validateSize(postContent)} <a className="relative z-20 text-xs text-primary cursor-pointer" onClick={togglePost}>See more</a></> : expandPost === true && postContent.length > 100 ? <><Linkify options={{ render: renderLink }}>{postContent}</Linkify> <a className="relative z-20 text-xs text-primary cursor-pointer" onClick={togglePost}>See Less</a></> : <Linkify options={{ render: renderLink }}>{postContent}</Linkify>}</p>
+                {/* </div> */}
               </div>
             </div>
           </div>  
@@ -103,7 +107,7 @@ const PostCard = ({users, userId, postId, liking, bookmarking, deleting, postUse
       </div>
         
         {
-          userId ? <div className="w-full border-t-[1px] border-black/5 px-5 py-4 gap-2 justify-between items-center text-[10px] md:text-xs pt-2 grid grid-cols-7 text-xs">
+          userId ? <div className="w-full border-t-[2px] border-black/5 px-5 py-4 gap-2 justify-between items-center text-[10px] md:text-xs mt-10 pt-2 grid grid-cols-7 text-xs">
           <div className="w-full flex gap-10 md:gap-20 col-span-6">
               <button className={`relative z-20 flex justify-center items-center gap-1 px-2 bg-neutral-100 dark:bg-neutral-500/30 hover:bg-primary/10 rounded-full hover:text-primary cursor-pointer`} onClick={openComment}><i className="bi bi-chat text-xs md:text-base"></i>{comments} </button>
 
@@ -114,7 +118,7 @@ const PostCard = ({users, userId, postId, liking, bookmarking, deleting, postUse
 
             {postUserId ? <button className={`relative z-20 flex justify-center items-center gap-1 rounded-full bg-neutral-100 dark:bg-neutral-500/30 hover:text-red-700 size-10  p-2 hover:bg-red-400/10 cursor-pointer`} onClick={() => setShowDelete(true)} disabled={deleting}><i className="bi bi-x-lg text-sm md:text-base"></i> </button> : '' }
 
-          </div> : <div className="w-full border-t-[1px] border-black/5 px-5 py-4 gap-2 justify-between items-center text-[10px] md:text-xs pt-2 grid grid-cols-7 text-xs">
+          </div> : <div className="w-full border-t-[2px] border-black/5 px-5 py-4 gap-2 justify-between items-center text-[10px] md:text-xs mt-10 pt-2 grid grid-cols-7 text-xs">
           <div className="w-full flex gap-20 col-span-6">
               <button className={`relative z-20 flex justify-center items-center gap-1 px-2 hover:bg-primary/10 rounded-full hover:text-primary cursor-pointer`} onClick={()=> location.assign('/#/login')}><i className="bi bi-chat text-xs md:text-base"></i>{comments} </button>
 
