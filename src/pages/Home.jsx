@@ -583,17 +583,17 @@ const Home = () => {
               </div>
             </>
           ) : (
-            <div className="w-full h-fit flex flex-col py-32 justify-center items-center">
+            <div className="w-full h-fit flex flex-col py-32 justify-center items-center text-neutral-dark dark:text-dark-accent border-neutral-100 dark:border-neutral-light/10">
               <p>Join Us to</p>
               <h1 className="font-bold text-4xl">Explore</h1>
               <ul className="flex mt-10 gap-4">
                 <Link to="/login">
-                  <li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral dark:border-slate-200 dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:bg-slate-200">
+                  <li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:text-neutral-dark dark:hover:bg-bg">
                     Login
                   </li>
                 </Link>
                 <Link to="/register">
-                  <li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral dark:border-slate-200 dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:bg-slate-200">
+                  <li className="py-2 px-4 border-[1px] rounded-full border-black text-neutral-dark dark:border-bg dark:text-dark-accent hover:bg-black hover:text-bg dark:hover:text-neutral-dark dark:hover:bg-bg">
                     Register
                   </li>
                 </Link>
