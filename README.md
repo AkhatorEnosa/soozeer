@@ -7,8 +7,11 @@ It allows users to create profiles, post content, follow others, like/comment, a
 Live Demo → [https://soozeer.netlify.app](https://soozeer.netlify.app)
 
 Homepage ![Homepage](https://res.cloudinary.com/dgmpx8acb/image/upload/v1772433291/soozeer_bhydg5.webp)
+
 Profile ![Profile](https://res.cloudinary.com/dgmpx8acb/image/upload/v1772433761/Screenshot_2026-03-02_at_07.40.09_tegwlq.png)
+
 Search ![Search](https://res.cloudinary.com/dgmpx8acb/image/upload/v1772433762/Screenshot_2026-03-02_at_07.40.49_bfplqx.png)
+
 Message ![Message](https://res.cloudinary.com/dgmpx8acb/image/upload/v1772433762/Screenshot_2026-03-02_at_07.39.24_sezhcu.png)
 
 ## ✨ Features
